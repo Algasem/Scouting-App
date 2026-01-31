@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FRC 7476 Scouting</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        h1, h2 {
+            margin-bottom: 20px;
+        }
+        
+        .status {
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            border: 1px solid #000;
+            background: #fff;
+            cursor: pointer;
+        }
+        
+        .tab.active {
+            background: #000;
+            color: #fff;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        input[type="text"],
+        input[type="number"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #000;
+        }
+        
+        textarea {
+            min-height: 60px;
+        }
+        
+        .counter {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid #000;
+            padding: 10px;
+        }
+        
+        .counter-label {
+            flex: 1;
+        }
+        
+        .counter-btn {
+            padding: 5px 15px;
+            border: 1px solid #000;
+            background: #fff;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        
+        .counter-value {
+            font-size: 24px;
+            min-width: 40px;
+            text-align: center;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .checkbox-label input {
+            width: auto;
+        }
+        
+        .buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        button {
+            padding: 10px 20px;
+            border: 1px solid #000;
+            background: #fff;
+            cursor: pointer;
+        }
+        
+        button:hover {
+            background: #f0f0f0;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: #fff;
+            padding: 20px;
+            max-width: 500px;
+            width: 90%;
+        }
+        
+        #qrcode {
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .alert {
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #000;
+        }
+        
+        .config {
+            border: 1px solid #000;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>FRC 7476 Scouting</h1> 
+    
+    <div id = "mainTabs">
+
+        <!-- Main Interface -->
+        <div id="mainInterface">
+            <!-- Match Info -->
+            <div class="section">
+                <div class="form-group">
+                    <label>Match #</label>
+                    <input type="number" id="matchNumber" min="1">
+                </div>
+                <div class="form-group">
+                    <label>Team #</label>
+                    <input type="number" id="teamNumber" min="1">
+                </div>
+                <div class="form-group">
+                    <label>Scout #</label>
+                    <input type="number" id="scoutNumber" min="1">
+                </div>
+                <div class="form-group">
+                    <label>Alliance</label>
+                    <select id="pitClimbLevel">
+                        <option value="">Select...</option>
+                        <option value="Red 1">Red 1</option>
+                        <option value="Red 2">Red 2</option>
+                        <option value="Red 3">Red 3</option>
+                        <option value="Blue 1">Blue 1</option>
+                        <option value="Blue 2">Blue 2</option>
+                        <option value="Blue 3">Blue 3</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Tabs -->
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab('pit')">Pit</button>
+                <button class="tab" onclick="switchTab('auto')">Auto</button>
+                <button class="tab" onclick="switchTab('teleop')">Teleop</button>
+                <button class="tab" onclick="switchTab('endgame')">Endgame</button>
+            </div>
+            
+            <!-- Pit Scouting -->
+            <div id="pit" class="tab-content active">
+                <div class="section">
+                    <h2>Pit Scouting</h2>
+                    
+                    <div class="form-group">
+                        <label>Climb Level</label>
+                        <select id="pitClimbLevel">
+                            <option value="">Select...</option>
+                            <option value="None">None</option>
+                            <option value="Level 1">Level 1</option>
+                            <option value="Level 2">Level 2</option>
+                            <option value="Level 3">Level 3</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Height (inches)</label>
+                        <input type="number" id="pitHeight" step="0.1">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Weight (lbs)</label>
+                        <input type="number" id="pitWeight" step="0.1">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Intake Type</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="otbIntake">
+                                Over the Bumper
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="inFrameIntake">
+                                In perimeter
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="intakeFromStation">
+                                Passive Intake - from station
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Drive Mechanism</label>
+                        <select id="pitDriveMechanism">
+                            <option value="">Select...</option>
+                            <option value="Tank">Tank</option>
+                            <option value="Swerve">Swerve</option>
+                            <option value="Mecanum">Mecanum</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Strategy</label>
+                        <textarea id="pitStrategy"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Features</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="pitVision">
+                                Vision
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="pitAdjustable">
+                                Adjustable Scoring
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Hopper Capacity</label>
+                        <select id="pitHopperCapacity">
+                            <option value="">Select...</option>
+                            <option value="Fixed">Fixed</option>
+                            <option value="Extendable">Extendable</option>
+                            <option value="None">None</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Drive Experience</label>
+                        <select id="pitDriveExperience">
+                            <option value="">Select...</option>
+                            <option value="Rookie">Rookie</option>
+                            <option value="Intermediate">Intermediate</option>
+                            <option value="Advanced">Advanced</option>
+                            <option value="Expert">Expert</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Estimated Cycles</label>
+                        <input type="number" id="pitEstimatedCycles" min="0">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Conversion %</label>
+                        <input type="number" id="pitConversionPercent" min="0" max="100">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Launch Rate (fuel/sec)</label>
+                        <input type="number" id="pitLaunchRate" step="0.1">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Build Quality (1-10)</label>
+                        <input type="number" id="pitDurability" min="1" max="10">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Outside Perimeter</label>
+                        <textarea id="pitOutsidePerimeter"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Breakdowns</label>
+                        <textarea id="pitBreakdowns"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Human Player Notes</label>
+                        <textarea id="pitHumanPlayer"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Notes</label>
+                        <textarea id="pitNotes"></textarea>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Auto -->
+            <div id="auto" class="tab-content">
+                <div class="section">
+                    <h2>Auto</h2>
+                    
+                    <div class="form-group">
+                        <label>Climb Level</label>
+                        <select id="autoClimbLevel">
+                            <option value="None">None</option>
+                            <option value="Level 1">Level 1</option>
+                            <option value="Level 2">Level 2</option>
+                            <option value="Level 3">Level 3</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Climb Speed</label>
+                        <select id="autoClimbSpeed">
+                            <option value="N/A">N/A</option>
+                            <option value="Slow">Slow</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Fast">Fast</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="counter">
+                            <span class="counter-label">Fuel Scored</span>
+                            <button class="counter-btn" onclick="decrement('autoFuelScored')">-</button>
+                            <span class="counter-value" id="autoFuelScored">0</span>
+                            <button class="counter-btn" onclick="increment('autoFuelScored')">+</button>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="autoBallsCollected">
+                            Balls Collected to Our Side
+                        </label>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Notes</label>
+                        <textarea id="autoNotes"></textarea>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Teleop -->
+            <div id="teleop" class="tab-content">
+                <div class="section">
+                    <h2>Teleop</h2>
+                    
+                    <div class="form-group">
+                        <div class="counter">
+                            <span class="counter-label">Fuel Scored</span>
+                            <button class="counter-btn" onclick="decrement('teleopFuelScored')">-</button>
+                            <span class="counter-value" id="teleopFuelScored">0</span>
+                            <button class="counter-btn" onclick="increment('teleopFuelScored')">+</button>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="counter">
+                            <span class="counter-label">Fuel Missed</span>
+                            <button class="counter-btn" onclick="decrement('teleopFuelMissed')">-</button>
+                            <span class="counter-value" id="teleopFuelMissed">0</span>
+                            <button class="counter-btn" onclick="increment('teleopFuelMissed')">+</button>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Traversal Time (sec)</label>
+                        <input type="number" id="teleopTraversalTime" step="0.1">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Active Phase Role</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="activeRoleFunnel">
+                                Funnel to Teammates
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="activeRoleScoring">
+                                Scoring
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="activeRoleFeed">
+                                Feed Human Station
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Inactive Phase Role</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="inactiveRoleLimit">
+                                Limiting Balls
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="inactiveRoleFunnel">
+                                Funnel to Teammates
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="inactiveRoleFeed">
+                                Feed Human Station
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="inactiveRoleBlock">
+                                Blocking
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="inactiveRoleRefill">
+                                Refilling Hopper
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Transition Phase Role</label>
+                        <input type="text" id="teleopTransitionRole">
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="counter">
+                            <span class="counter-label">Fouls</span>
+                            <button class="counter-btn" onclick="decrement('teleopFouls')">-</button>
+                            <span class="counter-value" id="teleopFouls">0</span>
+                            <button class="counter-btn" onclick="increment('teleopFouls')">+</button>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="counter">
+                            <span class="counter-label">Cycles</span>
+                            <button class="counter-btn" onclick="decrement('teleopCycles')">-</button>
+                            <span class="counter-value" id="teleopCycles">0</span>
+                            <button class="counter-btn" onclick="increment('teleopCycles')">+</button>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Collaboration (1-10)</label>
+                        <input type="number" id="teleopCollaboration" min="1" max="10">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Notes</label>
+                        <textarea id="teleopNotes"></textarea>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Endgame -->
+            <div id="endgame" class="tab-content">
+                <div class="section">
+                    <h2>Endgame</h2>
+                    
+                    <div class="form-group">
+                        <label>Climb Level</label>
+                        <select id="endgameClimbLevel">
+                            <option value="None">None</option>
+                            <option value="Level 1">Level 1</option>
+                            <option value="Level 2">Level 2</option>
+                            <option value="Level 3">Level 3</option>
+                            <option value="Failed">Failed</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Climb Speed</label>
+                        <select id="endgameClimbSpeed">
+                            <option value="N/A">N/A</option>
+                            <option value="Slow">Slow</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Fast">Fast</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="counter">
+                            <span class="counter-label">Fuel Scored</span>
+                            <button class="counter-btn" onclick="decrement('endgameFuelScored')">-</button>
+                            <span class="counter-value" id="endgameFuelScored">0</span>
+                            <button class="counter-btn" onclick="increment('endgameFuelScored')">+</button>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Notes</label>
+                        <textarea id="endgameNotes"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Extra Notes</label>
+                        <textarea id="extraNotes"></textarea>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Action Buttons -->
+            <div class="buttons">
+                <button onclick="resetForm()">Reset</button>
+                <button onclick="generateQR()">QR Code</button>
+            </div>
+        </div>
+        
+        <!-- QR Modal -->
+        <div id="qrModal" class="modal">
+            <div class="modal-content">
+                <h2>QR Code</h2>
+                <div id="qrcode"></div>
+                <button onclick="closeQRModal()">Close</button>
+            </div>
+        </div>
+    </div>
+    
+    <script></script>
+</body>
+</html>
