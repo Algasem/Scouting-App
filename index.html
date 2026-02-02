@@ -8,7 +8,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body>
-    <h1>FRC 7476 Scouting</h1> 
+    <h1>FRC 7476 Spongebotics Scouting</h1> 
     
     <div id = "mainTabs">
 
@@ -30,7 +30,7 @@
                 </div>
                 <div class="form-group">
                     <label>Alliance</label>
-                    <select id="pitClimbLevel">
+                    <select id="alliance">
                         <option value="">Select...</option>
                         <option value="Red 1">Red 1</option>
                         <option value="Red 2">Red 2</option>
@@ -57,13 +57,24 @@
                     
                     <div class="form-group">
                         <label>Climb Level</label>
-                        <select id="pitClimbLevel">
-                            <option value="">Select...</option>
-                            <option value="None">None</option>
-                            <option value="Level 1">Level 1</option>
-                            <option value="Level 2">Level 2</option>
-                            <option value="Level 3">Level 3</option>
-                        </select>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="lvl1">
+                                Level 1
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="lvl2">
+                                Level 2
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="lvl3">
+                                Level 3
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="none">
+                                None
+                            </label>
+                        </div>
                     </div>
                     
                     <div class="form-group">
@@ -119,7 +130,7 @@
                             </label>
                             <label class="checkbox-label">
                                 <input type="checkbox" id="pitAdjustable">
-                                Adjustable Scoring
+                                Adjustable Launcher for Scoring
                             </label>
                         </div>
                     </div>
@@ -129,7 +140,8 @@
                         <select id="pitHopperCapacity">
                             <option value="">Select...</option>
                             <option value="Fixed">Fixed</option>
-                            <option value="Extendable">Extendable</option>
+                            <option value="Extendable Horizontally">Extendable Horizontally</option>
+                            <option value ="Extendable Vertically">Extendable Vertically</option>
                             <option value="None">None</option>
                         </select>
                     </div>
@@ -199,6 +211,7 @@
                             <option value="Level 1">Level 1</option>
                             <option value="Level 2">Level 2</option>
                             <option value="Level 3">Level 3</option>
+                            <option value="Failed">Failed</option>
                         </select>
                     </div>
                     
@@ -406,6 +419,66 @@
         </div>
     </div>
     
-    <script></script>
+<script>
+ function switchTab(tabId) {
+    // 1) Hide all tab content panels
+    const panels = document.querySelectorAll('.tab-content');
+    panels.forEach(panel => panel.classList.remove('active'));
+
+    // 2) Remove active class from all tab buttons
+    const tabs = document.querySelectorAll('.tabs .tab');
+    tabs.forEach(tab => tab.classList.remove('active'));
+
+    // 3) Show the selected panel
+    const activePanel = document.getElementById(tabId);
+    if (activePanel) {
+      activePanel.classList.add('active');
+    }
+
+    // 4) Activate the clicked tab button (match by onclick attribute)
+    // This works with your current HTML (onclick="switchTab('pit')")
+    const activeTabButton = document.querySelector(`.tabs .tab[onclick="switchTab('${tabId}')"]`);
+    if (activeTabButton) {
+      activeTabButton.classList.add('active');
+    }
+  }
+
+   window.resetForm = function () {
+    // 1) Clear all inputs/selects/textareas
+    document.querySelectorAll('#mainInterface input, #mainInterface select, #mainInterface textarea')
+      .forEach(el => {
+        const tag = el.tagName.toLowerCase();
+        const type = (el.getAttribute('type') || '').toLowerCase();
+
+        if (tag === 'input') {
+          if (type === 'checkbox' || type === 'radio') {
+            el.checked = false;
+          } else {
+            el.value = '';
+          }
+        } else if (tag === 'select') {
+          el.selectedIndex = 0;
+        } else if (tag === 'textarea') {
+          el.value = '';
+        }
+      });
+
+    // 2) Reset all counter spans back to 0
+    document.querySelectorAll('#mainInterface .counter-value').forEach(span => {
+      span.textContent = '0';
+    });
+
+    // 3) Close QR modal + clear QR output (optional but usually desired)
+    const modal = document.getElementById('qrModal');
+    if (modal) modal.classList.remove('active');
+
+    const qr = document.getElementById('qrcode');
+    if (qr) qr.innerHTML = '';
+
+    // 4) Return to Pit tab (optional)
+    if (typeof switchTab === 'function') switchTab('pit');
+  };
+</script>
+
 </body>
 </html>

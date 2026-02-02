@@ -1,4 +1,18 @@
+:root{
+ 
+  --green: #0b7a3b;      
+  --green-dark: #075a2c; 
+  --yellow: #f3c932;     
+  --yellow-soft: #fff4bf;
 
+
+  --text: #102a1a;
+  --white: #ffffff;
+
+ 
+  --border: rgba(11,122,59,0.25); 
+  --radius: 12px;
+}
         * {
             margin: 0;
             padding: 0;
@@ -10,10 +24,13 @@
             padding: 20px;
             max-width: 800px;
             margin: 0 auto;
+            background-color: var(--yellow);
+            color: var(--text);
         }
         
         h1, h2 {
             margin-bottom: 20px;
+            color: var(--green);
         }
         
         .status {
@@ -29,15 +46,24 @@
         }
         
         .tab {
-            padding: 10px 20px;
-            border: 1px solid #000;
-            background: #fff;
+            padding: 10px 16px;
+            border: 2px solid var(--border);
+            border-radius: 999px;
+            background: #ffffff;
             cursor: pointer;
+            color: var(--green);
+            font-weight: 700;
         }
+
+        .tab:hover{
+        background: var(--yellow-soft);
+        border-color: rgba(11,122,59,0.4);
+}
         
         .tab.active {
-            background: #000;
+            background: var(--green);
             color: #fff;
+            border-color: var(--green);
         }
         
         .tab-content {
@@ -67,8 +93,9 @@
         textarea,
         select {
             width: 100%;
-            padding: 8px;
-            border: 1px solid #000;
+            padding: 10px;
+            border: 1px solid #d0d5dd;
+            border-radius: 12px;
         }
         
         textarea {
@@ -79,8 +106,10 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            border: 1px solid #000000;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
             padding: 10px;
+            background: var(--yellow-soft);
         }
         
         .counter-label {
@@ -88,11 +117,18 @@
         }
         
         .counter-btn {
-            padding: 5px 15px;
-            border: 1px solid #000;
-            background: #fff;
-            cursor: pointer;
-            font-size: 18px;
+              padding: 6px 14px;
+              border-radius: 10px;
+              border: 1px solid rgba(11,122,59,0.3);
+              background: white;
+              color: var(--green);
+              cursor: pointer;
+              font-size: 18px;
+              font-weight: 800;
+        }
+
+        .counter-btn:hover {
+            background: rgba(11,122,59,0.08);
         }
         
         .counter-value {
@@ -125,13 +161,41 @@
         
         button {
             padding: 10px 20px;
-            border: 1px solid #000;
+            border: 1px solid #d0d5dd;
             background: #fff;
             cursor: pointer;
+            border-radius: 12px;
         }
         
         button:hover {
             background: #f0f0f0;
+        }
+
+        .buttons button{
+        border: 2px solid var(--green);
+        border-radius: 999px;
+        font-weight: 800;
+        }
+
+
+        .buttons button:nth-child(1){
+        background: #ffffff;
+        color: var(--green);
+        }
+
+        .buttons button:nth-child(1):hover{
+        background: var(--yellow-soft);
+        }
+
+
+        .buttons button:nth-child(2){
+        background: #ffffff;
+        color: var(--green);
+        border-color: var(--green);
+        }
+
+        .buttons button:nth-child(2):hover{
+        background: var(--yellow-soft);
         }
         
         .modal {
@@ -155,21 +219,23 @@
             padding: 20px;
             max-width: 500px;
             width: 90%;
+            text-align: center;
         }
         
-        #qrcode {
-            margin: 20px 0;
-            text-align: center;
+        #qrcode{
+            background: #ffffff;
+            padding: 12px;
+            border-radius: 12px;
         }
         
         .alert {
             padding: 10px;
             margin-bottom: 10px;
-            border: 1px solid #000;
+            border: 1px solid #d0d5dd;
         }
         
         .config {
-            border: 1px solid #000;
+            border: 1px solid #d0d5dd;
             padding: 20px;
             margin-bottom: 20px;
         }
