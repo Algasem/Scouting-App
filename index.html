@@ -642,7 +642,10 @@
 
         function decrement(buttonID){
             const value = document.getElementById(buttonID);
-            value.textContent = parseInt(value.textContent) - 1; 
+
+            if(value.textContent > 0){
+                value.textContent = parseInt(value.textContent) - 1; 
+            }
         }
 
         // const APP = { 
