@@ -634,6 +634,48 @@
             event.target.classList.add('active');
             document.getElementById(tabName).classList.add('active');
         }
+
+        function increment(buttonID){ 
+            const value = document.getElementById(buttonID);
+            value.textContent = parseInt(value.textContent) + 1;        
+        }  
+
+        function decrement(buttonID){
+            const value = document.getElementById(buttonID);
+            value.textContent = parseInt(value.textContent) - 1; 
+        }
+
+        // const APP = { 
+        //     data: [],
+        //     init() {
+        //         APP.addListeners()
+        //     }
+        //     addListeners() {
+        //         const form = document.querySelector();
+        //         form.addEventListener();
+        //     }
+        // }
+
+        function saveMatch(){
+
+        }
+
+        // function resetForm(){
+            
+        //     document.querySelectorAll('.counter-value').forEach(counter => {
+        //         counter.textContent = '0';
+        //     })
+
+            
+        // }
+
+        function exportAllCSV(){
+
+        }
+
+        function clearHistory(){
+
+        }
     </script>
 </body>
 </html>
