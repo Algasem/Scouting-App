@@ -194,17 +194,22 @@
                 <div class="form-group">
                     <div class="counter">
                         <span class="counter-label">Fuel Scored</span>
+                        <button class="counter-btn" onclick="decrement5('autoFuelScored')">-5</button>
                         <button class="counter-btn" onclick="decrement('autoFuelScored')">-</button>
                         <span class="counter-value" id="autoFuelScored">0</span>
                         <button class="counter-btn" onclick="increment('autoFuelScored')">+</button>
+                        <button class="counter-btn" onclick="increment5('autoFuelScored')">+5</button>
+
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="counter">
                         <span class="counter-label">Fuel Missed</span>
+                        <button class="counter-btn" onclick="decrement5('autoFuelMissed')">-5</button>
                         <button class="counter-btn" onclick="decrement('autoFuelMissed')">-</button>
                         <span class="counter-value" id="autoFuelMissed">0</span>
                         <button class="counter-btn" onclick="increment('autoFuelMissed')">+</button>
+                        <button class="counter-btn" onclick="increment5('autoFuelMissed')">+5</button>
                     </div>
                 </div>
                 
@@ -230,18 +235,22 @@
                 <div class="form-group">
                     <div class="counter">
                         <span class="counter-label">Fuel Scored</span>
+                        <button class="counter-btn" onclick="decrement5('teleopFuelScored')">-5</button>
                         <button class="counter-btn" onclick="decrement('teleopFuelScored')">-</button>
                         <span class="counter-value" id="teleopFuelScored">0</span>
                         <button class="counter-btn" onclick="increment('teleopFuelScored')">+</button>
+                        <button class="counter-btn" onclick="increment5('teleopFuelScored')">+5</button>
                     </div>
                 </div>
                 
                 <div class="form-group">
                     <div class="counter">
                         <span class="counter-label">Fuel Missed</span>
+                        <button class="counter-btn" onclick="decrement5('teleopFuelMissed')">-5</button>
                         <button class="counter-btn" onclick="decrement('teleopFuelMissed')">-</button>
                         <span class="counter-value" id="teleopFuelMissed">0</span>
                         <button class="counter-btn" onclick="increment('teleopFuelMissed')">+</button>
+                        <button class="counter-btn" onclick="increment5('teleopFuelMissed')">+5</button>
                     </div>
                 </div>
                 
@@ -358,17 +367,21 @@
                 <div class="form-group">
                     <div class="counter">
                         <span class="counter-label">Fuel Scored</span>
+                        <button class="counter-btn" onclick="decrement5('endgameFuelScored')">-5</button>
                         <button class="counter-btn" onclick="decrement('endgameFuelScored')">-</button>
                         <span class="counter-value" id="endgameFuelScored">0</span>
                         <button class="counter-btn" onclick="increment('endgameFuelScored')">+</button>
+                        <button class="counter-btn" onclick="increment5('endgameFuelScored')">+5</button>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="counter">
                         <span class="counter-label">Fuel Missed</span>
+                        <button class="counter-btn" onclick="decrement5('endgameFuelMissed')">-5</button>
                         <button class="counter-btn" onclick="decrement('endgameFuelMissed')">-</button>
                         <span class="counter-value" id="endgameFuelMissed">0</span>
                         <button class="counter-btn" onclick="increment('endgameFuelMissed')">+</button>
+                        <button class="counter-btn" onclick="increment5('endgameFuelMissed')">+5</button>
                     </div>
                 </div>
                 
@@ -462,6 +475,22 @@
 
             if(value.textContent > 0){
                 value.textContent = parseInt(value.textContent) - 1; 
+            }
+        }
+
+        function increment5(buttonID) {
+            const value = document.getElementById(buttonID);
+            value.textContent = parseInt(value.textContent) + 5;
+        }
+
+        function decrement5(buttonID) {
+            const value = document.getElementById(buttonID);
+
+            if(value.textContent - 5 >= 0) {
+                value.textContent = parseInt(value.textContent) -5;
+            }
+            else{
+                value.textContent = parseInt('0');
             }
         }
 
