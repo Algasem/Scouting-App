@@ -398,6 +398,14 @@
                         <button class="counter-btn" onclick="increment('autoFuelScored')">+</button>
                     </div>
                 </div>
+                <div class="form-group">
+                    <div class="counter">
+                        <span class="counter-label">Fuel Missed</span>
+                        <button class="counter-btn" onclick="decrement('autoFuelMissed')">-</button>
+                        <span class="counter-value" id="autoFuelMissed">0</span>
+                        <button class="counter-btn" onclick="increment('autoFuelMissed')">+</button>
+                    </div>
+                </div>
                 
                 <div class="form-group">
                     <label class="checkbox-label">
@@ -554,6 +562,14 @@
                         <button class="counter-btn" onclick="increment('endgameFuelScored')">+</button>
                     </div>
                 </div>
+                <div class="form-group">
+                    <div class="counter">
+                        <span class="counter-label">Fuel Missed</span>
+                        <button class="counter-btn" onclick="decrement('endgameFuelMissed')">-</button>
+                        <span class="counter-value" id="endgameFuelMissed">0</span>
+                        <button class="counter-btn" onclick="increment('endgameFuelMissed')">+</button>
+                    </div>
+                </div>
                 
                 <div class="form-group">
                     <label>Notes</label>
@@ -640,7 +656,7 @@
             value.textContent = parseInt(value.textContent) + 1;        
         }  
 
-        function decrement(buttonID){
+        function decrement(buttonID){ 
             const value = document.getElementById(buttonID);
 
             if(value.textContent > 0){
@@ -663,14 +679,47 @@
 
         }
 
-        // function resetForm(){
+        function resetForm(){
             
-        //     document.querySelectorAll('.counter-value').forEach(counter => {
-        //         counter.textContent = '0';
-        //     })
+            // Reset all +- buttons
+            const arrayOfButtons = [];
+
+            arrayOfButtons[0] = document.getElementById('endgameFuelScored');
+            arrayOfButtons[1] = document.getElementById('endgameFuelMissed');
+            arrayOfButtons[2] = document.getElementById('teleopFuelMissed');
+            arrayOfButtons[3] = document.getElementById('teleopFuelScored');
+            arrayOfButtons[4] = document.getElementById('autoFuelMissed');
+            arrayOfButtons[5] = document.getElementById('autoFuelScored');
+            arrayOfButtons[6] = document.getElementById('teleopFouls');
+            arrayOfButtons[7] = document.getElementById('teleopCycles');
+
+            for(let i = 0; i < arrayOfButtons.length; i++){
+                arrayOfButtons[i].textContent = '0';
+            }
+
+            // Reset all checkboxes
+            const allCheckboxes = document.querySelectorAll('input[type="checkbox"]');
+    
+            allCheckboxes.forEach(checkbox => {
+                checkbox.checked = false;
+            })
+
+            // Reset all text fields
+            const allText = document.querySelectorAll('input[type="text"], input[type="number"], textarea');
+    
+            allText.forEach(text => {
+                text.value = '';
+            })
+
+            // Reset all drop down menu's
+            var allDropdowns = document.getElementsByTagName('select');
+            
+            for (var i = 0; i < allDropdowns.length; i++){
+                allDropdowns[i].selectedIndex = 0;
+            }
 
             
-        // }
+        }
 
         function exportAllCSV(){
 
@@ -679,6 +728,7 @@
         function clearHistory(){
 
         }
+
     </script>
 </body>
 </html>
