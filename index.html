@@ -546,9 +546,95 @@
             
             for (var i = 0; i < allDropdowns.length; i++){
                 allDropdowns[i].selectedIndex = 0;
-            }
+            }            
+        }
 
-            
+        function collectData(){
+
+            const data = {
+                timestamp: new Date().toISOString(),
+
+                // Match info
+                matchNumber: document.getElementById('matchNumber').value,
+                teamNumber: document.getElementById('teamNumber').value,
+                scoutName: document.getElementById('scoutName').value,
+
+                pit: {
+                    climbLevel: document.getElementById('pitClimbLevel').value,
+                    heightInches: document.getElementById('pitHeight').value,
+                    weightLbs: document.getElementById('pitWeight').value,
+                    intakeType: document.getElementById('pitIntake').value,
+                    driveMechanism: document.getElementById('pitDriveMechanism').value,
+                    strategy: document.getElementById('pitStrategy').value,
+
+                    features: {
+                        vision: document.getElementById('pitVision').checked,
+                        adjustableScoring: document.getElementById('pitAdjustable').checked
+                    },
+
+                    hopperCapacity: document.getElementById('pitHopperCapacity').value,
+                    driveExperience: document.getElementById('pitDriveExperience').value,
+                    estimatedCycles: document.getElementById('pitEstimatedCycles').value,
+                    conversionPercent: document.getElementById('pitConversionPercent').value,
+                    launchRate: document.getElementById('pitLaunchRate').value,
+                    buildQuality: document.getElementById('pitDurability').value,
+                    outsidePerimeter: document.getElementById('pitOutsidePerimeter').value,
+                    breakdowns: document.getElementById('pitBreakdowns').value,
+                    humanPlayerNotes: document.getElementById('pitHumanPlayer').value,
+                    notes: document.getElementById('pitNotes').value
+                },
+
+                auto: {
+                    climbLevel: document.getElementById('autoClimbLevel').value,
+                    climbSpeed: document.getElementById('autoClimbSpeed').value,
+
+                    fuelScored: parseInt(document.getElementById('autoFuelScored').textContent),
+                    fuelMissed: parseInt(document.getElementById('autoFuelMissed').textContent),
+
+                    ballsCollectedToOurSide: document.getElementById('autoBallsCollected').checked,
+                    notes: document.getElementById('autoNotes').value
+                },
+
+                teleop: {
+                    fuelScored: parseInt(document.getElementById('teleopFuelScored').textContent),
+                    fuelMissed: parseInt(document.getElementById('teleopFuelMissed').textContent),
+
+                    traversalTimeSec: document.getElementById('teleopTraversalTime').value,
+
+                    activeRole: {
+                        funnel: document.getElementById('activeRoleFunnel').checked,
+                        scoring: document.getElementById('activeRoleScoring').checked,
+                        feedHumanStation: document.getElementById('activeRoleFeed').checked
+                    },
+
+                    inactiveRole: {
+                        limitingBalls: document.getElementById('inactiveRoleLimit').checked,
+                        funnel: document.getElementById('inactiveRoleFunnel').checked,
+                        feedHumanStation: document.getElementById('inactiveRoleFeed').checked,
+                        blocking: document.getElementById('inactiveRoleBlock').checked,
+                        refillHopper: document.getElementById('inactiveRoleRefill').checked
+                    },
+
+                    transitionRole: document.getElementById('teleopTransitionRole').value,
+
+                    fouls: parseInt(document.getElementById('teleopFouls').textContent),
+                    cycles: parseInt(document.getElementById('teleopCycles').textContent),
+
+                    collaborationScore: document.getElementById('teleopCollaboration').value,
+                    notes: document.getElementById('teleopNotes').value
+                },
+
+                endgame: {
+                    climbLevel: document.getElementById('endgameClimbLevel').value,
+                    climbSpeed: document.getElementById('endgameClimbSpeed').value,
+
+                    fuelScored: parseInt(document.getElementById('endgameFuelScored').textContent),
+                    fuelMissed: parseInt(document.getElementById('endgameFuelMissed').textContent),
+
+                    notes: document.getElementById('endgameNotes').value,
+                    extraNotes: document.getElementById('extraNotes').value
+                }
+            }
         }
 
         function exportAllCSV(){
