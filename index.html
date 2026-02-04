@@ -258,6 +258,24 @@
                     <label>Traversal Time (sec)</label>
                     <input type="number" id="teleopTraversalTime" step="0.1">
                 </div>
+
+                <div class="form-group">
+                    <label>Traversal</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="radio" name = "traversal" id="Bump" value="yes">
+                            Bump
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="radio" name = "traversal" id="Trench" value="no">
+                            Trench
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="radio" name = "traversal" id="Both" value = "both">
+                            Both
+                        </label>
+                    </div>
+                </div>
                 
                 <div class="form-group">
                     <label>Active Phase Role</label>
@@ -382,6 +400,20 @@
                         <span class="counter-value" id="endgameFuelMissed">0</span>
                         <button class="counter-btn" onclick="increment('endgameFuelMissed')">+</button>
                         <button class="counter-btn" onclick="increment5('endgameFuelMissed')">+5</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Disconnect?</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="radio" name = "disconnect" id="disconnectYes" value="yes">
+                            Yes
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="radio" name = "disconnect" id="disconnectNo" value="no">
+                            No
+                        </label>
                     </div>
                 </div>
                 
