@@ -2,9 +2,10 @@
  
   --green: #0b7a3b;      
   --green-dark: #075a2c; 
-  --yellow: #f3c932;     
+  --yellow: #dab016;     
+  --yellow2: #f0c631;     
   --yellow-soft: #fff4bf;
-
+  --yellow-dark: #f6e58f;
 
   --text: #102a1a;
   --white: #ffffff;
@@ -58,7 +59,7 @@
         .tab:hover{
         background: var(--yellow-soft);
         border-color: rgba(11,122,59,0.4);
-}
+        }
         
         .tab.active {
             background: var(--green);
@@ -74,8 +75,13 @@
             display: block;
         }
         
+        
         .section {
-            margin-bottom: 30px;
+            background: var(--yellow2);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
         }
         
         .form-group {
@@ -106,7 +112,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            border: 1px solid var(--border);
+            border: 1px solid var(--green-dark);
             border-radius: var(--radius);
             padding: 10px;
             background: var(--yellow-soft);
