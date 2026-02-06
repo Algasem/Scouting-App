@@ -39,7 +39,7 @@ function decrement(buttonID){
     const value = document.getElementById(buttonID);
 
     if(value.textContent > 0){
-        value.textContent = parseInt(value.textContent) - 1; 
+        value.textContent = parseInt(value.textContent) -1;
     }
 }
 
