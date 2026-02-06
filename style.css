@@ -5,6 +5,7 @@
   --border: #dab016; 
   --radius: 12px;
   --black: #000000;
+  --green: #156B3A;
   --white: #ffffff
 }
         * {
@@ -32,6 +33,7 @@
             margin-bottom: 20px;
             border: 1px solid #ccc;
         }
+
         
         .tabs {
             display: flex;
@@ -56,6 +58,7 @@
         .tab.active {
             background: var(--black);
             color: #fff;
+            border-color: var(--white);
             border-color: var(--white);
         }
         
@@ -139,20 +142,23 @@
             text-align: center;
         }
         
-        .checkbox-group {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
+        .checkbox-label input[type="radio"], .checkbox-label input[type="checkbox"] {
+            display: none;
         }
-        
+
         .checkbox-label {
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            display: inline-block;
+            padding: 10px;
+            border: 2px solid var(--yellow);
+            border-radius: 10px;
+            background: #fff;
+            color: #000000;
+            transition: background 0.2s, color 0.2s;
         }
-        
-        .checkbox-label input {
-            width: auto;
+
+        .checkbox-label:has(input:checked) {
+            background: var(--green);
+            color: #000000;
         }
         
         .buttons {
@@ -174,29 +180,31 @@
         }
 
         .buttons button{
-        border: 2px solid;
-        border-radius: 999px;
-        font-weight: 800;
+            border: 2px solid;
+            border-radius: 999px;
+            font-weight: 800;
         }
 
 
         .buttons button:nth-child(1){
-        background: #ffffff;
-        color: var(--green);
+            background: #ffffff;
+            border-color: var(--green);
+            border-width: 5px;
         }
 
         .buttons button:nth-child(1):hover{
-        background: var(--yellow-soft);
+            background: var(--yellow-soft);
         }
 
 
         .buttons button:nth-child(2){
-        background: #ffffff;
-        border-color: var(--white);
+            background: #ffffff;
+            border-color: var(--green);
+            border-width: 5px;
         }
 
         .buttons button:nth-child(2):hover{
-        background: var(--yellow-soft);
+            background: var(--yellow-soft);
         }
 
         .sections:first-of-type {

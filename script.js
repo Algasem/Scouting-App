@@ -112,8 +112,24 @@ function resetForm(){
     }            
 }
 
-function saveMatch(){
-    
+// Returns a csv from an array of objects with
+// values separated by tabs and rows separated by newlines
+function saveMatch() {
+
+    const array = collectData();
+
+    // Use first element to choose the keys and the order
+    var keys = Object.keys(array[0]);
+
+    // Build header
+    var result = keys.join("\t") + "\n";
+
+    // Add the rows
+    array.forEach(function(obj){
+        result += keys.map(k => obj[k]).join("\t") + "\n";
+    });
+
+    return result;
 }
 
 function collectData(){
