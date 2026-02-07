@@ -61,17 +61,6 @@ function decrement5(buttonID) {
     }
 }
 
-// const APP = { 
-//     data: [],
-//     init() {
-//         APP.addListeners()
-//     }
-//     addListeners() {
-//         const form = document.querySelector();
-//         form.addEventListener();
-//     }
-// }
-
 function resetForm(){
     
     // Reset all +- buttons
@@ -118,9 +107,10 @@ function resetForm(){
     }            
 }
 
-function generateCSV(){
-    const data = collectData();
+function generateMatchCSV(){
+    const data = collectMatchData();
 
+    // TELEOP ACTIVE
     const teleopActiveRoleArr = [
         data.teleop.activeRole.funnel ? "Funnel" : null,
         data.teleop.activeRole.scoring ? "Scoring" : null,
@@ -140,6 +130,7 @@ function generateCSV(){
         teleopActiveRole = teleopActiveRole.slice(0, -1);
     }
     
+    // TELEOP INACTIVE
     const teleopInactiveRoleArr = [
         data.teleop.inactiveRole.limitingBalls ? "Limiting Balls" : null,
         data.teleop.inactiveRole.funnel ? "Funnel" : null,
@@ -160,6 +151,29 @@ function generateCSV(){
     if(teleopInactiveRole.endsWith(",")){
         teleopActiveRole = teleopActiveRole.slice(0, -1);
     }
+    
+    // TELEOP TRANSITION
+    const teleopTransitionRoleArr = [
+        data.teleop.transitionRole.limitingBalls ? "Limiting Balls" : null,
+        data.teleop.transitionRole.scoring ? "Scoring" : null,
+        data.teleop.transitionRole.feedHumanStation ? "Feed Human Station" : null,
+        data.teleop.transitionRole.blocking ? "Blocking" : null,
+        data.teleop.transitionRole.funnel ? "Funnel" : null,
+        data.teleop.transitionRole.refillHopper ? "Refill Hopper" : null
+    ];
+
+    let teleopTransitionRole = "";
+    
+    for(let i = 0; i < teleopTransitionRoleArr.length; i++){
+        if(teleopTransitionRoleArr[i] != null){
+            teleopTransitionRole += teleopTransitionRoleArr[i] + ",";
+        }
+    }
+
+    // Remove trailing comma if it exists
+    if(teleopTransitionRole.endsWith(",")){
+        teleopTransitionRole = teleopTransitionRole.slice(0, -1);
+    }
 
     const values = [
 
@@ -169,53 +183,32 @@ function generateCSV(){
         data.teamNumber,
         data.scoutName,
 
-        // Pit Scouting
-        data.pit.climbLevel,
-        data.pit.heightInches,
-        data.pit.weightLbs,
-        data.pit.intakeType,
-        data.pit.driveMechanism,
-        data.pit.strategy,
-        data.pit.features.vision,
-        data.pit.features.adjustableScoring,
-        data.pit.hopperCapacity,
-        data.pit.driveExperience,
-        data.pit.estimatedCycles,
-        data.pit.conversionPercent,
-        data.pit.launchRate,
-        data.pit.buildQuality,
-        data.pit.outsidePerimeter,
-        data.pit.breakdowns,
-        data.pit.humanPlayerNotes,
-        data.pit.notes,
-
         // Auto Scouting
         data.auto.climbLevel,
         data.auto.climbSpeed,
         data.auto.fuelScored,
         data.auto.fuelMissed,
         data.auto.ballsCollectedToOurSide,
-        data.auto.notes,
 
         // Teleop Scouting
         data.teleop.fuelScored,
         data.teleop.fuelMissed,
         data.teleop.traversalTimeSec,
+        //traversal
         teleopActiveRole,
         teleopInactiveRole,
-        data.teleop.transitionRole,
+        teleopTransitionRole,
         data.teleop.fouls,
         data.teleop.cycles,
         data.teleop.collaborationScore,
-        data.teleop.notes,
 
         // Endgame Scouting
         data.endgame.climbLevel,
         data.endgame.climbSpeed,
         data.endgame.fuelScored,
         data.endgame.fuelMissed,
+        //disconnect
         data.endgame.notes,
-        data.endgame.extraNotes
     ]
 
     for(let i = 0; i < values.length; i++){
@@ -225,7 +218,73 @@ function generateCSV(){
     return values.join(',');
 }
 
-function collectData(){
+function generatePitCSV(){
+    const pitData = collectPitData();
+    
+    const featuresArr = [
+        pitData.features.vision ? "Vision" : null,
+        pitData.features.adjustableScoring ? "Adjustable Scoring" : null
+    ];
+    
+    let features = "";
+    
+    for(let i = 0; i < featuresArr.length; i++){
+        if(featuresArr[i] != null){
+            features += featuresArr[i] + ",";
+        }
+    }
+
+    // Remove trailing comma if it exists
+    if(teleopInactiveRole.endsWith(",")){
+        teleopActiveRole = teleopActiveRole.slice(0, -1);
+    }
+
+    const intakeTypeArr = [
+        pitData.intakeType.overTheBumper ? "Over The Bumper" : null,
+        pitData.intakeType.inPerimeter ? "In Perimeter" : null,
+        pitData.intakeType.stationIntake ? "Station Intake" : null
+    ];
+    
+    let intakeType = "";
+    
+    for(let i = 0; i < intakeTypeArr.length; i++){
+        if(intakeTypeArr[i] != null){
+            intakeType += intakeTypeArr[i] + ",";
+        }
+    }
+
+    // Remove trailing comma if it exists
+    if(intakeType.endsWith(",")){
+        intakeType = intakeType.slice(0, -1);
+    }
+
+    const values = [
+        // Pit Scouting
+        data.pit.climbLevel,
+        data.pit.heightInches,
+        data.pit.weightLbs,
+        intakeType,
+        data.pit.driveMechanism,
+        data.pit.strategy,
+        features,
+        data.pit.hopperType,
+        data.pit.hopperCapacity,
+        data.pit.driveExperience,
+        data.pit.estimatedCycles,
+        data.pit.buildQuality,
+        data.pit.outsidePerimeter,
+        data.pit.breakdowns,
+        data.pit.notes,
+    ]
+
+    for(let i = 0; i < values.length; i++){
+        values[i] = '"' + values[i] + '"';
+    }
+
+    return values.join(',');
+}
+
+function collectMatchData(){
 
     const data = {
         timestamp: new Date().toISOString(),
@@ -235,31 +294,6 @@ function collectData(){
         teamNumber: document.getElementById('teamNumber').value,
         scoutName: document.getElementById('scoutName').value,
 
-        pit: {
-            climbLevel: document.getElementById('pitClimbLevel').value,
-            heightInches: document.getElementById('pitHeight').value,
-            weightLbs: document.getElementById('pitWeight').value,
-            intakeType: document.getElementById('pitIntake').value,
-            driveMechanism: document.getElementById('pitDriveMechanism').value,
-            strategy: document.getElementById('pitStrategy').value,
-
-            features: {
-                vision: document.getElementById('pitVision').checked,
-                adjustableScoring: document.getElementById('pitAdjustable').checked
-            },
-
-            hopperCapacity: document.getElementById('pitHopperCapacity').value,
-            driveExperience: document.getElementById('pitDriveExperience').value,
-            estimatedCycles: document.getElementById('pitEstimatedCycles').value,
-            conversionPercent: document.getElementById('pitConversionPercent').value,
-            launchRate: document.getElementById('pitLaunchRate').value,
-            buildQuality: document.getElementById('pitDurability').value,
-            outsidePerimeter: document.getElementById('pitOutsidePerimeter').value,
-            breakdowns: document.getElementById('pitBreakdowns').value,
-            humanPlayerNotes: document.getElementById('pitHumanPlayer').value,
-            notes: document.getElementById('pitNotes').value
-        },
-
         auto: {
             climbLevel: document.getElementById('autoClimbLevel').value,
             climbSpeed: document.getElementById('autoClimbSpeed').value,
@@ -268,7 +302,6 @@ function collectData(){
             fuelMissed: parseInt(document.getElementById('autoFuelMissed').textContent),
 
             ballsCollectedToOurSide: document.getElementById('autoBallsCollected').checked,
-            notes: document.getElementById('autoNotes').value
         },
 
         teleop: {
@@ -276,7 +309,7 @@ function collectData(){
             fuelMissed: parseInt(document.getElementById('teleopFuelMissed').textContent),
 
             traversalTimeSec: document.getElementById('teleopTraversalTime').value,
-
+            //add traversal type
             activeRole: {
                 funnel: document.getElementById('activeRoleFunnel').checked,
                 scoring: document.getElementById('activeRoleScoring').checked,
@@ -291,13 +324,19 @@ function collectData(){
                 refillHopper: document.getElementById('inactiveRoleRefill').checked
             },
 
-            transitionRole: document.getElementById('teleopTransitionRole').value,
+            transitionRole: {
+                limitingBalls: document.getElementById('transitionRoleLimit').checked,
+                scoring: document.getElementById('transitionRoleScoring').checked,
+                feedHumanStation: document.getElementById('transitionRoleFeed').checked,
+                blocking: document.getElementById('transitionRoleBlock').checked,
+                funnel: document.getElementById('transitionRoleFunnel').checked,
+                refillHopper: document.getElementById('transitionRoleRefill').checked
+            },
 
             fouls: parseInt(document.getElementById('teleopFouls').textContent),
             cycles: parseInt(document.getElementById('teleopCycles').textContent),
 
             collaborationScore: document.getElementById('teleopCollaboration').value,
-            notes: document.getElementById('teleopNotes').value
         },
 
         endgame: {
@@ -306,12 +345,42 @@ function collectData(){
 
             fuelScored: parseInt(document.getElementById('endgameFuelScored').textContent),
             fuelMissed: parseInt(document.getElementById('endgameFuelMissed').textContent),
-
+            
+            //disconnect
             notes: document.getElementById('endgameNotes').value,
-            extraNotes: document.getElementById('extraNotes').value
         }
     }
     return data;
+}
+
+function collectPitData(){
+    const pitData = {
+        climbLevel: document.getElementById('pitClimbLevel').value,
+        heightInches: document.getElementById('pitHeight').value,
+        weightLbs: document.getElementById('pitWeight').value,
+        intakeType: {
+            overTheBumper: document.getElementById('otbIntake').checked,
+            inPerimeter: document.getElementById('perimeterIntake').checked,
+            stationIntake: document.getElementById('stationIntake').checked
+        },
+        driveMechanism: document.getElementById('pitDriveMechanism').value,
+        strategy: document.getElementById('pitStrategy').value,
+
+        features: {
+            vision: document.getElementById('pitVision').checked,
+            adjustableScoring: document.getElementById('pitAdjustable').checked
+        },
+        hopperType: document.getElementById('pitHopperType').value,
+        hopperCapacity: document.getElementById('pitHopperCapacity').value,
+        driveExperience: document.getElementById('pitDriveExperience').value,
+        estimatedCycles: document.getElementById('pitEstimatedCycles').value,
+        buildQuality: document.getElementById('pitDurability').value,
+        outsidePerimeter: document.getElementById('pitOutsidePerimeter').value, //might need change
+        breakdowns: document.getElementById('pitBreakdowns').value,
+        notes: document.getElementById('pitNotes').value
+    }
+
+    return pitData;
 }
 
 function downloadCSV(csvContent, filename) {
@@ -329,9 +398,12 @@ function downloadCSV(csvContent, filename) {
 }
 
 function saveMatch(){
-    downloadCSV(generateCSV(), new Date().toISOString() + ".csv");
+    downloadCSV(generateMatchCSV(), new Date().toISOString() + ".csv");
 }
 
+function savePit(){
+    downloadCSV(generatePitCSV, new Date().toISOString() + ".csv");
+}
 
 function exportAllCSV(){
 
