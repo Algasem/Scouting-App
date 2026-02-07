@@ -97,6 +97,12 @@ function resetForm(){
         checkbox.checked = false;
     })
 
+    const allRadios = document.querySelectorAll('input[type="radio"]');
+
+    allRadios.forEach(option => {
+        option.checked = false;
+    })
+
     // Reset all text fields
     const allText = document.querySelectorAll('input[type="text"], input[type="number"], textarea');
 
