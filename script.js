@@ -118,24 +118,111 @@ function resetForm(){
     }            
 }
 
-// Returns a csv from an array of objects with
-// values separated by tabs and rows separated by newlines
-function saveMatch() {
+function generateCSV(){
+    const data = collectData();
 
-    const array = collectData();
+    const teleopActiveRoleArr = [
+        data.teleop.activeRole.funnel ? "Funnel" : null,
+        data.teleop.activeRole.scoring ? "Scoring" : null,
+        data.teleop.activeRole.feedHumanStation ? "Feed Human Station" : null
+    ];
+    
+    let teleopActiveRole = "";
+    
+    for(let i = 0; i < teleopActiveRoleArr.length; i++){
+        if(teleopActiveRoleArr[i] != null){
+            teleopActiveRole += teleopActiveRoleArr[i] + ",";
+        }
+    }
 
-    // Use first element to choose the keys and the order
-    var keys = Object.keys(array[0]);
+    // Remove trailing comma if it exists
+    if(teleopActiveRole.endsWith(",")){
+        teleopActiveRole = teleopActiveRole.slice(0, -1);
+    }
+    
+    const teleopInactiveRoleArr = [
+        data.teleop.inactiveRole.limitingBalls ? "Limiting Balls" : null,
+        data.teleop.inactiveRole.funnel ? "Funnel" : null,
+        data.teleop.inactiveRole.feedHumanStation ? "Feed Human Station" : null,
+        data.teleop.inactiveRole.blocking ? "Blocking" : null,
+        data.teleop.inactiveRole.refillHopper ? "Refill Hopper" : null
+    ];
 
-    // Build header
-    var result = keys.join("\t") + "\n";
+    let teleopInactiveRole = "";
+    
+    for(let i = 0; i < teleopInactiveRoleArr.length; i++){
+        if(teleopInactiveRoleArr[i] != null){
+            teleopInactiveRole += teleopInactiveRoleArr[i] + ",";
+        }
+    }
 
-    // Add the rows
-    array.forEach(function(obj){
-        result += keys.map(k => obj[k]).join("\t") + "\n";
-    });
+    // Remove trailing comma if it exists
+    if(teleopInactiveRole.endsWith(",")){
+        teleopActiveRole = teleopActiveRole.slice(0, -1);
+    }
 
-    return result;
+    const values = [
+
+        // General  
+        data.timestamp,
+        data.matchNumber,
+        data.teamNumber,
+        data.scoutName,
+
+        // Pit Scouting
+        data.pit.climbLevel,
+        data.pit.heightInches,
+        data.pit.weightLbs,
+        data.pit.intakeType,
+        data.pit.driveMechanism,
+        data.pit.strategy,
+        data.pit.features.vision,
+        data.pit.features.adjustableScoring,
+        data.pit.hopperCapacity,
+        data.pit.driveExperience,
+        data.pit.estimatedCycles,
+        data.pit.conversionPercent,
+        data.pit.launchRate,
+        data.pit.buildQuality,
+        data.pit.outsidePerimeter,
+        data.pit.breakdowns,
+        data.pit.humanPlayerNotes,
+        data.pit.notes,
+
+        // Auto Scouting
+        data.auto.climbLevel,
+        data.auto.climbSpeed,
+        data.auto.fuelScored,
+        data.auto.fuelMissed,
+        data.auto.ballsCollectedToOurSide,
+        data.auto.notes,
+
+        // Teleop Scouting
+        data.teleop.fuelScored,
+        data.teleop.fuelMissed,
+        data.teleop.traversalTimeSec,
+        teleopActiveRole,
+        teleopInactiveRole,
+        data.teleop.transitionRole,
+        data.teleop.fouls,
+        data.teleop.cycles,
+        data.teleop.collaborationScore,
+        data.teleop.notes,
+
+        // Endgame Scouting
+        data.endgame.climbLevel,
+        data.endgame.climbSpeed,
+        data.endgame.fuelScored,
+        data.endgame.fuelMissed,
+        data.endgame.notes,
+        data.endgame.extraNotes
+    ]
+
+    for(let i = 0; i < values.length; i++){
+        values[i] = '"' + values[i] + '"';
+    }
+
+    return values.join(',');
 }
 
 function collectData(){
@@ -224,7 +311,27 @@ function collectData(){
             extraNotes: document.getElementById('extraNotes').value
         }
     }
+    return data;
 }
+
+function downloadCSV(csvContent, filename) {
+    const blob = new Blob(["\uFEFF", csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    link.click();
+
+    // Clean up
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+}
+
+function saveMatch(){
+    downloadCSV(generateCSV(), new Date().toISOString() + ".csv");
+}
+
 
 function exportAllCSV(){
 
