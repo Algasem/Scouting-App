@@ -178,7 +178,7 @@ function generateMatchCSV(){
 
     // Remove trailing comma if it exists
     if(teleopInactiveRole.endsWith(",")){
-        teleopActiveRole = teleopActiveRole.slice(0, -1);
+        teleopInactiveRole = teleopInactiveRole.slice(0, -1);
     }
     
     // TELEOP TRANSITION
@@ -204,6 +204,17 @@ function generateMatchCSV(){
         teleopTransitionRole = teleopTransitionRole.slice(0, -1);
     }
 
+    let traversalType = "";
+    if(data.teleop.bumpTraversal){
+        traversalType += "Bump,";
+    }
+    else if(data.teleop.trenchTraversal){
+        traversalType += "Trench";
+    }
+    else if(data.teleop.bothTraversal){
+        traversalType += "Both";
+    }
+
     const values = [
 
         // General  
@@ -223,7 +234,7 @@ function generateMatchCSV(){
         data.teleop.fuelScored,
         data.teleop.fuelMissed,
         data.teleop.traversalTimeSec,
-        //traversal
+        traversalType,
         teleopActiveRole,
         teleopInactiveRole,
         teleopTransitionRole,
@@ -236,7 +247,7 @@ function generateMatchCSV(){
         data.endgame.climbSpeed,
         data.endgame.fuelScored,
         data.endgame.fuelMissed,
-        //disconnect
+        data.endgame.disconnect,
         data.endgame.notes,
     ]
 
@@ -338,7 +349,11 @@ function collectMatchData(){
             fuelMissed: parseInt(document.getElementById('teleopFuelMissed').textContent),
 
             traversalTimeSec: document.getElementById('teleopTraversalTime').value,
-            //add traversal type
+
+            bumpTraversal: document.getElementById('Bump').checked ? "Yes" : "No",
+            trenchTraversal: document.getElementById('Trench').checked ? "Yes" : "No",
+            bothTraversal: document.getElementById('Both').checked ? "Yes" : "No",
+
             activeRole: {
                 funnel: document.getElementById('activeRoleFunnel').checked,
                 scoring: document.getElementById('activeRoleScoring').checked,
@@ -375,7 +390,7 @@ function collectMatchData(){
             fuelScored: parseInt(document.getElementById('endgameFuelScored').textContent),
             fuelMissed: parseInt(document.getElementById('endgameFuelMissed').textContent),
             
-            //disconnect
+            disconnect: document.querySelector('input[name="disconnect"]:checked')?.value || "",           
             notes: document.getElementById('endgameNotes').value,
         }
     }
@@ -403,8 +418,8 @@ function collectPitData(){
         hopperCapacity: document.getElementById('pitHopperCapacity').value,
         driveExperience: document.getElementById('pitDriveExperience').value,
         estimatedCycles: document.getElementById('pitEstimatedCycles').value,
-        buildQuality: document.getElementById('pitDurability').value,
-        outsidePerimeter: document.getElementById('pitOutsidePerimeter').value, //might need change
+        buildQuality: document.getElementById('pitBuildQuality').value,
+        outsidePerimeter: document.getElementById('pitOutsidePerimeter').value,
         breakdowns: document.getElementById('pitBreakdowns').value,
         notes: document.getElementById('pitNotes').value
     }
@@ -431,7 +446,7 @@ function saveMatch(){
 }
 
 function savePit(){
-    downloadCSV(generatePitCSV, new Date().toISOString() + ".csv");
+    downloadCSV(generatePitCSV(), new Date().toISOString() + ".csv");
 }
 
 
