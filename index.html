@@ -14,6 +14,8 @@
     <div class="tabs">
         <button class="tab active" onclick="switchMainTab('scouting')">Scouting</button>
         <button class="tab" onclick="switchMainTab('history')">History</button>
+        <button class="tab" onclick="switchMainTab('pit')">Pit</button>
+
     </div>
     
     <!-- Scouting Tab -->
@@ -36,138 +38,14 @@
         
         <!-- Sub Tabs -->
         <div class="tabs">
-            <button class="tab active" onclick="switchTab('pit')">Pit</button>
-            <button class="tab" onclick="switchTab('auto')">Auto</button>
+            <button class="tab active" onclick="switchTab('auto')">Auto</button>
             <button class="tab" onclick="switchTab('teleop')">Teleop</button>
             <button class="tab" onclick="switchTab('endgame')">Endgame</button>
-        </div>
-        
-        <!-- Pit Scouting -->
-        <div id="pit" class="tab-content active">
-            <div class="section">
-                <h2>Pit Scouting</h2>
-                
-                <div class="form-group">
-                    <label>Climb Level</label>
-                    <select id="pitClimbLevel">
-                        <option value="">Select...</option>
-                        <option value="None">None</option>
-                        <option value="Level 1">Level 1</option>
-                        <option value="Level 2">Level 2</option>
-                        <option value="Level 3">Level 3</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label>Height (inches)</label>
-                    <input type="number" id="pitHeight" step="0.1">
-                </div>
-                
-                <div class="form-group">
-                    <label>Weight (lbs)</label>
-                    <input type="number" id="pitWeight" step="0.1">
-                </div>
-                
-                <div class="form-group">
-                    <label>Intake Type</label>
-                    <input type="text" id="pitIntake">
-                </div>
-                
-                <div class="form-group">
-                    <label>Drive Mechanism</label>
-                    <select id="pitDriveMechanism">
-                        <option value="">Select...</option>
-                        <option value="Tank">Tank</option>
-                        <option value="Swerve">Swerve</option>
-                        <option value="Mecanum">Mecanum</option>
-                        <option value="Other">Other</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label>Strategy</label>
-                    <textarea id="pitStrategy"></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label>Features</label>
-                    <div class="checkbox-group">
-                        <label class="checkbox-label">
-                            <input type="checkbox" id="pitVision">
-                            Vision
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" id="pitAdjustable">
-                            Adjustable Scoring
-                        </label>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label>Hopper Capacity</label>
-                    <select id="pitHopperCapacity">
-                        <option value="">Select...</option>
-                        <option value="Fixed">Fixed</option>
-                        <option value="Extendable">Extendable</option>
-                        <option value="None">None</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label>Drive Experience</label>
-                    <select id="pitDriveExperience">
-                        <option value="">Select...</option>
-                        <option value="Rookie">Rookie</option>
-                        <option value="Intermediate">Intermediate</option>
-                        <option value="Advanced">Advanced</option>
-                        <option value="Expert">Expert</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label>Estimated Cycles</label>
-                    <input type="number" id="pitEstimatedCycles" min="0">
-                </div>
-                
-                <div class="form-group">
-                    <label>Conversion %</label>
-                    <input type="number" id="pitConversionPercent" min="0" max="100">
-                </div>
-                
-                <div class="form-group">
-                    <label>Launch Rate (fuel/sec)</label>
-                    <input type="number" id="pitLaunchRate" step="0.1">
-                </div>
-                
-                <div class="form-group">
-                    <label>Build Quality (1-10)</label>
-                    <input type="number" id="pitDurability" min="1" max="10">
-                </div>
-                
-                <div class="form-group">
-                    <label>Outside Perimeter</label>
-                    <textarea id="pitOutsidePerimeter"></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label>Breakdowns</label>
-                    <textarea id="pitBreakdowns"></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label>Human Player Notes</label>
-                    <textarea id="pitHumanPlayer"></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label>Notes</label>
-                    <textarea id="pitNotes"></textarea>
-                </div>
-            </div>
+            <button class="tab" onclick="switchTab('humanPlayer')">Human Player</button>
         </div>
         
         <!-- Auto -->
-        <div id="auto" class="tab-content">
+        <div id="auto" class="tab-content active">
             <div class="section">
                 <h2>Auto</h2>
                 
@@ -218,11 +96,6 @@
                         <input type="checkbox" id="autoBallsCollected">
                         Balls Collected to Our Side
                     </label>
-                </div>
-                
-                <div class="form-group">
-                    <label>Notes</label>
-                    <textarea id="autoNotes"></textarea>
                 </div>
             </div>
         </div>
@@ -323,7 +196,32 @@
                 
                 <div class="form-group">
                     <label>Transition Phase Role</label>
-                    <input type="text" id="teleopTransitionRole">
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="transitionRoleScoring">
+                            Scoring
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="transitionRoleLimit">
+                            Limiting Balls
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="transitionRoleFunnel">
+                            Funnel to Teammates
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="transitionRoleFeed">
+                            Feed Human Station
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="transitionRoleBlock">
+                            Blocking
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="transitionRoleRefill">
+                            Refilling Hopper
+                        </label>
+                    </div>
                 </div>
                 
                 <div class="form-group">
@@ -361,11 +259,6 @@
                             <span>10</span>
                         </div>
                     </div>
-                </div>
-                
-                <div class="form-group">
-                    <label>Notes</label>
-                    <textarea id="teleopNotes"></textarea>
                 </div>
             </div>
         </div>
@@ -435,11 +328,52 @@
                     <label>Notes</label>
                     <textarea id="endgameNotes"></textarea>
                 </div>
-                
+            </div>
+        </div>
+
+        <!-- Human Player -->
+        <div id="humanPlayer" class="tab-content">
+            <div class="section">
+                <h2>Human Player</h2>
+
                 <div class="form-group">
-                    <label>Extra Notes</label>
-                    <textarea id="extraNotes"></textarea>
+                    <div class="counter">
+                        <span class="counter-label">Fuel Shot</span>
+                        <button class="counter-btn" onclick="decrement5('humanPlayerFuelShot')">-5</button>
+                        <button class="counter-btn" onclick="decrement('humanPlayerFuelShot')">-</button>
+                        <span class="counter-value" id="humanPlayerFuelShot">0</span>
+                        <button class="counter-btn" onclick="increment('humanPlayerFuelShot')">+</button>
+                        <button class="counter-btn" onclick="increment5('humanPlayerFuelShot')">+5</button>
+                    </div>
                 </div>
+
+                <div class="form-group">
+                    <div class="counter">
+                        <span class="counter-label">Fuel Scored</span>
+                        <button class="counter-btn" onclick="decrement5('humanPlayerFuelScored')">-5</button>
+                        <button class="counter-btn" onclick="decrement('humanPlayerFuelScored')">-</button>
+                        <span class="counter-value" id="humanPlayerFuelScored">0</span>
+                        <button class="counter-btn" onclick="increment('humanPlayerFuelScored')">+</button>
+                        <button class="counter-btn" onclick="increment5('humanPlayerFuelScored')">+5</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="fedRobot">
+                        Fed balls to Robot
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="fedHumanPlayers">
+                        Fed balls to other Human Players
+                    </label>
+                </div>
+
+                <div class="form-group">
+                    <label>Notes</label>
+                    <textarea id="endgameNotes"></textarea>
+                </div>
+
             </div>
         </div>
         
@@ -463,6 +397,162 @@
             
             <div id="historyList"></div>
         </div>
+    </div>
+
+    <!-- Pit Scouting -->
+    <div id="pit" class="tab-content">
+        <div class="section">
+            <h2>Pit Scouting</h2>
+                
+            <div class="form-group">
+                <label>Climb Level</label>
+                <select id="pitClimbLevel">
+                    <option value="">Select...</option>
+                    <option value="None">None</option>
+                    <option value="Level 1">Level 1</option>
+                    <option value="Level 2">Level 2</option>
+                    <option value="Level 3">Level 3</option>
+                </select>
+            </div>
+                
+            <div class="form-group">
+                <label>Height (inches)</label>
+                <input type="number" id="pitHeight" step="0.1">
+            </div>
+                
+            <div class="form-group">
+                <label>Weight (lbs)</label>
+                <input type="number" id="pitWeight" step="0.1">
+            </div>
+                
+            <div class="form-group">
+                    <label>Intake Type</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="otbIntake">
+                            Over the Bumper
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="perimeterIntake">
+                            In Perimeter
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="stationIntake">
+                            Station Intake
+                        </label>
+                    </div>
+                </div>
+                
+            <div class="form-group">
+                <label>Drive Mechanism</label>
+                <select id="pitDriveMechanism">
+                    <option value="">Select...</option>
+                    <option value="Tank">Tank</option>
+                    <option value="Swerve">Swerve</option>
+                    <option value="Mecanum">Mecanum</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+                
+            <div class="form-group">
+                <label>General Strategy</label>
+                <textarea id="pitStrategy"></textarea>
+            </div>
+                
+            <div class="form-group">
+                <label>Features</label>
+                <div class="checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="pitVision">
+                        Vision
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="pitAdjustable">
+                        Adjustable Scoring
+                    </label>
+                </div>
+            </div>
+                
+            <div class="form-group">
+                <label>Hopper Type</label>
+                <select id="pitHopperType">
+                    <option value="">Select...</option>
+                    <option value="Fixed">Fixed</option>
+                    <option value="Extendable">Extendable</option>
+                    <option value="None">None</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                    <label>Hopper Capacity</label>
+                    <input type="number" id="pitHopperCapacity" step="0.1">
+                </div>
+                
+            <div class="form-group">
+                <label>Drive Experience</label>
+                <select id="pitDriveExperience">
+                    <option value="">Select...</option>
+                    <option value="Rookie">Rookie</option>
+                    <option value="Intermediate">Intermediate</option>
+                    <option value="Advanced">Advanced</option>
+                    <option value="Expert">Expert</option>
+                </select>
+            </div>
+                
+            <div class="form-group">
+                <label>Estimated Cycles</label>
+                <input type="number" id="pitEstimatedCycles" min="0">
+            </div>
+                
+            <div class="form-group">
+                    <label>Build Quality (1-10)</label>
+                    <div class="slider-container">
+                        <input type="range" id="teleopCollaboration" min="1" max="10" value="5" class="styled-slider">
+                        <div class="slider-notches">
+                            <span>1</span>
+                            <span>2</span>
+                            <span>3</span>
+                            <span>4</span>
+                            <span>5</span>
+                            <span>6</span>
+                            <span>7</span>
+                            <span>8</span>
+                            <span>9</span>
+                            <span>10</span>
+                        </div>
+                    </div>
+                </div>
+                
+            <div class="form-group">
+                    <label>Outside Perimeter</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="radio" name = "Outside Perimeter" id="perimeterYes" value="yes">
+                            Yes
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="radio" name = "Outside Perimeter" id="perimeterNo" value="no">
+                            No
+                        </label>
+                    </div>
+                </div>
+                
+            <div class="form-group">
+                <label>Breakdowns</label>
+                <textarea id="pitBreakdowns"></textarea>
+            </div>
+                
+            <div class="form-group">
+                <label>Notes</label>
+                <textarea id="pitNotes"></textarea>
+            </div>
+        </div>
+
+        <div class="buttons">
+            <button onclick="resetForm()">Reset</button>
+            <button onclick="savePit()">Save Match</button>
+        </div>
+
     </div>
     
     <!-- QR Modal -->

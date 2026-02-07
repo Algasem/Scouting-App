@@ -1,19 +1,17 @@
-
-
-// Switch between Scouting and History tabs
+// Switch between Scouting, Pit and History tabs
 function switchMainTab(tabName) {
-    const tabs = document.querySelectorAll('.tabs > .tab');
-    const contents = document.querySelectorAll('body > .tab-content');
+    // Only select the main tabs (first .tabs container that's a direct child of body)
+    const mainTabsContainer = document.querySelector('body > .tabs');
+    const mainTabs = mainTabsContainer.querySelectorAll('.tab');
     
-    tabs.forEach(tab => tab.classList.remove('active'));
-    contents.forEach(content => content.classList.remove('active'));
+    // Select only main content sections (scouting, pit, history)
+    const mainContents = document.querySelectorAll('body > .tab-content');
+    
+    mainTabs.forEach(tab => tab.classList.remove('active'));
+    mainContents.forEach(content => content.classList.remove('active'));
     
     event.target.classList.add('active');
     document.getElementById(tabName).classList.add('active');
-    
-    if (tabName === 'history') {
-        updateHistoryDisplay();
-    }
 }
 
 // Switch between Pit, Auto, Teleop, and Engame tabs
@@ -31,8 +29,15 @@ function switchTab(tabName) {
 // Increment fuel buttons 
 function increment(buttonID){ 
     const value = document.getElementById(buttonID);
+
+    if(buttonID === 'humanPlayerFuelScored') {
+        const shots = parseInt(document.getElementById('humanPlayerFuelShot').textContent);
+        if (parseInt(value.textContent) + 1 > shots) {
+            return;
+        }
+    }
     value.textContent = parseInt(value.textContent) + 1;        
-}  
+}
 
 // Decrement fuel buttons 
 function decrement(buttonID){ 
@@ -40,12 +45,29 @@ function decrement(buttonID){
 
     if(value.textContent > 0){
         value.textContent = parseInt(value.textContent) -1;
+
+        if (buttonID === 'humanPlayerFuelShot') {
+            const scored = document.getElementById('humanPlayerFuelScored');
+            if (parseInt(scored.textContent) > parseInt(value.textContent)) {
+                scored.textContent = value.textContent;
+            }
+        }
     }
 }
 
 // Increment fuel buttons by 5 at once
 function increment5(buttonID) {
     const value = document.getElementById(buttonID);
+
+    if (buttonID === 'humanPlayerFuelScored') {
+        const shots = parseInt(document.getElementById('humanPlayerFuelShot').textContent);
+        const newValue = parseInt(value.textContent) + 5;
+        if (newValue > shots) {
+            value.textContent = shots; // Cap at max shots
+            return;
+        }
+    }
+
     value.textContent = parseInt(value.textContent) + 5;
 }
 
@@ -58,6 +80,13 @@ function decrement5(buttonID) {
     }
     else{
         value.textContent = parseInt('0');
+    }
+
+    if (buttonID === 'humanPlayerFuelShot') {
+        const scored = document.getElementById('humanPlayerFuelScored');
+        if (parseInt(scored.textContent) > parseInt(value.textContent)) {
+            scored.textContent = value.textContent;
+        }
     }
 }
 
@@ -220,10 +249,4 @@ function collectData(){
     }
 }
 
-function exportAllCSV(){
 
-}
-
-function clearHistory(){
-
-}
