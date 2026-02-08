@@ -373,14 +373,14 @@
                     <label>Notes</label>
                     <textarea id="endgameNotes"></textarea>
                 </div>
-
             </div>
         </div>
-        
+        <div id = "qr-code"></div>
         <!-- Action Buttons -->
         <div class="buttons">
             <button onclick="resetForm()">Reset</button>
             <button onclick="saveMatch()">Save Match</button>
+            <button onclick="generateQRMatch()">Match QR</button>
         </div>
     </div>
     
@@ -548,11 +548,14 @@
             </div>
         </div>
 
+        <div id="qr-code-pit"></div>
+        <button onclick="generateQRPit()">Generate Pit QR</button>
+
         <div class="buttons">
             <button onclick="resetForm()">Reset</button>
-            <button onclick="savePit()">Save Match</button>
+            <button onclick="savePit()">Save Pit</button>
         </div>
-
+ 
     </div>
     
     <!-- QR Modal -->

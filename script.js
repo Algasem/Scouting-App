@@ -275,8 +275,8 @@ function generatePitCSV(){
     }
 
     // Remove trailing comma if it exists
-    if(teleopInactiveRole.endsWith(",")){
-        teleopActiveRole = teleopActiveRole.slice(0, -1);
+    if (features.endsWith(",")) {
+        features = features.slice(0, -1);
     }
 
     const intakeTypeArr = [
@@ -300,21 +300,21 @@ function generatePitCSV(){
 
     const values = [
         // Pit Scouting
-        data.pit.climbLevel,
-        data.pit.heightInches,
-        data.pit.weightLbs,
+        pitData.climbLevel,
+        pitData.heightInches,
+        pitData.weightLbs,
         intakeType,
-        data.pit.driveMechanism,
-        data.pit.strategy,
+        pitData.driveMechanism,
+        pitData.strategy,
         features,
-        data.pit.hopperType,
-        data.pit.hopperCapacity,
-        data.pit.driveExperience,
-        data.pit.estimatedCycles,
-        data.pit.buildQuality,
-        data.pit.outsidePerimeter,
-        data.pit.breakdowns,
-        data.pit.notes,
+        pitData.hopperType,
+        pitData.hopperCapacity,
+        pitData.driveExperience,
+        pitData.estimatedCycles,
+        pitData.buildQuality,
+        pitData.outsidePerimeter,
+        pitData.breakdowns,
+        pitData.notes,
     ]
 
     for(let i = 0; i < values.length; i++){
@@ -419,7 +419,7 @@ function collectPitData(){
         driveExperience: document.getElementById('pitDriveExperience').value,
         estimatedCycles: document.getElementById('pitEstimatedCycles').value,
         buildQuality: document.getElementById('pitBuildQuality').value,
-        outsidePerimeter: document.getElementById('pitOutsidePerimeter').value,
+        outsidePerimeter: document.querySelector('input[name="Outside Perimeter"]:checked')?.value || "",             
         breakdowns: document.getElementById('pitBreakdowns').value,
         notes: document.getElementById('pitNotes').value
     }
@@ -435,7 +435,6 @@ function downloadCSV(csvContent, filename) {
     link.href = url;
     link.download = filename;
     link.click();
-
     // Clean up
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
@@ -443,10 +442,42 @@ function downloadCSV(csvContent, filename) {
 
 function saveMatch(){
     downloadCSV(generateMatchCSV(), new Date().toISOString() + ".csv");
+    console.log("Generated match download");
 }
 
 function savePit(){
     downloadCSV(generatePitCSV(), new Date().toISOString() + ".csv");
+    console.log("Generated pit download");
 }
 
+function generateQRMatch(){
+    const csvMatchContent = generateMatchCSV();
+
+    var qrcode = new QRCode("qr-code", {
+        text: csvMatchContent,
+        width: 256,
+        height: 256,
+        colorDark : "#000000",
+        colorLight : "#ffffff",
+        correctLevel : QRCode.CorrectLevel.H
+    })
+
+    console.log("Generated match QR Code with content:", csvMatchContent);
+
+}
+
+function generateQRPit(){
+    const csvPitContent = generatePitCSV();
+
+    var qrcode = new QRCode("qr-code-pit", {
+        text: csvPitContent,
+        width: 256,
+        height: 256,
+        colorDark : "#000000",
+        colorLight : "#ffffff",
+        correctLevel : QRCode.CorrectLevel.H
+    })
+
+    console.log("Generated Pit QR Code with content:", csvPitContent);
+}
 
