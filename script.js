@@ -435,14 +435,25 @@ function downloadCSV(csvContent, filename) {
     link.href = url;
     link.download = filename;
     link.click();
+
     // Clean up
-    document.body.removeChild(link);
     URL.revokeObjectURL(url);
 }
 
-function saveMatch(){
-    downloadCSV(generateMatchCSV(), new Date().toISOString() + ".csv");
-    console.log("Generated match download");
+let count = Number(localStorage.getItem("MatchCount")) || 0;
+
+function saveMatch() {
+    const csv = generateMatchCSV();
+    downloadCSV(csv, new Date().toISOString() + ".csv");
+
+    localStorage.setItem("Match" + count, csv);
+    count++;
+
+    localStorage.setItem("MatchCount", count);
+
+    for (let i = 0; i < count; i++) {
+        console.log(localStorage.getItem("Match" + i));
+    }
 }
 
 function savePit(){
@@ -480,4 +491,3 @@ function generateQRPit(){
 
     console.log("Generated Pit QR Code with content:", csvPitContent);
 }
-
