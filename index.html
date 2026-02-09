@@ -375,12 +375,10 @@
                 </div>
             </div>
         </div>
-        <div id = "qr-code"></div>
         <!-- Action Buttons -->
         <div class="buttons">
             <button onclick="resetForm()">Reset</button>
             <button onclick="saveMatch()">Save Match</button>
-            <button onclick="generateQRMatch()">Match QR</button>
         </div>
     </div>
     
@@ -388,8 +386,19 @@
     <div id="history" class="tab-content">
         <div class="section">
             <h2>Match History</h2>
-            <p style="margin-bottom: 20px;">Saved matches: <strong id="historyCount">0</strong></p>
-            
+            <p style="margin-bottom: 20px;">Saved matches: <strong id="matchHistoryCount">0</strong></p>
+            <div class = "section" id = "matchesList">
+                <button onclick="pastMatchesQR()">Display Matches</button>
+                <p id="matchContent"></p>
+             </div>
+            <div id = "qr-code"></div>
+            <h2>Pit History</h2>
+            <p style="margin-bottom: 20px;">Saved Pits: <strong id="pitHistoryCount">0</strong></p>
+            <div class = "section" id = "pitsList">
+                <button onclick="pastPitsQR()">Display Pits</button>
+                <p id="pitContent"></p>
+             </div>
+            <div id = "qr-code-pit"></div>
             <div class="buttons" style="margin-bottom: 20px;">
                 <button onclick="exportAllCSV()">Export All Matches (CSV)</button>
                 <button onclick="clearHistory()">Clear All History</button>
@@ -547,9 +556,6 @@
                 <textarea id="pitNotes"></textarea>
             </div>
         </div>
-
-        <div id="qr-code-pit"></div>
-        <button onclick="generateQRPit()">Generate Pit QR</button>
 
         <div class="buttons">
             <button onclick="resetForm()">Reset</button>

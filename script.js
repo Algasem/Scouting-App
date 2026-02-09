@@ -90,6 +90,7 @@ function decrement5(buttonID) {
     }
 }
 
+// Reset all fields in the form
 function resetForm(){
     
     // Reset all +- buttons
@@ -136,6 +137,7 @@ function resetForm(){
     }            
 }
 
+// Generate the CSV array for a match
 function generateMatchCSV(){
     const data = collectMatchData();
 
@@ -258,6 +260,7 @@ function generateMatchCSV(){
     return values.join(',');
 }
 
+// Generate the CSV array for a pit scouting
 function generatePitCSV(){
     const pitData = collectPitData();
     
@@ -324,6 +327,7 @@ function generatePitCSV(){
     return values.join(',');
 }
 
+// Create object of all match data points being collected
 function collectMatchData(){
 
     const data = {
@@ -397,6 +401,7 @@ function collectMatchData(){
     return data;
 }
 
+// Create object of all pit data points being collected
 function collectPitData(){
     const pitData = {
         climbLevel: document.getElementById('pitClimbLevel').value,
@@ -454,40 +459,129 @@ function saveMatch() {
     for (let i = 0; i < count; i++) {
         console.log(localStorage.getItem("Match" + i));
     }
+
+    updateMatchCount();
 }
+
+let pitCount = Number(localStorage.getItem("PitCount")) || 0;
 
 function savePit(){
+    const csv = generatePitCSV();
     downloadCSV(generatePitCSV(), new Date().toISOString() + ".csv");
-    console.log("Generated pit download");
+
+    localStorage.setItem("Pit" + pitCount, csv);
+    pitCount++;
+
+    localStorage.setItem("PitCount", pitCount);
+
+    updatePitCount();
 }
 
-function generateQRMatch(){
-    const csvMatchContent = generateMatchCSV();
+function pastMatchesQR() {
+    const matchContent = document.getElementById("matchContent");
 
-    var qrcode = new QRCode("qr-code", {
-        text: csvMatchContent,
-        width: 256,
-        height: 256,
-        colorDark : "#000000",
-        colorLight : "#ffffff",
-        correctLevel : QRCode.CorrectLevel.H
-    })
+    // Clear previous content
+    matchContent.innerHTML = "";
 
-    console.log("Generated match QR Code with content:", csvMatchContent);
+    let allMatches = [];
 
+    // loop thru all matches
+    for (let i = 0; i < localStorage.length; i++) {
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i); 
+            if (key.startsWith("Match")) {
+                const matchIndex = parseInt(key.replace("Match", ""), 10); // Extract index from key
+                allMatches[matchIndex] = localStorage.getItem(key);
+            }
+        }
+        allMatches[i] = localStorage.getItem("Match" + i) || [];
+    }
+
+    for (let i = 0; i < allMatches.length; i++) {
+
+        const matchButton = document.createElement("button");
+        matchButton.textContent = "Match " + (i + 1);
+        matchButton.className = "match-button";
+
+        matchButton.onclick = () => {
+
+            const qrCodeDiv = document.getElementById("qr-code");
+            qrCodeDiv.innerHTML = ""; // Clear existing QR code
+
+            new QRCode(qrCodeDiv, {
+                text: allMatches[i],
+                width: 256,
+                height: 256,
+                colorDark: "#da4416",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H,
+            });
+
+            console.log(`Generated QR Code for Match ` + i);
+        };
+
+        matchContent.appendChild(matchButton);
+    }
 }
 
-function generateQRPit(){
-    const csvPitContent = generatePitCSV();
+function pastPitsQR() {
+    const pitContent = document.getElementById("pitContent");
 
-    var qrcode = new QRCode("qr-code-pit", {
-        text: csvPitContent,
-        width: 256,
-        height: 256,
-        colorDark : "#000000",
-        colorLight : "#ffffff",
-        correctLevel : QRCode.CorrectLevel.H
-    })
+    // Clear previous content
+    pitContent.innerHTML = "";
 
-    console.log("Generated Pit QR Code with content:", csvPitContent);
+    let allPits = [];
+
+     // Loop through all keys in localStorage and filter for pits
+     for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key.startsWith("Pit")) {
+            const pitIndex = parseInt(key.replace("Pit", ""), 10);
+            allPits[pitIndex] = localStorage.getItem(key);
+        }
+    }
+
+    for (let i = 0; i < allPits.length; i++) {
+
+        const pitButton = document.createElement("button");
+        pitButton.textContent = "Pit " + (i + 1);
+        pitButton.className = "match-button"; //use same style as match buttons
+
+        pitButton.onclick = () => {
+
+            const qrCodeDiv = document.getElementById("qr-code-pit");
+            qrCodeDiv.innerHTML = ""; // Clear existing QR code
+
+            new QRCode(qrCodeDiv, {
+                text: allPits[i],
+                width: 256,
+                height: 256,
+                colorDark: "#da4416",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H,
+            });
+
+            console.log(`Generated QR Code for Pit ` + i);
+        };
+
+        pitContent.appendChild(pitButton);
+    }
+}
+
+window.onload = function () {
+    updateMatchCount();
+};
+
+function updateMatchCount() {
+    const count = Number(localStorage.getItem("MatchCount")) || 0;
+    document.getElementById("matchHistoryCount").textContent = count;
+}
+
+function updatePitCount() {
+    const count = Number(localStorage.getItem("PitCount")) || 0;
+    document.getElementById("pitHistoryCount").textContent = count;
+}
+
+function clearHistory(){
+    localStorage.clear();
 }

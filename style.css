@@ -305,3 +305,17 @@
             width: 20px;
             text-align: center;
         }
+
+        .match-button{
+            width: 150px;
+            padding: 10px 20px;
+            border: 1px solid #d0d5dd;
+            background: #fff;
+            cursor: pointer;
+            border-radius: 12px;
+        }
+
+        .match-button:hover {
+            background-color: #156B3A;
+            transition: background 0.2s, color 0.2s;
+        }
