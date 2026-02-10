@@ -487,14 +487,11 @@ function pastMatchesQR() {
 
     // loop thru all matches
     for (let i = 0; i < localStorage.length; i++) {
-        for (let i = 0; i < localStorage.length; i++) {
-            const key = localStorage.key(i); 
-            if (key.startsWith("Match")) {
-                const matchIndex = parseInt(key.replace("Match", ""), 10); // Extract index from key
-                allMatches[matchIndex] = localStorage.getItem(key);
-            }
+        const key = localStorage.key(i); 
+        if (key.startsWith("Match")) {
+            const matchIndex = parseInt(key.replace("Match", ""), 10); // Extract index from key
+            allMatches[matchIndex] = localStorage.getItem(key);
         }
-        allMatches[i] = localStorage.getItem("Match" + i) || [];
     }
 
     for (let i = 0; i < allMatches.length; i++) {
@@ -510,11 +507,11 @@ function pastMatchesQR() {
 
             new QRCode(qrCodeDiv, {
                 text: allMatches[i],
-                width: 256,
-                height: 256,
+                width: 512,
+                height: 512,
                 colorDark: "#da4416",
                 colorLight: "#ffffff",
-                correctLevel: QRCode.CorrectLevel.H,
+                correctLevel: QRCode.CorrectLevel.L,
             });
 
             console.log(`Generated QR Code for Match ` + i);
@@ -554,11 +551,11 @@ function pastPitsQR() {
 
             new QRCode(qrCodeDiv, {
                 text: allPits[i],
-                width: 256,
-                height: 256,
+                width: 512,
+                height: 512,
                 colorDark: "#da4416",
                 colorLight: "#ffffff",
-                correctLevel: QRCode.CorrectLevel.H,
+                correctLevel: QRCode.CorrectLevel.L,
             });
 
             console.log(`Generated QR Code for Pit ` + i);
@@ -584,4 +581,5 @@ function updatePitCount() {
 
 function clearHistory(){
     localStorage.clear();
+    window.location.reload();
 }
