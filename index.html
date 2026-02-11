@@ -23,6 +23,16 @@
         <!-- Match Info -->
         <div class="sections">
             <div class="form-group">
+                <label class="checkbox-label">
+                    <input type="radio" name = "matchStage" id="playoff" value="no">
+                    Playoffs
+                </label>
+                <label class="checkbox-label">
+                    <input type="radio" name = "matchStage" id="qualification" value = "both">
+                    Qualification
+                </label>
+            </div>
+            <div class="form-group">
                 <label>Match #</label>
                 <input type="number" id="matchNumber" min="1">
             </div>
@@ -412,7 +422,12 @@
     <div id="pit" class="tab-content">
         <div class="section">
             <h2>Pit Scouting</h2>
-                
+
+            <div class="form-group">
+                <label>Team Number</label>
+                <input type="number" id="teamPitNum">
+            </div>
+
             <div class="form-group">
                 <label>Climb Level</label>
                 <select id="pitClimbLevel">

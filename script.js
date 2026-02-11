@@ -208,20 +208,31 @@ function generateMatchCSV(){
 
     let traversalType = "";
     if(data.teleop.bumpTraversal){
-        traversalType += "Bump,";
+        traversalType = "Bump,";
     }
     else if(data.teleop.trenchTraversal){
-        traversalType += "Trench";
+        traversalType = "Trench";
     }
     else if(data.teleop.bothTraversal){
-        traversalType += "Both";
+        traversalType = "Both";
     }
+
+    let matchType = "";
+    if(data.qualMatch){
+        matchType = "Qualification";
+    }
+    else if(data.playoffMatch){
+        matchType = "Playoff";
+    }
+
+    let totalMatch = matchType + " " + data.matchNumber;
+
+    console.log(totalMatch);
 
     const values = [
 
         // General  
-        data.timestamp,
-        data.matchNumber,
+        totalMatch,
         data.teamNumber,
         data.scoutName,
 
@@ -303,6 +314,7 @@ function generatePitCSV(){
 
     const values = [
         // Pit Scouting
+        pitData.teamNumber,
         pitData.climbLevel,
         pitData.heightInches,
         pitData.weightLbs,
@@ -331,9 +343,11 @@ function generatePitCSV(){
 function collectMatchData(){
 
     const data = {
-        timestamp: new Date().toISOString(),
+        // timestamp: new Date().toISOString(),
 
         // Match info
+        qualMatch: document.getElementById('playoff').checked ? "Yes" : "No",
+        playoffMatch: document.getElementById('qualification').checked ? "Yes" : "No",
         matchNumber: document.getElementById('matchNumber').value,
         teamNumber: document.getElementById('teamNumber').value,
         scoutName: document.getElementById('scoutName').value,
@@ -404,6 +418,7 @@ function collectMatchData(){
 // Create object of all pit data points being collected
 function collectPitData(){
     const pitData = {
+        teamNumber: document.getElementById('teamPitNum').value,
         climbLevel: document.getElementById('pitClimbLevel').value,
         heightInches: document.getElementById('pitHeight').value,
         weightLbs: document.getElementById('pitWeight').value,
@@ -467,7 +482,7 @@ let pitCount = Number(localStorage.getItem("PitCount")) || 0;
 
 function savePit(){
     const csv = generatePitCSV();
-    downloadCSV(generatePitCSV(), new Date().toISOString() + ".csv");
+    downloadCSV(csv, new Date().toISOString() + ".csv");
 
     localStorage.setItem("Pit" + pitCount, csv);
     pitCount++;
@@ -488,7 +503,7 @@ function pastMatchesQR() {
     // loop thru all matches
     for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i); 
-        if (key.startsWith("Match")) {
+        if (key.startsWith("Match") && !key.startsWith("MatchCount")) {
             const matchIndex = parseInt(key.replace("Match", ""), 10); // Extract index from key
             allMatches[matchIndex] = localStorage.getItem(key);
         }
@@ -497,7 +512,13 @@ function pastMatchesQR() {
     for (let i = 0; i < allMatches.length; i++) {
 
         const matchButton = document.createElement("button");
-        matchButton.textContent = "Match " + (i + 1);
+        let tempArr = allMatches[i].split(',')
+        
+        for(let i = 0; i < tempArr.length; i++){
+            tempArr[i] = tempArr[i].replaceAll('"', '');
+        }
+
+        matchButton.textContent = tempArr[0] + "--" + tempArr[1];
         matchButton.className = "match-button";
 
         matchButton.onclick = () => {
@@ -529,8 +550,8 @@ function pastPitsQR() {
 
     let allPits = [];
 
-     // Loop through all keys in localStorage and filter for pits
-     for (let i = 0; i < localStorage.length; i++) {
+    // Loop through all keys in localStorage and filter for pits
+    for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i);
         if (key.startsWith("Pit")) {
             const pitIndex = parseInt(key.replace("Pit", ""), 10);
@@ -540,8 +561,14 @@ function pastPitsQR() {
 
     for (let i = 0; i < allPits.length; i++) {
 
+        let tempArr = allPits[i].split(',')
+        
+        for(let i = 0; i < tempArr.length; i++){
+            tempArr[i] = tempArr[i].replaceAll('"', '');
+        }
+
         const pitButton = document.createElement("button");
-        pitButton.textContent = "Pit " + (i + 1);
+        pitButton.textContent = "Pit " + tempArr[0];
         pitButton.className = "match-button"; //use same style as match buttons
 
         pitButton.onclick = () => {
