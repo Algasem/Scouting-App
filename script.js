@@ -476,6 +476,7 @@ function saveMatch() {
     }
 
     updateMatchCount();
+    pastMatchesQR();
 }
 
 let pitCount = Number(localStorage.getItem("PitCount")) || 0;
@@ -490,6 +491,7 @@ function savePit(){
     localStorage.setItem("PitCount", pitCount);
 
     updatePitCount();
+    pastPitsQR();
 }
 
 function pastMatchesQR() {
@@ -518,22 +520,12 @@ function pastMatchesQR() {
             tempArr[i] = tempArr[i].replaceAll('"', '');
         }
 
-        matchButton.textContent = tempArr[0] + "--" + tempArr[1];
+        matchButton.textContent = tempArr[0] + " -- " + tempArr[1];
         matchButton.className = "match-button";
 
         matchButton.onclick = () => {
 
-            const qrCodeDiv = document.getElementById("qr-code");
-            qrCodeDiv.innerHTML = ""; // Clear existing QR code
-
-            new QRCode(qrCodeDiv, {
-                text: allMatches[i],
-                width: 512,
-                height: 512,
-                colorDark: "#da4416",
-                colorLight: "#ffffff",
-                correctLevel: QRCode.CorrectLevel.L,
-            });
+            openQRModal(allMatches[i], "Match " + (i + 1) + " QR");
 
             console.log(`Generated QR Code for Match ` + i);
         };
@@ -573,17 +565,7 @@ function pastPitsQR() {
 
         pitButton.onclick = () => {
 
-            const qrCodeDiv = document.getElementById("qr-code-pit");
-            qrCodeDiv.innerHTML = ""; // Clear existing QR code
-
-            new QRCode(qrCodeDiv, {
-                text: allPits[i],
-                width: 512,
-                height: 512,
-                colorDark: "#da4416",
-                colorLight: "#ffffff",
-                correctLevel: QRCode.CorrectLevel.L,
-            });
+            openQRModal(allPits[i], "Pit " + (i + 1) + " QR");
 
             console.log(`Generated QR Code for Pit ` + i);
         };
@@ -592,8 +574,39 @@ function pastPitsQR() {
     }
 }
 
+
+function openQRModal(text, title) {
+    const modal = document.getElementById("qrModal");
+    const qrTitle = document.getElementById("qrModalTitle");
+    const qrCodeDiv = document.getElementById("qrcode");
+
+    qrTitle.textContent = title;
+    qrCodeDiv.innerHTML = "";
+
+    new QRCode(qrCodeDiv, {
+        text: text,
+        width: 420,
+        height: 420,
+        colorDark: "#da4416",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.L,
+    });
+
+    modal.classList.add("active");
+}
+
+function closeQRModal() {
+    const modal = document.getElementById("qrModal");
+    const qrCodeDiv = document.getElementById("qrcode");
+    modal.classList.remove("active");
+    qrCodeDiv.innerHTML = "";
+}
+
 window.onload = function () {
     updateMatchCount();
+    updatePitCount();
+    pastMatchesQR();
+    pastPitsQR();
 };
 
 function updateMatchCount() {
