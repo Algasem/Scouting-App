@@ -398,15 +398,13 @@
             <h2>Match History</h2>
             <p style="margin-bottom: 20px;">Saved matches: <strong id="matchHistoryCount">0</strong></p>
             <div class = "section" id = "matchesList">
-                <button onclick="pastMatchesQR()">Display Matches</button>
-                <p id="matchContent"></p>
+                <div id="matchContent" class="history-button-grid"></div>
              </div>
             <div id = "qr-code"></div>
             <h2>Pit History</h2>
             <p style="margin-bottom: 20px;">Saved Pits: <strong id="pitHistoryCount">0</strong></p>
             <div class = "section" id = "pitsList">
-                <button onclick="pastPitsQR()">Display Pits</button>
-                <p id="pitContent"></p>
+                <div id="pitContent" class="history-button-grid"></div>
              </div>
             <div id = "qr-code-pit"></div>
             <div class="buttons" style="margin-bottom: 20px;">
@@ -582,10 +580,10 @@
     <!-- QR Modal -->
     <div id="qrModal" class="modal">
         <div class="modal-content">
-            <h2>Match Data QR Code</h2>
+            <button class="modal-close" onclick="closeQRModal()" aria-label="Close QR popup">X</button>
+            <h2 id="qrModalTitle">QR Code</h2>
             <div id="qrcode" style="text-align: center; margin: 20px 0;"></div>
-            <p style="font-size: 12px; margin-bottom: 10px;">Scan this QR code to get the CSV data row</p>
-            <button onclick="closeQRModal()">Close</button>
+            <p style="font-size: 12px; margin-bottom: 10px;">Scan this QR code to get the CSV file</p>
         </div>
     </div>
     
