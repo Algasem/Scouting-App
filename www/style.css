@@ -111,12 +111,13 @@
     .counter {
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 8px;
         border: 1px solid var(--yellow);
         border-radius: var(--radius);
         padding: 10px;
         background: var(--white);
         color: #000000;
+        flex-wrap: wrap;          /* ← ADD THIS */
     }
     
     .counter-label {
@@ -124,13 +125,15 @@
     }
     
     .counter-btn {
-        padding: 6px 14px;
+        padding: 6px 10px;      /* smaller horizontal padding */
         border-radius: 10px;
         border: 1px solid rgba(11,122,59,0.3);
         background: white;
         cursor: pointer;
-        font-size: 18px;
+        font-size: 16px;        /* slightly smaller */
         font-weight: 800;
+        flex: 0 0 auto;         /* ← prevents stretching */
+        min-width: 40px;        /* smaller minimum */
     }
 
     .counter-btn:hover {
@@ -138,8 +141,8 @@
     }
     
     .counter-value {
-        font-size: 24px;
-        min-width: 40px;
+        font-size: 20px;
+        min-width: 30px;
         text-align: center;
     }
     
@@ -258,6 +261,10 @@
         background: #ffffff;
         padding: 12px;
         border-radius: 12px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0 auto;
     }
     
     .alert {

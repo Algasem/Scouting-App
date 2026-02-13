@@ -583,10 +583,12 @@ function openQRModal(text, title) {
     qrTitle.textContent = title;
     qrCodeDiv.innerHTML = "";
 
+    const size = Math.min(window.innerWidth * 0.8, 450);
+
     new QRCode(qrCodeDiv, {
         text: text,
-        width: 420,
-        height: 420,
+        width: size,
+        height: size,
         colorDark: "#da4416",
         colorLight: "#ffffff",
         correctLevel: QRCode.CorrectLevel.L,
