@@ -31,8 +31,8 @@ function increment(buttonID){
     const value = document.getElementById(buttonID);
 
     if(buttonID === 'humanPlayerFuelScored') {
-        const shots = parseInt(document.getElementById('humanPlayerFuelShot').textContent);
-        if (parseInt(value.textContent) + 1 > shots) {
+        const missed = parseInt(document.getElementById('humanPlayerFuelMissed').textContent);
+        if (parseInt(value.textContent) + 1 > missed) {
             return;
         }
     }
@@ -46,7 +46,7 @@ function decrement(buttonID){
     if(value.textContent > 0){
         value.textContent = parseInt(value.textContent) -1;
 
-        if (buttonID === 'humanPlayerFuelShot') {
+        if (buttonID === 'humanPlayerFuelMissed') {
             const scored = document.getElementById('humanPlayerFuelScored');
             if (parseInt(scored.textContent) > parseInt(value.textContent)) {
                 scored.textContent = value.textContent;
@@ -60,10 +60,10 @@ function increment5(buttonID) {
     const value = document.getElementById(buttonID);
 
     if (buttonID === 'humanPlayerFuelScored') {
-        const shots = parseInt(document.getElementById('humanPlayerFuelShot').textContent);
+        const missed = parseInt(document.getElementById('humanPlayerFuelMissed').textContent);
         const newValue = parseInt(value.textContent) + 5;
-        if (newValue > shots) {
-            value.textContent = shots; // Cap at max shots
+        if (newValue > missed) {
+            value.textContent = missed; // Cap at max miss
             return;
         }
     }
@@ -82,7 +82,7 @@ function decrement5(buttonID) {
         value.textContent = parseInt('0');
     }
 
-    if (buttonID === 'humanPlayerFuelShot') {
+    if (buttonID === 'humanPlayerFuelMissed') {
         const scored = document.getElementById('humanPlayerFuelScored');
         if (parseInt(scored.textContent) > parseInt(value.textContent)) {
             scored.textContent = value.textContent;
@@ -219,48 +219,58 @@ function generateMatchCSV(){
 
     let matchType = "";
     if(data.qualMatch){
-        matchType = "Qualification";
+        matchType = "Q";
     }
     else if(data.playoffMatch){
-        matchType = "Playoff";
+        matchType = "P";
     }
 
-    let totalMatch = matchType + " " + data.matchNumber;
+    let totalMatch = matchType + data.matchNumber;
 
     console.log(totalMatch);
+
+    let autoClimbLevel = data.auto.climbLevel.substring(6);
+    let endgameClimbLevel = "L"+data.endgame.climbLevel.substring(6);
 
     const values = [
 
         // General  
-        totalMatch,
         data.teamNumber,
+        data.event,
+        totalMatch,
+        data.driverStation,
         data.scoutName,
 
         // Auto Scouting
-        data.auto.climbLevel,
-        data.auto.climbSpeed,
         data.auto.fuelScored,
         data.auto.fuelMissed,
-        data.auto.ballsCollectedToOurSide,
+        autoClimbLevel,
+        "",
+        // data.auto.climbSpeed,
+        // data.auto.ballsCollectedToOurSide,
 
         // Teleop Scouting
         data.teleop.fuelScored,
         data.teleop.fuelMissed,
-        data.teleop.traversalTimeSec,
-        traversalType,
+        data.humanPlayer.fuelScored,
+        data.humanPlayer.fuelMissed,
         teleopActiveRole,
         teleopInactiveRole,
         teleopTransitionRole,
+        endgameClimbLevel,
         data.teleop.fouls,
-        data.teleop.cycles,
+
+        //traversalType,
+        //data.teleop.cycles,
+        data.teleop.drivingScore,
         data.teleop.collaborationScore,
+        //data.teleop.traversalTimeSec,
 
         // Endgame Scouting
-        data.endgame.climbLevel,
-        data.endgame.climbSpeed,
-        data.endgame.fuelScored,
-        data.endgame.fuelMissed,
-        data.endgame.disconnect,
+        // data.endgame.climbSpeed,
+        // data.endgame.fuelScored,
+        // data.endgame.fuelMissed,
+        // data.endgame.disconnect,
         data.endgame.notes,
     ]
 
@@ -346,11 +356,13 @@ function collectMatchData(){
         // timestamp: new Date().toISOString(),
 
         // Match info
+        event: document.getElementById('event').value,
         qualMatch: document.getElementById('playoff').checked ? "Yes" : "No",
         playoffMatch: document.getElementById('qualification').checked ? "Yes" : "No",
         matchNumber: document.getElementById('matchNumber').value,
         teamNumber: document.getElementById('teamNumber').value,
         scoutName: document.getElementById('scoutName').value,
+        driverStation: document.getElementById("driverStation").value,
 
         auto: {
             climbLevel: document.getElementById('autoClimbLevel').value,
@@ -399,18 +411,30 @@ function collectMatchData(){
             cycles: parseInt(document.getElementById('teleopCycles').textContent),
 
             collaborationScore: document.getElementById('teleopCollaboration').value,
+            drivingScore: document.getElementById('drivingScore').value,
         },
 
         endgame: {
             climbLevel: document.getElementById('endgameClimbLevel').value,
             climbSpeed: document.getElementById('endgameClimbSpeed').value,
 
-            fuelScored: parseInt(document.getElementById('endgameFuelScored').textContent),
-            fuelMissed: parseInt(document.getElementById('endgameFuelMissed').textContent),
+            //fuelScored: parseInt(document.getElementById('endgameFuelScored').textContent),
+            //fuelMissed: parseInt(document.getElementById('endgameFuelMissed').textContent),
             
             disconnect: document.querySelector('input[name="disconnect"]:checked')?.value || "",           
             notes: document.getElementById('endgameNotes').value,
+        },
+
+        humanPlayer: {
+            fuelMissed: parseInt(document.getElementById('humanPlayerFuelMissed').textContent),
+            fuelScored: parseInt(document.getElementById('humanPlayerFuelScored').textContent),
+        
+            fedRobot: document.getElementById('fedRobot').checked,
+            fedHumanPlayers: document.getElementById('fedHumanPlayers').checked,
+        
+           HPnotes: document.getElementById('endgameNotes').value
         }
+        
     }
     return data;
 }
@@ -496,6 +520,7 @@ function savePit(){
 
 function pastMatchesQR() {
     const matchContent = document.getElementById("matchContent");
+    const qrWindow = document.getElementById("qrModal");
 
     // Clear previous content
     matchContent.innerHTML = "";
@@ -530,7 +555,21 @@ function pastMatchesQR() {
             console.log(`Generated QR Code for Match ` + i);
         };
 
+        const deleteButton = document.createElement("button");
+        deleteButton.textContent = "Delete Match";
+        deleteButton.className = "match-button";
+
+        deleteButton.onclick = () => {
+            localStorage.removeItem("Match" + i);
+        
+            let currentCount = Number(localStorage.getItem("MatchCount")) || 0;
+            localStorage.setItem("MatchCount", currentCount - 1);
+        
+            window.location.reload();
+        };
+
         matchContent.appendChild(matchButton);
+        qrWindow.appendChild(deleteButton);
     }
 }
 
@@ -572,6 +611,8 @@ function pastPitsQR() {
 
         pitContent.appendChild(pitButton);
     }
+
+    
 }
 
 
