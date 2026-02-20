@@ -1,3 +1,26 @@
+const USERNAME_KEY = "ScoutUsername_v1";
+
+function loadUsername() {
+    const saved = localStorage.getItem(USERNAME_KEY);
+    if (saved) {
+        document.getElementById('userName').value = saved;
+    }
+}
+
+function saveUsername() {
+    const val = document.getElementById('userName').value.trim();
+    if (val) {
+        localStorage.setItem(USERNAME_KEY, val);
+    } else {
+        localStorage.removeItem(USERNAME_KEY);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    loadUsername();
+    document.getElementById('userName').addEventListener('input', saveUsername);
+});
+
 // Switch between Scouting, Pit and History tabs
 function switchMainTab(tabName) {
     // Only select the main tabs (first .tabs container that's a direct child of body)
@@ -246,7 +269,6 @@ function generateMatchCSV(){
         data.auto.fuelMissed,
         autoClimbLevel,
         "",
-        // data.auto.climbSpeed,
         // data.auto.ballsCollectedToOurSide,
 
         // Teleop Scouting
@@ -261,17 +283,12 @@ function generateMatchCSV(){
         data.teleop.fouls,
 
         //traversalType,
-        //data.teleop.cycles,
         data.teleop.drivingScore,
         data.teleop.collaborationScore,
-        //data.teleop.traversalTimeSec,
-
-        // Endgame Scouting
-        // data.endgame.climbSpeed,
-        // data.endgame.fuelScored,
-        // data.endgame.fuelMissed,
-        // data.endgame.disconnect,
-        data.endgame.notes,
+        data.endgame.disconnect,
+        data.teleop.traversalTimeSec,
+        data.endgame.climbSpeed,
+        data.endgame.notes
     ]
 
     for(let i = 0; i < values.length; i++){
@@ -327,8 +344,8 @@ function generatePitCSV(){
         pitData.teamNumber,
         pitData.climbLevel,
         pitData.heightInches,
-        pitData.weightLbs,
         intakeType,
+        pitData.weightLbs,
         pitData.driveMechanism,
         pitData.strategy,
         features,
@@ -361,7 +378,7 @@ function collectMatchData(){
         playoffMatch: document.getElementById('qualification').checked ? "Yes" : "No",
         matchNumber: document.getElementById('matchNumber').value,
         teamNumber: document.getElementById('teamNumber').value,
-        scoutName: document.getElementById('scoutName').value,
+        scoutName: document.getElementById('userName').value,
         driverStation: document.getElementById("driverStation").value,
 
         auto: {

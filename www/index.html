@@ -8,7 +8,13 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body>
-    <h1>FRC 7476 SPONGEBOTICS SCOUTING</h1> 
+    <div class="app-header">
+        <h1>FRC 7476 <span class="header-accent">SPONGEBOTICS</span> SCOUTING</h1>
+        <div class="username-wrapper">
+            <label>Scout</label>
+            <input type="text" id="userName" placeholder="Your name...">
+        </div>
+    </div>
         
     <!-- Tabs -->
     <div class="tabs">
@@ -17,7 +23,7 @@
         <button class="tab" onclick="switchMainTab('pit')">Pit</button>
 
     </div>
-    
+
     <!-- Scouting Tab -->
     <div id="scouting" class="tab-content active">
         <!-- Match Info -->
@@ -65,10 +71,6 @@
             <div class="form-group">
                 <label>Team #</label>
                 <input type="number" id="teamNumber" min="1">
-            </div>
-            <div class="form-group">
-                <label>Scout Name</label>
-                <input type="text" id="scoutName">
             </div>
         </div>
         
