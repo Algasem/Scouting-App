@@ -115,7 +115,7 @@ const teamData = {
     "9575": "Silver Robotics",
     "9580": "Grizzly Gears",
     "9589": "Arcade Robotics",
-    "9592": "Blue’s Bolts n' Bots",
+    "9592": "Blue's Bolts n' Bots",
     "9659": "Vanier Vikings",
     "9782": "Wextech Titans",
     "9785": "Alectrona",
@@ -295,6 +295,219 @@ function resetForm(){
     for (var i = 0; i < allDropdowns.length; i++){
         allDropdowns[i].selectedIndex = 0;
     }            
+}
+
+// Error checking
+
+// Show the unified validation modal.
+function showValidationModal(required, warnings, onValid) {
+    const modal = document.getElementById('validationModal');
+    const requiredSection = document.getElementById('validationRequiredSection');
+    const warningSection = document.getElementById('validationWarningSection');
+    const requiredList = document.getElementById('validationRequiredList');
+    const warningList = document.getElementById('validationWarningList');
+    const saveAnywayBtn = document.getElementById('validationSaveAnyway');
+
+    requiredList.innerHTML = "";
+    warningList.innerHTML = "";
+
+    if (required.length > 0) {
+        requiredSection.style.display = '';
+        required.forEach(function(msg) {
+            const li = document.createElement('li');
+            li.textContent = msg;
+            li.className = 'error-item';
+            requiredList.appendChild(li);
+        });
+    } else {
+        requiredSection.style.display = 'none';
+    }
+
+    if (warnings.length > 0) {
+        warningSection.style.display = '';
+        warnings.forEach(function(msg) {
+            const li = document.createElement('li');
+            li.textContent = msg;
+            li.className = 'warning-item';
+            warningList.appendChild(li);
+        });
+    } else {
+        warningSection.style.display = 'none';
+    }
+
+    // Only show Save Anyway if there are no blocking errors
+    if (required.length === 0 && warnings.length > 0) {
+        saveAnywayBtn.style.display = '';
+        _pendingSaveCallback = onValid;
+    } else {
+        saveAnywayBtn.style.display = 'none';
+        _pendingSaveCallback = null;
+    }
+
+    modal.classList.add('active');
+}
+
+function closeValidationModal() {
+    document.getElementById('validationModal').classList.remove('active');
+    _pendingSaveCallback = null;
+}
+
+function saveAnywayFromModal() {
+    document.getElementById('validationModal').classList.remove('active');
+    if (_pendingSaveCallback) {
+        _pendingSaveCallback();
+    }
+    _pendingSaveCallback = null;
+}
+
+function validateMatch(onValid) {
+    const required = [];
+    const warnings = [];
+
+    const scoutName = document.getElementById('userName').value.trim();
+    if (!scoutName) {
+        required.push("Scout name is required.");
+    } else if (!/^[a-zA-Z\s]+$/.test(scoutName)) {
+        required.push("Scout name should only contain letters — no numbers or special characters.");
+    }
+
+    const matchStageChecked = document.querySelector('input[name="matchStage"]:checked');
+    if (!matchStageChecked) {
+        required.push("Match stage is required — select Playoffs or Qualification.");
+    }
+
+    const driverStation = document.getElementById('driverStation').value;
+    if (!driverStation) {
+        required.push("Driver Station is required.");
+    }
+
+    const matchNumVal = document.getElementById('matchNumber').value.trim();
+    if (!matchNumVal) {
+        required.push("Match number is required.");
+    } else if (parseInt(matchNumVal) > 100) {
+        required.push("Match number cannot exceed 100.");
+    }
+
+    const teamNumVal = document.getElementById('teamNumber').value.trim();
+    if (!teamNumVal) {
+        required.push("Team number is required.");
+    } else if (parseInt(teamNumVal) > 12000) {
+        required.push("Team number cannot exceed 12000.");
+    }
+
+    const disconnectChecked = document.querySelector('input[name="disconnect"]:checked');
+    if (!disconnectChecked) {
+        warnings.push("Disconnect status not selected (Endgame tab).");
+    }
+
+    const activeRoleAny = document.getElementById('activeRoleFunnel').checked ||
+        document.getElementById('activeRoleScoring').checked ||
+        document.getElementById('activeRoleDeliver').checked ||
+        document.getElementById('activeRoleDefend').checked ||
+        document.getElementById('activeRoleNoMove').checked;
+    if (!activeRoleAny) {
+        warnings.push("No Active Phase Role selected (Teleop tab).");
+    }
+
+    const inactiveRoleAny = document.getElementById('inactiveRoleLimit').checked ||
+        document.getElementById('inactiveRoleFunnel').checked ||
+        document.getElementById('inactiveRoleDeliver').checked ||
+        document.getElementById('inactiveRoleBlock').checked ||
+        document.getElementById('inactiveRoleRefill').checked ||
+        document.getElementById('inactiveRoleNoMove').checked;
+    if (!inactiveRoleAny) {
+        warnings.push("No Inactive Phase Role selected (Teleop tab).");
+    }
+
+    const transitionRoleAny = document.getElementById('transitionRoleScoring').checked ||
+        document.getElementById('transitionRoleLimit').checked ||
+        document.getElementById('transitionRoleFunnel').checked ||
+        document.getElementById('transitionRoleDeliver').checked ||
+        document.getElementById('transitionRoleBlock').checked ||
+        document.getElementById('transitionRoleRefill').checked ||
+        document.getElementById('transitionRoleNoMove').checked;
+    if (!transitionRoleAny) {
+        warnings.push("No Transition Phase Role selected (Teleop tab).");
+    }
+
+    const traversalChecked = document.querySelector('input[name="traversal"]:checked');
+    if (!traversalChecked) {
+        warnings.push("Traversal type not selected (Teleop tab).");
+    }
+
+    const notes = document.getElementById('endgameNotes').value.trim();
+    if (!notes) {
+        warnings.push("Notes are empty (Endgame tab).");
+    }
+
+    if (required.length > 0 || warnings.length > 0) {
+        showValidationModal(required, warnings, onValid);
+        return;
+    }
+
+    onValid();
+}
+
+function validatePit(onValid) {
+    const required = [];
+    const warnings = [];
+
+    const teamNumVal = document.getElementById('teamPitNum').value.trim();
+    if (!teamNumVal) {
+        required.push("Team number is required.");
+    } else if (parseInt(teamNumVal) > 12000) {
+        required.push("Team number cannot exceed 12000.");
+    }
+
+    const heightVal = document.getElementById('pitHeight').value.trim();
+    if (!heightVal) {
+        warnings.push("Height is empty.");
+    } else if (parseFloat(heightVal) > 30) {
+        required.push("Height cannot exceed 30 inches.");
+    }
+
+    const weightVal = document.getElementById('pitWeight').value.trim();
+    if (!weightVal) {
+        warnings.push("Weight is empty.");
+    } else if (parseFloat(weightVal) > 115) {
+        required.push("Weight cannot exceed 115 lbs.");
+    }
+
+    if (!document.getElementById('pitClimbLevel').value) {
+        warnings.push("Climb Level not selected.");
+    }
+
+    if (!document.getElementById('pitDriveMechanism').value) {
+        warnings.push("Drive Mechanism not selected.");
+    }
+
+    if (!document.getElementById('pitDriveExperience').value) {
+        warnings.push("Drive Experience not selected.");
+    }
+
+    if (!document.getElementById('pitHopperType').value) {
+        warnings.push("Hopper Type not selected.");
+    }
+
+    if (!document.getElementById('pitStrategy').value.trim()) {
+        warnings.push("General Strategy is empty.");
+    }
+
+    const outsidePerimeterChecked = document.querySelector('input[name="Outside Perimeter"]:checked');
+    if (!outsidePerimeterChecked) {
+        warnings.push("Outside Perimeter not selected.");
+    }
+
+    if (!document.getElementById('pitNotes').value.trim()) {
+        warnings.push("Notes are empty.");
+    }
+
+    if (required.length > 0 || warnings.length > 0) {
+        showValidationModal(required, warnings, onValid);
+        return;
+    }
+
+    onValid();
 }
 
 // Generate the CSV array for a match
@@ -660,35 +873,39 @@ function downloadCSV(csvContent, filename) {
 let count = Number(localStorage.getItem("MatchCount")) || 0;
 
 function saveMatch() {
-    const csv = generateMatchCSV();
-    downloadCSV(csv, new Date().toISOString() + ".csv");
+    validateMatch(function() {
+        const csv = generateMatchCSV();
+        downloadCSV(csv, new Date().toISOString() + ".csv");
 
-    localStorage.setItem("Match" + count, csv);
-    count++;
+        localStorage.setItem("Match" + count, csv);
+        count++;
 
-    localStorage.setItem("MatchCount", count);
+        localStorage.setItem("MatchCount", count);
 
-    for (let i = 0; i < count; i++) {
-        console.log(localStorage.getItem("Match" + i));
-    }
+        for (let i = 0; i < count; i++) {
+            console.log(localStorage.getItem("Match" + i));
+        }
 
-    updateMatchCount();
-    pastMatchesQR();
+        updateMatchCount();
+        pastMatchesQR();
+    });
 }
 
 let pitCount = Number(localStorage.getItem("PitCount")) || 0;
 
 function savePit(){
-    const csv = generatePitCSV();
-    downloadCSV(csv, new Date().toISOString() + ".csv");
+    validatePit(function() {
+        const csv = generatePitCSV();
+        downloadCSV(csv, new Date().toISOString() + ".csv");
 
-    localStorage.setItem("Pit" + pitCount, csv);
-    pitCount++;
+        localStorage.setItem("Pit" + pitCount, csv);
+        pitCount++;
 
-    localStorage.setItem("PitCount", pitCount);
+        localStorage.setItem("PitCount", pitCount);
 
-    updatePitCount();
-    pastPitsQR();
+        updatePitCount();
+        pastPitsQR();
+    });
 }
 
 function pastMatchesQR() {
