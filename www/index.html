@@ -8,7 +8,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body>
-    <h1>FRC 7476 SPONGEBOTICS SCOUTING</h1> 
+    <div class="app-header">
+        <h1>FRC 7476 <span class="header-accent">SPONGEBOTICS</span> SCOUTING</h1>
+    </div>
         
     <!-- Tabs -->
     <div class="tabs">
@@ -17,12 +19,30 @@
         <button class="tab" onclick="switchMainTab('pit')">Pit</button>
 
     </div>
-    
+
     <!-- Scouting Tab -->
     <div id="scouting" class="tab-content active">
         <!-- Match Info -->
         <div class="sections">
+            <div class="username-wrapper">
+                <label>Scout</label>
+                <input type="text" id="userName" placeholder="Your name...">
+            </div>
             <div class="form-group">
+                <label>Event</label>
+                <select id="event">
+                    <option value="North Bay">North Bay</option>
+                    <option value="Humber Polytechnic">Humber Polytechnic</option>
+                    <option value="Durham College">Durham College</option>
+                    <option value="McMaster University">McMaster University</option>
+                    <option value="University of Waterloo">University of Waterloo</option>
+                    <option value="Georgian College">Georgian College</option>
+                    <option value="Windsor Essex">Windsor Essex</option>
+                    <option value="Niagara College">Niagara College</option>
+                    <option value="Ontario Provincial Championship">Ontario Provincial Championship</option>
+                </select>
+            </div>
+            <div class="match-stage-buttons">
                 <label class="checkbox-label">
                     <input type="radio" name = "matchStage" id="playoff" value="no">
                     Playoffs
@@ -33,16 +53,24 @@
                 </label>
             </div>
             <div class="form-group">
+                <label for="driverStation">Driver Station</label>
+                <select id="driverStation" name="driverStation" class="form-control">
+                    <option value="" disabled selected>Driver station</option>
+                    <option value="R1">R1</option>
+                    <option value="R2">R2</option>
+                    <option value="R3">R3</option>
+                    <option value="B1">B1</option>
+                    <option value="B2">B2</option>
+                    <option value="B3">B3</option>
+                </select>
+            </div>
+            <div class="form-group">
                 <label>Match #</label>
                 <input type="number" id="matchNumber" min="1">
             </div>
             <div class="form-group">
                 <label>Team #</label>
                 <input type="number" id="teamNumber" min="1">
-            </div>
-            <div class="form-group">
-                <label>Scout Name</label>
-                <input type="text" id="scoutName">
             </div>
         </div>
         
@@ -64,8 +92,6 @@
                     <select id="autoClimbLevel">
                         <option value="None">None</option>
                         <option value="Level 1">Level 1</option>
-                        <option value="Level 2">Level 2</option>
-                        <option value="Level 3">Level 3</option>
                     </select>
                 </div>
                 
@@ -136,11 +162,6 @@
                         <button class="counter-btn" onclick="increment5('teleopFuelMissed')">+5</button>
                     </div>
                 </div>
-                
-                <div class="form-group">
-                    <label>Traversal Time (sec)</label>
-                    <input type="number" id="teleopTraversalTime" step="0.1">
-                </div>
 
                 <div class="form-group">
                     <label>Traversal</label>
@@ -169,11 +190,19 @@
                         </label>
                         <label class="checkbox-label">
                             <input type="checkbox" id="activeRoleScoring">
-                            Scoring
+                            Score
                         </label>
                         <label class="checkbox-label">
-                            <input type="checkbox" id="activeRoleFeed">
-                            Feed Human Station
+                            <input type="checkbox" id="activeRoleDeliver">
+                            Deliver to HP
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="activeRoleDefend">
+                            Defend
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="activeRoleNoMove">
+                            Didn't move
                         </label>
                     </div>
                 </div>
@@ -190,8 +219,8 @@
                             Funnel to Teammates
                         </label>
                         <label class="checkbox-label">
-                            <input type="checkbox" id="inactiveRoleFeed">
-                            Feed Human Station
+                            <input type="checkbox" id="inactiveRoleDeliver">
+                            Deliver to HP
                         </label>
                         <label class="checkbox-label">
                             <input type="checkbox" id="inactiveRoleBlock">
@@ -199,7 +228,11 @@
                         </label>
                         <label class="checkbox-label">
                             <input type="checkbox" id="inactiveRoleRefill">
-                            Refilling Hopper
+                            Refill Hopper
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="inactiveRoleNoMove">
+                            Didn't move
                         </label>
                     </div>
                 </div>
@@ -209,7 +242,7 @@
                     <div class="checkbox-group">
                         <label class="checkbox-label">
                             <input type="checkbox" id="transitionRoleScoring">
-                            Scoring
+                            Score
                         </label>
                         <label class="checkbox-label">
                             <input type="checkbox" id="transitionRoleLimit">
@@ -220,8 +253,8 @@
                             Funnel to Teammates
                         </label>
                         <label class="checkbox-label">
-                            <input type="checkbox" id="transitionRoleFeed">
-                            Feed Human Station
+                            <input type="checkbox" id="transitionRoleDeliver">
+                            Deliver to HP
                         </label>
                         <label class="checkbox-label">
                             <input type="checkbox" id="transitionRoleBlock">
@@ -229,7 +262,11 @@
                         </label>
                         <label class="checkbox-label">
                             <input type="checkbox" id="transitionRoleRefill">
-                            Refilling Hopper
+                            Refill Hopper
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="transitionRoleNoMove">
+                            Didn't move
                         </label>
                     </div>
                 </div>
@@ -253,20 +290,26 @@
                 </div>
                 
                 <div class="form-group">
-                    <label>Collaboration (1-10)</label>
+                    <label>Collaboration (1-4)</label>
                     <div class="slider-container">
-                        <input type="range" id="teleopCollaboration" min="1" max="10" value="5" class="styled-slider">
+                        <input type="range" id="teleopCollaboration" min="1" max="4" value="1" class="styled-slider">
                         <div class="slider-notches">
                             <span>1</span>
                             <span>2</span>
                             <span>3</span>
                             <span>4</span>
-                            <span>5</span>
-                            <span>6</span>
-                            <span>7</span>
-                            <span>8</span>
-                            <span>9</span>
-                            <span>10</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Driving Skill (1-4)</label>
+                    <div class="slider-container">
+                        <input type="range" id="drivingScore" min="1" max="4" value="1" class="styled-slider">
+                        <div class="slider-notches">
+                            <span>1</span>
+                            <span>2</span>
+                            <span>3</span>
+                            <span>4</span>
                         </div>
                     </div>
                 </div>
@@ -299,7 +342,7 @@
                     </select>
                 </div>
                 
-                <div class="form-group">
+                <!-- <div class="form-group">
                     <div class="counter">
                         <span class="counter-label">Fuel Scored</span>
                         <button class="counter-btn" onclick="decrement5('endgameFuelScored')">-5</button>
@@ -308,8 +351,8 @@
                         <button class="counter-btn" onclick="increment('endgameFuelScored')">+</button>
                         <button class="counter-btn" onclick="increment5('endgameFuelScored')">+5</button>
                     </div>
-                </div>
-                <div class="form-group">
+                </div> -->
+                <!-- <div class="form-group">
                     <div class="counter">
                         <span class="counter-label">Fuel Missed</span>
                         <button class="counter-btn" onclick="decrement5('endgameFuelMissed')">-5</button>
@@ -318,7 +361,7 @@
                         <button class="counter-btn" onclick="increment('endgameFuelMissed')">+</button>
                         <button class="counter-btn" onclick="increment5('endgameFuelMissed')">+5</button>
                     </div>
-                </div>
+                </div> -->
 
                 <div class="form-group">
                     <label>Disconnect?</label>
@@ -348,12 +391,12 @@
 
                 <div class="form-group">
                     <div class="counter">
-                        <span class="counter-label">Fuel Shot</span>
-                        <button class="counter-btn" onclick="decrement5('humanPlayerFuelShot')">-5</button>
-                        <button class="counter-btn" onclick="decrement('humanPlayerFuelShot')">-</button>
-                        <span class="counter-value" id="humanPlayerFuelShot">0</span>
-                        <button class="counter-btn" onclick="increment('humanPlayerFuelShot')">+</button>
-                        <button class="counter-btn" onclick="increment5('humanPlayerFuelShot')">+5</button>
+                        <span class="counter-label">Fuel Missed</span>
+                        <button class="counter-btn" onclick="decrement5('humanPlayerFuelMissed')">-5</button>
+                        <button class="counter-btn" onclick="decrement('humanPlayerFuelMissed')">-</button>
+                        <span class="counter-value" id="humanPlayerFuelMissed">0</span>
+                        <button class="counter-btn" onclick="increment('humanPlayerFuelMissed')">+</button>
+                        <button class="counter-btn" onclick="increment5('humanPlayerFuelMissed')">+5</button>
                     </div>
                 </div>
 
@@ -427,13 +470,18 @@
             </div>
 
             <div class="form-group">
+                <label>Team Name</label>
+                <textarea id="teamPitName"></textarea>
+            </div>
+
+            <div class="form-group">
                 <label>Climb Level</label>
                 <select id="pitClimbLevel">
                     <option value="">Select...</option>
                     <option value="None">None</option>
-                    <option value="Level 1">Level 1</option>
-                    <option value="Level 2">Level 2</option>
-                    <option value="Level 3">Level 3</option>
+                    <option value="L1">L1</option>
+                    <option value="L2">L2</option>
+                    <option value="L3">L3</option>
                 </select>
             </div>
                 
@@ -452,7 +500,7 @@
                     <div class="checkbox-group">
                         <label class="checkbox-label">
                             <input type="checkbox" id="otbIntake">
-                            Over the Bumper
+                            Over The Bumper
                         </label>
                         <label class="checkbox-label">
                             <input type="checkbox" id="perimeterIntake">
@@ -500,7 +548,8 @@
                 <select id="pitHopperType">
                     <option value="">Select...</option>
                     <option value="Fixed">Fixed</option>
-                    <option value="Extendable">Extendable</option>
+                    <option value="Extendable Horizontally">Extendable Horizontally</option>
+                    <option value="Extendable Vertically">Extendable Vertically</option>
                     <option value="None">None</option>
                 </select>
             </div>
@@ -549,11 +598,11 @@
                     <label>Outside Perimeter</label>
                     <div class="checkbox-group">
                         <label class="checkbox-label">
-                            <input type="radio" name = "Outside Perimeter" id="perimeterYes" value="yes">
+                            <input type="radio" name = "Outside Perimeter" id="perimeterYes" value="Yes">
                             Yes
                         </label>
                         <label class="checkbox-label">
-                            <input type="radio" name = "Outside Perimeter" id="perimeterNo" value="no">
+                            <input type="radio" name = "Outside Perimeter" id="perimeterNo" value="No">
                             No
                         </label>
                     </div>
