@@ -10,10 +10,6 @@
 <body>
     <div class="app-header">
         <h1>FRC 7476 <span class="header-accent">SPONGEBOTICS</span> SCOUTING</h1>
-        <div class="username-wrapper">
-            <label>Scout</label>
-            <input type="text" id="userName" placeholder="Your name...">
-        </div>
     </div>
         
     <!-- Tabs -->
@@ -28,6 +24,10 @@
     <div id="scouting" class="tab-content active">
         <!-- Match Info -->
         <div class="sections">
+            <div class="username-wrapper">
+                <label>Scout</label>
+                <input type="text" id="userName" placeholder="Your name...">
+            </div>
             <div class="form-group">
                 <label>Event</label>
                 <select id="event">
@@ -42,7 +42,7 @@
                     <option value="Ontario Provincial Championship">Ontario Provincial Championship</option>
                 </select>
             </div>
-            <div class="form-group">
+            <div class="match-stage-buttons">
                 <label class="checkbox-label">
                     <input type="radio" name = "matchStage" id="playoff" value="no">
                     Playoffs
@@ -162,11 +162,6 @@
                         <button class="counter-btn" onclick="increment5('teleopFuelMissed')">+5</button>
                     </div>
                 </div>
-                
-                <div class="form-group">
-                    <label>Traversal Time (sec)</label>
-                    <input type="number" id="teleopTraversalTime" step="0.1">
-                </div>
 
                 <div class="form-group">
                     <label>Traversal</label>
@@ -195,11 +190,19 @@
                         </label>
                         <label class="checkbox-label">
                             <input type="checkbox" id="activeRoleScoring">
-                            Scoring
+                            Score
                         </label>
                         <label class="checkbox-label">
-                            <input type="checkbox" id="activeRoleFeed">
-                            Feed Human Station
+                            <input type="checkbox" id="activeRoleDeliver">
+                            Deliver to HP
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="activeRoleDefend">
+                            Defend
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="activeRoleNoMove">
+                            Didn't move
                         </label>
                     </div>
                 </div>
@@ -216,8 +219,8 @@
                             Funnel to Teammates
                         </label>
                         <label class="checkbox-label">
-                            <input type="checkbox" id="inactiveRoleFeed">
-                            Feed Human Station
+                            <input type="checkbox" id="inactiveRoleDeliver">
+                            Deliver to HP
                         </label>
                         <label class="checkbox-label">
                             <input type="checkbox" id="inactiveRoleBlock">
@@ -225,7 +228,11 @@
                         </label>
                         <label class="checkbox-label">
                             <input type="checkbox" id="inactiveRoleRefill">
-                            Refilling Hopper
+                            Refill Hopper
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="inactiveRoleNoMove">
+                            Didn't move
                         </label>
                     </div>
                 </div>
@@ -235,7 +242,7 @@
                     <div class="checkbox-group">
                         <label class="checkbox-label">
                             <input type="checkbox" id="transitionRoleScoring">
-                            Scoring
+                            Score
                         </label>
                         <label class="checkbox-label">
                             <input type="checkbox" id="transitionRoleLimit">
@@ -246,8 +253,8 @@
                             Funnel to Teammates
                         </label>
                         <label class="checkbox-label">
-                            <input type="checkbox" id="transitionRoleFeed">
-                            Feed Human Station
+                            <input type="checkbox" id="transitionRoleDeliver">
+                            Deliver to HP
                         </label>
                         <label class="checkbox-label">
                             <input type="checkbox" id="transitionRoleBlock">
@@ -255,7 +262,11 @@
                         </label>
                         <label class="checkbox-label">
                             <input type="checkbox" id="transitionRoleRefill">
-                            Refilling Hopper
+                            Refill Hopper
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="transitionRoleNoMove">
+                            Didn't move
                         </label>
                     </div>
                 </div>
@@ -279,7 +290,7 @@
                 </div>
                 
                 <div class="form-group">
-                    <label>Collaboration (1-10)</label>
+                    <label>Collaboration (1-4)</label>
                     <div class="slider-container">
                         <input type="range" id="teleopCollaboration" min="1" max="4" value="1" class="styled-slider">
                         <div class="slider-notches">
@@ -291,7 +302,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>Driving Skill (1-5)</label>
+                    <label>Driving Skill (1-4)</label>
                     <div class="slider-container">
                         <input type="range" id="drivingScore" min="1" max="4" value="1" class="styled-slider">
                         <div class="slider-notches">

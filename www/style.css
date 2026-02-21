@@ -385,4 +385,10 @@
         }
     }
 
+    .match-stage-buttons {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+
     

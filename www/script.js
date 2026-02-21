@@ -166,9 +166,11 @@ function generateMatchCSV(){
 
     // TELEOP ACTIVE
     const teleopActiveRoleArr = [
-        data.teleop.activeRole.funnel ? "Funnel" : null,
-        data.teleop.activeRole.scoring ? "Scoring" : null,
-        data.teleop.activeRole.feedHumanStation ? "Feed Human Station" : null
+        data.teleop.activeRole.funnel ? "Funnel to Teammates" : null,
+        data.teleop.activeRole.score ? "Score" : null,
+        data.teleop.activeRole.deliver ? "Deliver to HP" : null,
+        data.teleop.activeRole.defend ? "Defend" : null,
+        data.teleop.activeRole.noMove ? "Didn't move" : null
     ];
     
     let teleopActiveRole = "";
@@ -187,10 +189,11 @@ function generateMatchCSV(){
     // TELEOP INACTIVE
     const teleopInactiveRoleArr = [
         data.teleop.inactiveRole.limitingBalls ? "Limiting Balls" : null,
-        data.teleop.inactiveRole.funnel ? "Funnel" : null,
-        data.teleop.inactiveRole.feedHumanStation ? "Feed Human Station" : null,
+        data.teleop.inactiveRole.funnel ? "Funnel to Teammates" : null,
+        data.teleop.inactiveRole.deliver ? "Deliver to HP" : null,
         data.teleop.inactiveRole.blocking ? "Blocking" : null,
-        data.teleop.inactiveRole.refillHopper ? "Refill Hopper" : null
+        data.teleop.inactiveRole.refillHopper ? "Refill Hopper" : null,
+        data.teleop.inactiveRole.noMove ? "Didn't move" : null
     ];
 
     let teleopInactiveRole = "";
@@ -208,12 +211,13 @@ function generateMatchCSV(){
     
     // TELEOP TRANSITION
     const teleopTransitionRoleArr = [
+        data.teleop.transitionRole.score ? "Score" : null,
         data.teleop.transitionRole.limitingBalls ? "Limiting Balls" : null,
-        data.teleop.transitionRole.scoring ? "Scoring" : null,
-        data.teleop.transitionRole.feedHumanStation ? "Feed Human Station" : null,
+        data.teleop.transitionRole.funnel ? "Funnel to Teammates" : null,
+        data.teleop.transitionRole.deliver ? "Deliver to HP" : null,
         data.teleop.transitionRole.blocking ? "Blocking" : null,
-        data.teleop.transitionRole.funnel ? "Funnel" : null,
-        data.teleop.transitionRole.refillHopper ? "Refill Hopper" : null
+        data.teleop.transitionRole.refillHopper ? "Refill Hopper" : null,
+        data.teleop.transitionRole.noMove ? "Didn't move" : null
     ];
 
     let teleopTransitionRole = "";
@@ -286,7 +290,6 @@ function generateMatchCSV(){
         data.teleop.drivingScore,
         data.teleop.collaborationScore,
         data.endgame.disconnect,
-        data.teleop.traversalTimeSec,
         data.endgame.climbSpeed,
         data.endgame.notes
     ]
@@ -395,33 +398,37 @@ function collectMatchData(){
             fuelScored: parseInt(document.getElementById('teleopFuelScored').textContent),
             fuelMissed: parseInt(document.getElementById('teleopFuelMissed').textContent),
 
-            traversalTimeSec: document.getElementById('teleopTraversalTime').value,
-
             bumpTraversal: document.getElementById('Bump').checked ? "Yes" : "No",
             trenchTraversal: document.getElementById('Trench').checked ? "Yes" : "No",
             bothTraversal: document.getElementById('Both').checked ? "Yes" : "No",
 
             activeRole: {
                 funnel: document.getElementById('activeRoleFunnel').checked,
-                scoring: document.getElementById('activeRoleScoring').checked,
-                feedHumanStation: document.getElementById('activeRoleFeed').checked
+                score: document.getElementById('activeRoleScoring').checked,
+                deliver: document.getElementById('activeRoleDeliver').checked,
+                defend: document.getElementById('activeRoleDefend').checked,
+                noMove: document.getElementById('activeRoleNoMove').checked,
+
             },
 
             inactiveRole: {
                 limitingBalls: document.getElementById('inactiveRoleLimit').checked,
                 funnel: document.getElementById('inactiveRoleFunnel').checked,
-                feedHumanStation: document.getElementById('inactiveRoleFeed').checked,
+                deliver: document.getElementById('inactiveRoleDeliver').checked,
                 blocking: document.getElementById('inactiveRoleBlock').checked,
-                refillHopper: document.getElementById('inactiveRoleRefill').checked
+                refillHopper: document.getElementById('inactiveRoleRefill').checked,
+                noMove: document.getElementById('inactiveRoleNoMove').checked
+
             },
 
             transitionRole: {
                 limitingBalls: document.getElementById('transitionRoleLimit').checked,
-                scoring: document.getElementById('transitionRoleScoring').checked,
-                feedHumanStation: document.getElementById('transitionRoleFeed').checked,
+                score: document.getElementById('transitionRoleScoring').checked,
+                deliver: document.getElementById('transitionRoleDeliver').checked,
                 blocking: document.getElementById('transitionRoleBlock').checked,
                 funnel: document.getElementById('transitionRoleFunnel').checked,
-                refillHopper: document.getElementById('transitionRoleRefill').checked
+                refillHopper: document.getElementById('transitionRoleRefill').checked,
+                noMove: document.getElementById('transitionRoleNoMove').checked
             },
 
             fouls: parseInt(document.getElementById('teleopFouls').textContent),
