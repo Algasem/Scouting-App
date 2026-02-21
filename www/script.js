@@ -345,10 +345,11 @@ function generatePitCSV(){
     const values = [
         // Pit Scouting
         pitData.teamNumber,
+        pitData.teamName,
         pitData.climbLevel,
         pitData.heightInches,
-        intakeType,
         pitData.weightLbs,
+        intakeType,
         pitData.driveMechanism,
         pitData.strategy,
         features,
@@ -467,6 +468,7 @@ function collectMatchData(){
 function collectPitData(){
     const pitData = {
         teamNumber: document.getElementById('teamPitNum').value,
+        teamName: document.getElementById('teamPitName').value,
         climbLevel: document.getElementById('pitClimbLevel').value,
         heightInches: document.getElementById('pitHeight').value,
         weightLbs: document.getElementById('pitWeight').value,
