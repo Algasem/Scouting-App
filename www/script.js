@@ -126,7 +126,6 @@ function resetForm(){
     arrayOfButtons[4] = document.getElementById('autoFuelMissed');
     arrayOfButtons[5] = document.getElementById('autoFuelScored');
     arrayOfButtons[6] = document.getElementById('teleopFouls');
-    arrayOfButtons[7] = document.getElementById('teleopCycles');
 
     for(let i = 0; i < arrayOfButtons.length; i++){
         arrayOfButtons[i].textContent = '0';
@@ -235,7 +234,7 @@ function generateMatchCSV(){
 
     let traversalType = "";
     if(data.teleop.bumpTraversal){
-        traversalType = "Bump,";
+        traversalType = "Bump";
     }
     else if(data.teleop.trenchTraversal){
         traversalType = "Trench";
@@ -255,6 +254,14 @@ function generateMatchCSV(){
     let totalMatch = matchType + data.matchNumber;
 
     console.log(totalMatch);
+
+    let humanPlayerRoles = "";
+    if(data.humanPlayer.fedRobot){
+        humanPlayerRoles = "Fed balls to Robot";
+    }
+    else if(data.humanPlayer.fedHumanPlayers){
+        humanplayerRolers = "Fed balls to Human Players";
+    }
 
     let autoClimbLevel = data.auto.climbLevel.substring(6);
     let endgameClimbLevel = "L"+data.endgame.climbLevel.substring(6);
@@ -286,12 +293,15 @@ function generateMatchCSV(){
         endgameClimbLevel,
         data.teleop.fouls,
 
-        //traversalType,
         data.teleop.drivingScore,
         data.teleop.collaborationScore,
         data.endgame.disconnect,
         data.endgame.climbSpeed,
-        data.endgame.notes
+        data.endgame.notes,
+        data.auto.ballsCollectedToOurSide,
+        traversalType,
+        humanPlayerRoles,
+        data.humanPlayer.HPnotes
     ]
 
     for(let i = 0; i < values.length; i++){
@@ -378,8 +388,8 @@ function collectMatchData(){
 
         // Match info
         event: document.getElementById('event').value,
-        qualMatch: document.getElementById('playoff').checked ? "Yes" : "No",
-        playoffMatch: document.getElementById('qualification').checked ? "Yes" : "No",
+        qualMatch: document.getElementById('qualification').checked,
+        playoffMatch: document.getElementById('playoff').checked,
         matchNumber: document.getElementById('matchNumber').value,
         teamNumber: document.getElementById('teamNumber').value,
         scoutName: document.getElementById('userName').value,
@@ -387,7 +397,6 @@ function collectMatchData(){
 
         auto: {
             climbLevel: document.getElementById('autoClimbLevel').value,
-            climbSpeed: document.getElementById('autoClimbSpeed').value,
 
             fuelScored: parseInt(document.getElementById('autoFuelScored').textContent),
             fuelMissed: parseInt(document.getElementById('autoFuelMissed').textContent),
@@ -399,9 +408,9 @@ function collectMatchData(){
             fuelScored: parseInt(document.getElementById('teleopFuelScored').textContent),
             fuelMissed: parseInt(document.getElementById('teleopFuelMissed').textContent),
 
-            bumpTraversal: document.getElementById('Bump').checked ? "Yes" : "No",
-            trenchTraversal: document.getElementById('Trench').checked ? "Yes" : "No",
-            bothTraversal: document.getElementById('Both').checked ? "Yes" : "No",
+            bumpTraversal: document.getElementById('Bump').checked,
+            trenchTraversal: document.getElementById('Trench').checked,
+            bothTraversal: document.getElementById('Both').checked,
 
             activeRole: {
                 funnel: document.getElementById('activeRoleFunnel').checked,
@@ -433,7 +442,6 @@ function collectMatchData(){
             },
 
             fouls: parseInt(document.getElementById('teleopFouls').textContent),
-            cycles: parseInt(document.getElementById('teleopCycles').textContent),
 
             collaborationScore: document.getElementById('teleopCollaboration').value,
             drivingScore: document.getElementById('drivingScore').value,
@@ -468,7 +476,6 @@ function collectMatchData(){
 function collectPitData(){
     const pitData = {
         teamNumber: document.getElementById('teamPitNum').value,
-        teamName: document.getElementById('teamPitName').value,
         climbLevel: document.getElementById('pitClimbLevel').value,
         heightInches: document.getElementById('pitHeight').value,
         weightLbs: document.getElementById('pitWeight').value,
