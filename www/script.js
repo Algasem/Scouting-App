@@ -12,7 +12,6 @@ const teamData = {
     "1114": "Simbotics",
     "1229": "Tidal Shift",
     "1241": "THEORY6",
-    "1285": "The Biggest Birds",
     "1305": "Ice Cubed",
     "1310": "Runnymede Robotics",
     "1325": "Inverse Paradox",
@@ -20,10 +19,9 @@ const teamData = {
     "1360": "Orbit Robotics",
     "2013": "Cybergnomes",
     "2056": "OP Robotics",
-    "2198": "Paradigm Shift Robotics",
     "2200": "BCR Blackout",
     "2386": "Trojans",
-    "2609": "BeaverworX",
+    "2609": "Beaverworx",
     "2634": "The Gryphons",
     "2702": "Rebels",
     "2706": "Merge Robotics",
@@ -71,7 +69,7 @@ const teamData = {
     "6162": "Cap Alpaca 6162",
     "6397": "Romero Robotics",
     "6632": "Northview Robotics",
-    "6725": "Westminster WildBOTS",
+    "6725": "WildBOTS",
     "6854": "Viking Robotics",
     "6859": "Big Metal Lakers 6859- BML Robotics",
     "6864": "GryphTech Robotics",
@@ -79,18 +77,13 @@ const teamData = {
     "6875": "Amazon Warriors Robotics",
     "6975": "The Neil McNeil Brotherhood Bots",
     "6978": "QuickStrike Niagara",
-    "6987": "Falcon Automation",
-    "7022": "ACE Robotics",
     "7058": "StrathDroids",
-    "7136": "Titanium Titans",
     "7200": "Banting Robotics",
-    "7475": "WIRED 7475",
     "7476": "EOM Robotics 7476",
     "7480": "Machine Mavericks",
     "7520": "Team MineKee",
     "7558": "ALT-F4",
     "7603": "7603 VESPA ROBOTICS",
-    "7623": "Morebotics",
     "7659": "HNMCS Robotics",
     "7712": "ACCN UMOJA",
     "7757": "Atomic Dishwashers",
@@ -99,39 +92,36 @@ const teamData = {
     "8089": "Rockway Robotics",
     "8349": "Newbotics",
     "8729": "Sparkling H2O",
-    "8731": "Wild WYRE",
     "8764": "Thunder Robotics",
-    "8789": "The Lost Sockets",
+    "8789": "The Lost 10mm Sockets",
     "8850": "Ed Bears",
     "8884": "Knight Owls",
     "9062": "Critical Circuits",
     "9098": "FireHawks",
-    "9127": "EOM Robotics 9127",
     "9262": "Humberside Huskies",
     "9263": "ALD Lions",
-    "9525": "NileTech",
     "9562": "Royal Robotics",
     "9569": "Milliken Mills Silver Knights",
     "9575": "Silver Robotics",
     "9580": "Grizzly Gears",
     "9589": "Arcade Robotics",
-    "9592": "Blue’s Bolts n' Bots",
+    "9592": "Blues Robotics",
     "9659": "Vanier Vikings",
     "9782": "Wextech Titans",
     "9785": "Alectrona",
     "10015": "Bubbles",
-    "10027": "Spontaneous Combustion",
     "10167": "Jeunes Sans Frontières",
-    "10218": "No Signal",
-    "10279": "The Erudites",
-    "10464": "The Wash",
     "10514": "Mixed Métal",
-    "10535": "Liberian Canadian Association of London",
     "10554": "Team VIPER",
-    "10579": "BoschBotics",
     "10611": "Gemini Robotics",
-    "10634": "The Last Gambit"
-}
+    "10924": "Titanium Titans",
+    "11002": "Montcalm Robotics",
+    "11215": "Les Panthères",
+    "11227": "Goose Goose Duck",
+    "11270": "Nova",
+    "11362": "RoBumpers",
+    "11428": "Corpus Christi"
+};
 
 function getTeamName(teamNumber) {
     const name = teamData[String(teamNumber)];
@@ -255,19 +245,15 @@ function decrement5(buttonID) {
 function resetForm(){
     
     // Reset all +- buttons
-    const arrayOfButtons = [];
-
-    arrayOfButtons[0] = document.getElementById('endgameFuelScored');
-    arrayOfButtons[1] = document.getElementById('endgameFuelMissed');
-    arrayOfButtons[2] = document.getElementById('teleopFuelMissed');
-    arrayOfButtons[3] = document.getElementById('teleopFuelScored');
-    arrayOfButtons[4] = document.getElementById('autoFuelMissed');
-    arrayOfButtons[5] = document.getElementById('autoFuelScored');
-    arrayOfButtons[6] = document.getElementById('teleopFouls');
-
-    for(let i = 0; i < arrayOfButtons.length; i++){
-        arrayOfButtons[i].textContent = '0';
-    }
+    const counterIds = [
+        'teleopFuelMissed','teleopFuelScored',
+        'autoFuelMissed','autoFuelScored','teleopFouls',
+        'humanPlayerFuelMissed','humanPlayerFuelScored'
+    ];
+    counterIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = '0';
+    });
 
     // Reset all checkboxes
     const allCheckboxes = document.querySelectorAll('input[type="checkbox"]');
@@ -605,7 +591,7 @@ function collectMatchData(){
             fedRobot: document.getElementById('fedRobot').checked,
             fedHumanPlayers: document.getElementById('fedHumanPlayers').checked,
         
-           HPnotes: document.getElementById('endgameNotes').value
+           HPnotes: (document.getElementById('humanPlayerNotes') || document.getElementById('endgameNotes') || {value:''}).value
         }
         
     }
@@ -722,27 +708,10 @@ function pastMatchesQR() {
         matchButton.className = "match-button";
 
         matchButton.onclick = () => {
-
-            openQRModal(allMatches[i], "Match " + (i + 1) + " QR");
-
-            console.log(`Generated QR Code for Match ` + i);
-        };
-
-        const deleteButton = document.createElement("button");
-        deleteButton.textContent = "Delete Match";
-        deleteButton.className = "match-button";
-
-        deleteButton.onclick = () => {
-            localStorage.removeItem("Match" + i);
-        
-            let currentCount = Number(localStorage.getItem("MatchCount")) || 0;
-            localStorage.setItem("MatchCount", currentCount - 1);
-        
-            window.location.reload();
+            openQRModal(allMatches[i], "Match " + (i + 1) + " QR", "Match" + i);
         };
 
         matchContent.appendChild(matchButton);
-        qrWindow.appendChild(deleteButton);
     }
 }
 
@@ -776,10 +745,7 @@ function pastPitsQR() {
         pitButton.className = "match-button"; //use same style as match buttons
 
         pitButton.onclick = () => {
-
-            openQRModal(allPits[i], "Pit " + (i + 1) + " QR");
-
-            console.log(`Generated QR Code for Pit ` + i);
+            openQRModal(allPits[i], "Pit " + (i + 1) + " QR", "Pit" + i);
         };
 
         pitContent.appendChild(pitButton);
@@ -789,7 +755,7 @@ function pastPitsQR() {
 }
 
 
-function openQRModal(text, title) {
+function openQRModal(text, title, deleteKey) {
     const modal = document.getElementById("qrModal");
     const qrTitle = document.getElementById("qrModalTitle");
     const qrCodeDiv = document.getElementById("qrcode");
@@ -808,6 +774,25 @@ function openQRModal(text, title) {
         correctLevel: QRCode.CorrectLevel.L,
     });
 
+    // Remove any previous delete button
+    const existing = document.getElementById("modalDeleteBtn");
+    if (existing) existing.remove();
+
+    if (deleteKey) {
+        const deleteButton = document.createElement("button");
+        deleteButton.id = "modalDeleteBtn";
+        deleteButton.textContent = "Delete";
+        deleteButton.className = "match-button";
+        deleteButton.style.cssText = "margin-top:12px;width:100%;background:rgba(192,57,43,0.15);border-color:rgba(192,57,43,0.5);color:#E57373;";
+        deleteButton.onclick = () => {
+            localStorage.removeItem(deleteKey);
+            const countKey = deleteKey.startsWith("Pit") && !deleteKey.startsWith("PitCount") ? "PitCount" : "MatchCount";
+            localStorage.setItem(countKey, Math.max(0, (Number(localStorage.getItem(countKey)) || 1) - 1));
+            window.location.reload();
+        };
+        document.querySelector("#qrModal .modal-content").appendChild(deleteButton);
+    }
+
     modal.classList.add("active");
 }
 
@@ -816,6 +801,8 @@ function closeQRModal() {
     const qrCodeDiv = document.getElementById("qrcode");
     modal.classList.remove("active");
     qrCodeDiv.innerHTML = "";
+    const existing = document.getElementById("modalDeleteBtn");
+    if (existing) existing.remove();
 }
 
 window.onload = function () {
