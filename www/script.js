@@ -597,7 +597,7 @@ function generateMatchCSV(){
         humanPlayerRoles = "Fed balls to Robot";
     }
     else if(data.humanPlayer.fedHumanPlayers){
-        humanplayerRolers = "Fed balls to Human Players";
+        humanPlayerRoles = "Fed balls to Human Players";
     }
 
     let autoClimbLevel = data.auto.climbLevel.substring(6);
@@ -705,7 +705,6 @@ function generatePitCSV(){
         pitData.hopperType,
         pitData.hopperCapacity,
         pitData.driveExperience,
-        pitData.estimatedCycles,
         pitData.buildQuality,
         pitData.outsidePerimeter,
         pitData.breakdowns,
@@ -833,7 +832,6 @@ function collectPitData(){
         hopperType: document.getElementById('pitHopperType').value,
         hopperCapacity: document.getElementById('pitHopperCapacity').value,
         driveExperience: document.getElementById('pitDriveExperience').value,
-        estimatedCycles: document.getElementById('pitEstimatedCycles').value,
         buildQuality: document.getElementById('pitBuildQuality').value,
         outsidePerimeter: document.querySelector('input[name="Outside Perimeter"]:checked')?.value || "",             
         breakdowns: document.getElementById('pitBreakdowns').value,
@@ -1037,6 +1035,26 @@ function updateMatchCount() {
 function updatePitCount() {
     const count = Number(localStorage.getItem("PitCount")) || 0;
     document.getElementById("pitHistoryCount").textContent = count;
+}
+
+function exportAllPitCSV(){
+    let totalPit = "";
+
+    for(let i = 0; i < pitCount; i++){
+        totalPit += localStorage.getItem("Pit" + i) + "\n";
+    }
+
+    downloadCSV(totalPit, "ALL_PITS");
+}
+
+function exportAllMatchCSV(){
+    let totalMatch = "";
+
+    for(let i = 0; i < pitCount; i++){
+        totalMatch += localStorage.getItem("Match" + i) + "\n";
+    }
+
+    downloadCSV(totalMatch, "ALL_MATCHES");
 }
 
 function clearHistory(){
