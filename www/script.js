@@ -1039,22 +1039,32 @@ function updatePitCount() {
 
 function exportAllPitCSV(){
     let totalPit = "";
+    const pitCount = Number(localStorage.getItem("PitCount")) || 0;
 
     for(let i = 0; i < pitCount; i++){
-        totalPit += localStorage.getItem("Pit" + i) + "\n";
+        const pit = localStorage.getItem("Pit" + i);
+        if (pit) {
+            totalPit += pit + "\n";
+        }
     }
 
     downloadCSV(totalPit, "ALL_PITS");
+    openQRModal(totalPit, "ALL PITS", "ALL PITS");
 }
 
 function exportAllMatchCSV(){
     let totalMatch = "";
+    const matchCount = Number(localStorage.getItem("MatchCount")) || 0;
 
-    for(let i = 0; i < pitCount; i++){
-        totalMatch += localStorage.getItem("Match" + i) + "\n";
+    for(let i = 0; i < count; i++){
+        const match = localStorage.getItem("Match" + i);
+        if (match) {
+            totalMatch += match + "\n";
+        }
     }
 
     downloadCSV(totalMatch, "ALL_MATCHES");
+    openQRModal(totalMatch, "ALL MATCHES", "ALL MATCHES");
 }
 
 function clearHistory(){
