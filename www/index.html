@@ -52,12 +52,11 @@
 
           <div class="form-group">
             <label>Match #</label>
-            <input type="number" id="matchNumber" min="1" placeholder="0">
+            <input type="number" id="matchNumber" min="1" max="100" oninput="if(this.value > 100) this.value = 100; if(this.value < 1 && this.value !== '') this.value = 1;">
           </div>
-
           <div class="form-group">
-            <label>Team #</label>
-            <input type="number" id="teamNumber" min="1" placeholder="0000">
+              <label>Team #</label>
+              <input type="number" id="teamNumber" min="1" max="12000" oninput="if(this.value > 12000) this.value = 12000; if(this.value < 1 && this.value !== '') this.value = 1;">
           </div>
 
           <div class="form-group">
@@ -386,7 +385,8 @@
       </div>
 
       <div class="export-buttons">
-        <button class="btn btn-secondary" onclick="exportAllCSV()">Export All (CSV)</button>
+        <button class="btn btn-secondary" onclick="exportAllPitCSV()">Export All Pits</button>
+        <button class="btn btn-secondary" onclick="exportAllMatchCSV()">Export All Matches</button>
         <button class="btn btn-danger"    onclick="clearHistory()">Clear All History</button>
       </div>
 
@@ -402,7 +402,7 @@
 
         <div class="form-group">
           <label>Team Number</label>
-          <input type="number" id="teamPitNum" placeholder="0000">
+          <input type="number" id="teamPitNum" min="1" max="12000" oninput="if(this.value > 12000) this.value = 12000; if(this.value < 1 && this.value !== '') this.value = 1;">
         </div>
 
         <div class="form-group">
@@ -418,12 +418,13 @@
 
         <div class="match-info-grid">
           <div class="form-group">
-            <label>Height (in)</label>
-            <input type="number" id="pitHeight" step="0.1" placeholder="0.0">
+            <label>Height (inches)</label>
+            <input type="number" id="pitHeight" step="0.1" max="30" oninput="if(this.value > 30) this.value = 30; if(this.value < 0) this.value = 0;">
           </div>
+            
           <div class="form-group">
             <label>Weight (lbs)</label>
-            <input type="number" id="pitWeight" step="0.1" placeholder="0.0">
+            <input type="number" id="pitWeight" step="0.1" max="115" oninput="if(this.value > 115) this.value = 115; if(this.value < 0) this.value = 0;">
           </div>
         </div>
 
@@ -485,11 +486,6 @@
             <option value="Advanced">Advanced</option>
             <option value="Expert">Expert</option>
           </select>
-        </div>
-
-        <div class="form-group">
-          <label>Estimated Cycles</label>
-          <input type="number" id="pitEstimatedCycles" min="0" placeholder="0">
         </div>
 
         <div class="form-group">
@@ -559,6 +555,38 @@
       <button class="btn btn-secondary" onclick="closePreviewModal()" style="margin-top:14px;width:100%">Close</button>
     </div>
   </div>
+
+   <!-- Unified Validation Modal -->
+   <div id="validationModal" class="modal">
+    <div class="modal-content validation-modal-content">
+        <button class="modal-close" onclick="closeValidationModal()" aria-label="Close">X</button>
+        <div class="validation-modal-icon">⚠️</div>
+        <h2 class="validation-modal-title">Before You Save</h2>
+
+        <!-- Required errors — blocks saving -->
+        <div id="validationRequiredSection">
+            <div class="validation-section-header required-header">
+                <span class="validation-section-badge required-badge">Required</span>
+                <span class="validation-section-sub">Fix these before saving</span>
+            </div>
+            <ul id="validationRequiredList" class="validation-error-list"></ul>
+        </div>
+
+        <!-- Warnings -->
+        <div id="validationWarningSection">
+            <div class="validation-section-header warning-header">
+                <span class="validation-section-badge warning-badge">Heads Up</span>
+                <span class="validation-section-sub">These fields are blank</span>
+            </div>
+            <ul id="validationWarningList" class="validation-error-list"></ul>
+        </div>
+
+        <div class="validation-modal-buttons">
+            <button class="validation-cancel-btn" onclick="closeValidationModal()">Go Back</button>
+            <button class="validation-ok-btn" id="validationSaveAnyway" onclick="saveAnywayFromModal()">Save Anyway</button>
+        </div>
+    </div>
+</div>
 
   <script src="script.js"></script>
   <script>
