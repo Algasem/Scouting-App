@@ -123,6 +123,94 @@ const teamData = {
     "11428": "Corpus Christi"
 };
 
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyXn4Mg7BqH8f-KfDuZe77Wrf-JLUUrLtArWPhYjtdO-Q-wvtcJi3qP7_rW88yoJQCu7A/exec"; // Your URL
+
+async function syncToSheets() {
+  try {
+    if (!navigator.onLine) {
+      alert('❌ No internet connection');
+      return;
+    }
+    
+    const matchCount = Number(localStorage.getItem("MatchCount")) || 0;
+    const pitCount = Number(localStorage.getItem("PitCount")) || 0;
+    
+    if (matchCount === 0 && pitCount === 0) {
+      alert('No data to sync');
+      return;
+    }
+    
+    // Collect matches - PROPER CSV PARSING
+    const matches = [];
+    for (let i = 0; i < matchCount; i++) {
+      const csv = localStorage.getItem("Match" + i);
+      if (csv) {
+        matches.push(parseCSVRow(csv));
+      }
+    }
+    
+    // Collect pits - PROPER CSV PARSING
+    const pits = [];
+    for (let i = 0; i < pitCount; i++) {
+      const csv = localStorage.getItem("Pit" + i);
+      if (csv) {
+        pits.push(parseCSVRow(csv));
+      }
+    }
+    
+    // Send to Google Sheets
+    const response = await fetch(SCRIPT_URL, {
+      method: 'POST',
+      body: JSON.stringify({ matches, pits })
+    });
+    
+    const result = await response.json();
+    
+    if (result.success) {
+      alert(`✓ Synced ${result.matches} matches, ${result.pits} pits`);
+    } else {
+      alert('❌ Sync failed: ' + result.error);
+    }
+    
+  } catch (error) {
+    alert('❌ Sync failed: ' + error.message);
+  }
+}
+
+// Proper CSV parser that handles quoted fields with commas
+function parseCSVRow(csvString) {
+  const result = [];
+  let current = '';
+  let inQuotes = false;
+  
+  for (let i = 0; i < csvString.length; i++) {
+    const char = csvString[i];
+    const nextChar = csvString[i + 1];
+    
+    if (char === '"') {
+      if (inQuotes && nextChar === '"') {
+        // Escaped quote ("")
+        current += '"';
+        i++; // Skip next quote
+      } else {
+        // Toggle quote state
+        inQuotes = !inQuotes;
+      }
+    } else if (char === ',' && !inQuotes) {
+      // End of field
+      result.push(current);
+      current = '';
+    } else {
+      current += char;
+    }
+  }
+  
+  // Add last field
+  result.push(current);
+  
+  return result;
+}
+
 function getTeamName(teamNumber) {
     const name = teamData[String(teamNumber)];
     return name || 'Unknown Team';
