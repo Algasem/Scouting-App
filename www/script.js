@@ -129,7 +129,7 @@ async function syncToSheets() {
   try {
     if (!navigator.onLine) {
       alert('❌ No internet connection');
-      return;
+      return
     }
     
     const matchCount = Number(localStorage.getItem("MatchCount")) || 0;
@@ -982,83 +982,135 @@ function savePit(){
 
 function pastMatchesQR() {
     const matchContent = document.getElementById("matchContent");
-    const qrWindow = document.getElementById("qrModal");
-
-    // Clear previous content
     matchContent.innerHTML = "";
-
     let allMatches = [];
 
-    // loop thru all matches
     for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i); 
         if (key.startsWith("Match") && !key.startsWith("MatchCount")) {
-            const matchIndex = parseInt(key.replace("Match", ""), 10); // Extract index from key
+            const matchIndex = parseInt(key.replace("Match", ""), 10);
             allMatches[matchIndex] = localStorage.getItem(key);
         }
     }
 
     for (let i = 0; i < allMatches.length; i++) {
+        let tempArr = parseCSVRow(allMatches[i]);
 
-        const matchButton = document.createElement("button");
-        let tempArr = allMatches[i].split(',')
+        const matchDiv = document.createElement("div");
+        matchDiv.style.cssText = "display:flex; gap:6px;";
         
-        for(let i = 0; i < tempArr.length; i++){
-            tempArr[i] = tempArr[i].replaceAll('"', '');
-        }
-
-        matchButton.textContent = tempArr[0] + " -- " + tempArr[1];
+        const matchButton = document.createElement("button");
+        matchButton.textContent = tempArr[0] + " -- " + tempArr[2];
         matchButton.className = "match-button";
+        matchButton.style.flex = "1";
+        matchButton.onclick = () => openQRModal(allMatches[i], "Match QR");
+        
+        const editBtn = document.createElement("button");
+        editBtn.textContent = "✏️";
+        editBtn.className = "match-button";
+        editBtn.style.cssText = "width:50px; flex-shrink:0;";
+        editBtn.onclick = () => openEditModal(i, allMatches[i], tempArr[0] + " -- " + tempArr[2]);
+        
+        matchDiv.appendChild(matchButton);
+        matchDiv.appendChild(editBtn);
+        matchContent.appendChild(matchDiv);
+    }
+}
 
-        matchButton.onclick = () => {
-            openQRModal(allMatches[i], "Match " + (i + 1) + " QR", "Match" + i);
-        };
+let editingIndex = null;
+let editingType = 'match';
 
-        matchContent.appendChild(matchButton);
+function openEditModal(index, csv, title) {
+    editingIndex = index;
+    editingType = 'match';
+    document.getElementById('editModalTitle').textContent = 'Edit: ' + title;
+    document.getElementById('editCSV').value = csv;
+    document.getElementById('editModal').classList.add('active');
+}
+
+function closeEditModal() {
+    document.getElementById('editModal').classList.remove('active');
+    editingIndex = null;
+}
+
+function saveEdit() {
+    const newCSV = document.getElementById('editCSV').value.trim();
+    
+    if (!newCSV) {
+        alert('CSV cannot be empty');
+        return;
+    }
+    
+    const key = editingType === 'match' ? "Match" : "Pit";
+    localStorage.setItem(key + editingIndex, newCSV);
+    
+    closeEditModal();
+    
+    if (editingType === 'match') {
+        pastMatchesQR();
+    } else {
+        pastPitsQR();
+    }
+    
+    alert('Saved!');
+}
+
+function deleteFromEdit() {
+    if (confirm('Delete this? Cannot be undone.')) {
+        const key = editingType === 'match' ? "Match" : "Pit";
+        const countKey = editingType === 'match' ? "MatchCount" : "PitCount";
+        
+        localStorage.removeItem(key + editingIndex);
+        
+        let currentCount = Number(localStorage.getItem(countKey)) || 0;
+        localStorage.setItem(countKey, Math.max(0, currentCount - 1));
+        
+        closeEditModal();
+        window.location.reload();
     }
 }
 
 function pastPitsQR() {
     const pitContent = document.getElementById("pitContent");
-
-    // Clear previous content
     pitContent.innerHTML = "";
-
     let allPits = [];
 
-    // Loop through all keys in localStorage and filter for pits
     for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i);
-        if (key.startsWith("Pit")) {
+        if (key.startsWith("Pit") && !key.startsWith("PitCount")) {
             const pitIndex = parseInt(key.replace("Pit", ""), 10);
             allPits[pitIndex] = localStorage.getItem(key);
         }
     }
 
     for (let i = 0; i < allPits.length; i++) {
+        let tempArr = parseCSVRow(allPits[i]);
 
-        let tempArr = allPits[i].split(',')
+        const pitDiv = document.createElement("div");
+        pitDiv.style.cssText = "display:flex; gap:6px;";
         
-        for(let i = 0; i < tempArr.length; i++){
-            tempArr[i] = tempArr[i].replaceAll('"', '');
-        }
-
         const pitButton = document.createElement("button");
         pitButton.textContent = "Pit " + tempArr[0];
-        pitButton.className = "match-button"; //use same style as match buttons
-
-        pitButton.onclick = () => {
-            openQRModal(allPits[i], "Pit " + (i + 1) + " QR", "Pit" + i);
+        pitButton.className = "match-button";
+        pitButton.style.flex = "1";
+        pitButton.onclick = () => openQRModal(allPits[i], "Pit QR");
+        
+        const editBtn = document.createElement("button");
+        editBtn.textContent = "✏️";
+        editBtn.className = "match-button";
+        editBtn.style.cssText = "width:50px; flex-shrink:0;";
+        editBtn.onclick = () => {
+            editingType = 'pit';
+            openEditModal(i, allPits[i], "Pit " + tempArr[0]);
         };
-
-        pitContent.appendChild(pitButton);
+        
+        pitDiv.appendChild(pitButton);
+        pitDiv.appendChild(editBtn);
+        pitContent.appendChild(pitDiv);
     }
-
-    
 }
 
-
-function openQRModal(text, title, deleteKey) {
+function openQRModal(text, title) {
     const modal = document.getElementById("qrModal");
     const qrTitle = document.getElementById("qrModalTitle");
     const qrCodeDiv = document.getElementById("qrcode");
@@ -1076,25 +1128,6 @@ function openQRModal(text, title, deleteKey) {
         colorLight: "#ffffff",
         correctLevel: QRCode.CorrectLevel.L,
     });
-
-    // Remove any previous delete button
-    const existing = document.getElementById("modalDeleteBtn");
-    if (existing) existing.remove();
-
-    if (deleteKey) {
-        const deleteButton = document.createElement("button");
-        deleteButton.id = "modalDeleteBtn";
-        deleteButton.textContent = "Delete";
-        deleteButton.className = "match-button";
-        deleteButton.style.cssText = "margin-top:12px;width:100%;background:rgba(192,57,43,0.15);border-color:rgba(192,57,43,0.5);color:#E57373;";
-        deleteButton.onclick = () => {
-            localStorage.removeItem(deleteKey);
-            const countKey = deleteKey.startsWith("Pit") && !deleteKey.startsWith("PitCount") ? "PitCount" : "MatchCount";
-            localStorage.setItem(countKey, Math.max(0, (Number(localStorage.getItem(countKey)) || 1) - 1));
-            window.location.reload();
-        };
-        document.querySelector("#qrModal .modal-content").appendChild(deleteButton);
-    }
 
     modal.classList.add("active");
 }
@@ -1137,7 +1170,7 @@ function exportAllPitCSV(){
     }
 
     downloadCSV(totalPit, "ALL_PITS");
-    openQRModal(totalPit, "ALL PITS", "ALL PITS");
+    openQRModal(totalPit, "ALL PITS");
 }
 
 function exportAllMatchCSV(){
@@ -1152,7 +1185,7 @@ function exportAllMatchCSV(){
     }
 
     downloadCSV(totalMatch, "ALL_MATCHES");
-    openQRModal(totalMatch, "ALL MATCHES", "ALL MATCHES");
+    openQRModal(totalMatch, "ALL MATCHES");
 }
 
 function clearHistory(){

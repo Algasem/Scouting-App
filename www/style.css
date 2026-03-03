@@ -690,6 +690,16 @@ textarea {
 .modal-hint {
   font-size: 12px;
   color: var(--text-muted);
+  padding-top: 10px;
+}
+
+details {
+  border: 1px solid #ccc;
+  display: inline-block;
+  font-size: small;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
 }
 
 /* ─── EXPORT BUTTONS ─── */
