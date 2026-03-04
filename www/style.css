@@ -898,14 +898,14 @@ details {
 .slider-notches {
     display: flex;
     justify-content: space-between;
-    padding: 5px;
+    padding: 10px;
     font-size: 12px;
     font-weight: bold;
     color: var(--yellow);
 }
 
 .slider-notches span {
-    width: 20px;
+    width: 52px;
     text-align: center;
 }
 

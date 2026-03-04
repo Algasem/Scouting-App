@@ -691,6 +691,106 @@ function generateMatchCSV(){
     let autoClimbLevel = data.auto.climbLevel.substring(6);
     let endgameClimbLevel = "L"+data.endgame.climbLevel.substring(6);
 
+    let autoFuelSCORE = 0;
+
+    switch (data.auto.fuelScored) {
+        case "0":
+            autoFuelSCORE = 0;
+            break;
+        case "40":
+            autoFuelSCORE = 1;
+            break;
+        case "80":
+            autoFuelSCORE = 2;
+            break;
+        case "120":
+            autoFuelSCORE = 3;
+            break;
+        case "160":
+            autoFuelSCORE = 4;
+            break;
+        case "200":
+            autoFuelSCORE = 5;
+            break;
+        default:
+            autoFuelSCORE = 0;
+    }  
+    
+    let autoFuelMISS = 0;
+
+    switch (data.auto.fuelMissed) {
+        case "0":
+            autoFuelMISS = 0;
+            break;
+        case "40":
+            autoFuelMISS = 1;
+            break;
+        case "80":
+            autoFuelMISS = 2;
+            break;
+        case "120":
+            autoFuelMISS = 3;
+            break;
+        case "160":
+            autoFuelMISS = 4;
+            break;
+        case "200":
+            autoFuelMISS = 5;
+            break;
+        default:
+            autoFuelMISS = 0;
+    }
+
+    let fuelSCORE = 0;
+
+    switch (data.teleop.fuelScored) {
+        case "0":
+            fuelSCORE = 0;
+            break;
+        case "40":
+            fuelSCORE = 1;
+            break;
+        case "80":
+            fuelSCORE = 2;
+            break;
+        case "120":
+            fuelSCORE = 3;
+            break;
+        case "160":
+            fuelSCORE = 4;
+            break;
+        case "200":
+            fuelSCORE = 5;
+            break;
+        default:
+            fuelSCORE = 0;
+    }
+
+    let fuelMISS = 0;
+
+    switch (data.teleop.fuelMissed) {
+        case "0":
+            fuelMISS = 0;
+            break;
+        case "40":
+            fuelMISS = 1;
+            break;
+        case "80":
+            fuelMISS = 2;
+            break;
+        case "120":
+            fuelMISS = 3;
+            break;
+        case "160":
+            fuelMISS = 4;
+            break;
+        case "200":
+            fuelMISS = 5;
+            break;
+        default:
+            fuelMISS = 0;
+    }
+
     const values = [
 
         // General  
@@ -701,15 +801,15 @@ function generateMatchCSV(){
         data.scoutName,
 
         // Auto Scouting
-        data.auto.fuelScored,
-        data.auto.fuelMissed,
+        autoFuelSCORE,
+        autoFuelMISS,
         autoClimbLevel,
         "",
         // data.auto.ballsCollectedToOurSide,
 
         // Teleop Scouting
-        data.teleop.fuelScored,
-        data.teleop.fuelMissed,
+        fuelSCORE,
+        fuelMISS,
         data.humanPlayer.fuelScored,
         data.humanPlayer.fuelMissed,
         teleopActiveRole,
@@ -824,15 +924,15 @@ function collectMatchData(){
         auto: {
             climbLevel: document.getElementById('autoClimbLevel').value,
 
-            fuelScored: parseInt(document.getElementById('autoFuelScored').textContent),
-            fuelMissed: parseInt(document.getElementById('autoFuelMissed').textContent),
+            fuelScored: document.getElementById('autoFuelScored').value,
+            fuelMissed: document.getElementById('autoFuelMissed').value,
 
             ballsCollectedToOurSide: document.getElementById('autoBallsCollected').checked,
         },
 
         teleop: {
-            fuelScored: parseInt(document.getElementById('teleopFuelScored').textContent),
-            fuelMissed: parseInt(document.getElementById('teleopFuelMissed').textContent),
+            fuelScored: document.getElementById('teleopFuelScored').value,
+            fuelMissed: document.getElementById('teleopFuelMissed').value,
 
             bumpTraversal: document.getElementById('Bump').checked,
             trenchTraversal: document.getElementById('Trench').checked,
@@ -1019,6 +1119,7 @@ function pastMatchesQR() {
 
 let editingIndex = null;
 let editingType = 'match';
+let _pendingSaveCallback = null;
 
 function openEditModal(index, csv, title) {
     editingIndex = index;
@@ -1055,18 +1156,89 @@ function saveEdit() {
     alert('Saved!');
 }
 
+function fillTestData() {
+    // Match info
+    document.getElementById('event').value = 'North Bay';
+    document.getElementById('qualification').checked = true;
+    document.getElementById('matchNumber').value = Math.floor(Math.random() * 50) + 1;
+    document.getElementById('teamNumber').value = Math.floor(Math.random() * 10000) + 1000;
+    document.getElementById('driverStation').value = ['R1', 'R2', 'R3', 'B1', 'B2', 'B3'][Math.floor(Math.random() * 6)];
+    document.getElementById('userName').value = 'Test Scout';
+    
+    // Auto
+    document.getElementById('autoFuelScored').textContent = Math.floor(Math.random() * 10);
+    document.getElementById('autoFuelMissed').textContent = Math.floor(Math.random() * 5);
+    document.getElementById('autoClimbLevel').value = ['None', 'Level 1'][Math.floor(Math.random() * 2)];
+    document.getElementById('autoBallsCollected').checked = Math.random() > 0.5;
+    
+    // Teleop
+    document.getElementById('teleopFuelScored').textContent = Math.floor(Math.random() * 20);
+    document.getElementById('teleopFuelMissed').textContent = Math.floor(Math.random() * 10);
+    document.getElementById('humanPlayerFuelMissed').textContent = Math.floor(Math.random() * 15);
+    document.getElementById('humanPlayerFuelScored').textContent = Math.floor(Math.random() * parseInt(document.getElementById('humanPlayerFuelMissed').textContent));
+    
+    // Roles
+    document.getElementById('activeRoleFunnel').checked = Math.random() > 0.5;
+    document.getElementById('activeRoleScoring').checked = Math.random() > 0.5;
+    document.getElementById('inactiveRoleLimit').checked = Math.random() > 0.5;
+    document.getElementById('transitionRoleScoring').checked = Math.random() > 0.5;
+    
+    // Traversal
+    const traversals = ['Bump', 'Trench', 'Both'];
+    document.getElementById(traversals[Math.floor(Math.random() * 3)]).checked = true;
+    
+    document.getElementById('teleopFouls').textContent = Math.floor(Math.random() * 3);
+    document.getElementById('teleopCollaboration').value = Math.floor(Math.random() * 4) + 1;
+    document.getElementById('drivingScore').value = Math.floor(Math.random() * 4) + 1;
+    
+    // Update slider displays
+    document.getElementById('collab-val').textContent = document.getElementById('teleopCollaboration').value;
+    document.getElementById('drive-val').textContent = document.getElementById('drivingScore').value;
+    
+    // Endgame
+    document.getElementById('endgameClimbLevel').value = ['None', 'Level 1', 'Level 2', 'Level 3'][Math.floor(Math.random() * 4)];
+    document.getElementById('endgameClimbSpeed').value = ['N/A', 'Slow', 'Medium', 'Fast'][Math.floor(Math.random() * 4)];
+    document.getElementById('disconnectNo').checked = true;
+    document.getElementById('endgameNotes').value = 'Auto-generated test data';
+    
+    alert('✓ Form filled with test data!');
+}
+
 function deleteFromEdit() {
     if (confirm('Delete this? Cannot be undone.')) {
         const key = editingType === 'match' ? "Match" : "Pit";
         const countKey = editingType === 'match' ? "MatchCount" : "PitCount";
         
+        // Get current count
+        let currentCount = Number(localStorage.getItem(countKey)) || 0;
+        
+        // Remove the item
         localStorage.removeItem(key + editingIndex);
         
-        let currentCount = Number(localStorage.getItem(countKey)) || 0;
-        localStorage.setItem(countKey, Math.max(0, currentCount - 1));
+        // Shift all items after this one down
+        for (let i = editingIndex + 1; i < currentCount; i++) {
+            const item = localStorage.getItem(key + i);
+            if (item) {
+                localStorage.setItem(key + (i - 1), item);
+                localStorage.removeItem(key + i);
+            }
+        }
+        
+        // Update count
+        localStorage.setItem(countKey, currentCount - 1);
         
         closeEditModal();
-        window.location.reload();
+        
+        // Refresh without reload
+        if (editingType === 'match') {
+            count = currentCount - 1; // Update global count
+            updateMatchCount();
+            pastMatchesQR();
+        } else {
+            pitCount = currentCount - 1; // Update global pitCount
+            updatePitCount();
+            pastPitsQR();
+        }
     }
 }
 
