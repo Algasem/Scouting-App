@@ -110,7 +110,7 @@
             </select>
           </div>
 
-          <div class="form-group">
+          <!-- <div class="form-group">
             <div class="counter">
               <span class="counter-label">Fuel Scored</span>
               <button class="counter-btn big-step" onclick="decrement5('autoFuelScored')">-5</button>
@@ -119,9 +119,29 @@
               <button class="counter-btn" onclick="increment('autoFuelScored')">+</button>
               <button class="counter-btn big-step" onclick="increment5('autoFuelScored')">+5</button>
             </div>
+          </div> -->
+
+          <div class="form-group">
+            <label>Fuel Scored: </label>
+            <div class="slider-container">
+              <input type="range" id="autoFuelScored" min="0" max="200" value="1" class="styled-slider" step="40">
+              <div class="slider-notches">
+                <span>0</span><span>1-20</span><span>25-50</span><span>60-90</span><span>100-150</span><span>150+</span>
+              </div>
+            </div>
           </div>
 
           <div class="form-group">
+            <label>Fuel Missed: </label>
+            <div class="slider-container">
+              <input type="range" id="autoFuelMissed" min="0" max="200" value="1" class="styled-slider" step="40">
+              <div class="slider-notches">
+                <span>0</span><span>1-20</span><span>25-50</span><span>60-90</span><span>100-150</span><span>150+</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- <div class="form-group">
             <div class="counter">
               <span class="counter-label">Fuel Missed</span>
               <button class="counter-btn big-step" onclick="decrement5('autoFuelMissed')">-5</button>
@@ -130,7 +150,7 @@
               <button class="counter-btn" onclick="increment('autoFuelMissed')">+</button>
               <button class="counter-btn big-step" onclick="increment5('autoFuelMissed')">+5</button>
             </div>
-          </div>
+          </div> -->
 
           <div class="form-group">
             <label>Balls Collected</label>
@@ -149,26 +169,36 @@
           <div class="card-title">Teleoperated</div>
 
           <div class="form-group">
-            <div class="counter">
-              <span class="counter-label">Fuel Scored</span>
-              <button class="counter-btn big-step" onclick="decrement5('teleopFuelScored')">-5</button>
-              <button class="counter-btn" onclick="decrement('teleopFuelScored')">−</button>
-              <span class="counter-value" id="teleopFuelScored">0</span>
-              <button class="counter-btn" onclick="increment('teleopFuelScored')">+</button>
-              <button class="counter-btn big-step" onclick="increment5('teleopFuelScored')">+5</button>
+            <label>Fuel Scored: </label>
+            <div class="slider-container">
+              <input type="range" id="teleopFuelScored" min="0" max="200" value="1" class="styled-slider" step="40">
+              <div class="slider-notches">
+                <span>0</span><span>1-20</span><span>25-50</span><span>60-90</span><span>100-150</span><span>150+</span>
+              </div>
             </div>
           </div>
 
+          <!-- <button class="counter-btn big-step" onclick="decrement5('teleopFuelScored')">-5</button>
+          <button class="counter-btn" onclick="decrement('teleopFuelScored')">−</button>
+          <span class="counter-value" id="teleopFuelScored">0</span>
+          <button class="counter-btn" onclick="increment('teleopFuelScored')">+</button>
+          <button class="counter-btn big-step" onclick="increment5('teleopFuelScored')">+5</button> -->
+
           <div class="form-group">
-            <div class="counter">
-              <span class="counter-label">Fuel Missed</span>
-              <button class="counter-btn big-step" onclick="decrement5('teleopFuelMissed')">-5</button>
-              <button class="counter-btn" onclick="decrement('teleopFuelMissed')">−</button>
-              <span class="counter-value" id="teleopFuelMissed">0</span>
-              <button class="counter-btn" onclick="increment('teleopFuelMissed')">+</button>
-              <button class="counter-btn big-step" onclick="increment5('teleopFuelMissed')">+5</button>
+            <label>Fuel Missed: </label>
+            <div class="slider-container">
+              <input type="range" id="teleopFuelMissed" min="0" max="200" value="1" class="styled-slider" step="40">
+              <div class="slider-notches">
+                <span>0</span><span>1-20</span><span>25-50</span><span>60-90</span><span>100-150</span><span>150+</span>
+              </div>
             </div>
           </div>
+              
+          <!-- <button class="counter-btn big-step" onclick="decrement5('teleopFuelMissed')">-5</button>
+          <button class="counter-btn" onclick="decrement('teleopFuelMissed')">−</button>
+          <span class="counter-value" id="teleopFuelMissed">0</span>
+          <button class="counter-btn" onclick="increment('teleopFuelMissed')">+</button>
+          <button class="counter-btn big-step" onclick="increment5('teleopFuelMissed')">+5</button> -->
 
           <div class="form-group">
             <label>Traversal</label>
@@ -238,7 +268,8 @@
             <div class="slider-container">
               <input type="range" id="teleopCollaboration" min="1" max="4" value="1" class="styled-slider"
                      oninput="document.getElementById('collab-val').textContent=this.value">
-              <div class="slider-notches"><span>1</span><span>2</span><span>3</span><span>4</span></div>
+              <div class="slider-notches">
+              <span>1</span><span>2</span><span>3</span><span>4</span></div>
             </div>
           </div>
 
@@ -247,7 +278,8 @@
             <div class="slider-container">
               <input type="range" id="drivingScore" min="1" max="4" value="1" class="styled-slider"
                      oninput="document.getElementById('drive-val').textContent=this.value">
-              <div class="slider-notches"><span>1</span><span>2</span><span>3</span><span>4</span></div>
+              <div class="slider-notches">
+              <span>1</span><span>2</span><span>3</span><span>4</span></div>
             </div>
           </div>
 
@@ -354,6 +386,7 @@
       <!-- Action Buttons -->
       <div class="action-buttons">
         <button class="btn btn-secondary" onclick="resetForm()">Reset</button>
+        <!--<button class="btn btn-secondary" onclick="fillTestData()" style="flex:1;">Fill Match Form</button>-->
         <button class="btn btn-primary"   onclick="saveMatch()">Save Match</button>
       </div>
 
@@ -526,7 +559,7 @@
         </div>
 
       </div>
-
+      
       <div class="action-buttons">
         <button class="btn btn-secondary" onclick="resetForm()">Reset</button>
         <button class="btn btn-primary"   onclick="savePit()">Save Pit</button>
