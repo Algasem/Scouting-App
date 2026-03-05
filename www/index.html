@@ -51,6 +51,7 @@
               <option value="Windsor Essex">Windsor Essex</option>
               <option value="Niagara College">Niagara College</option>
               <option value="Ontario Provincial Championship">Ontario Provincial Championship</option>
+              <option value="Niagara College">Other Event</option>
             </select>
           </div>
 
@@ -130,7 +131,7 @@
             <div class="slider-container">
               <input type="range" id="autoFuelScored" min="0" max="200" value="1" class="styled-slider" step="40">
               <div class="slider-notches">
-                <span>0</span><span>1-20</span><span>25-50</span><span>60-90</span><span>100-150</span><span>150+</span>
+                <span>0</span><span>1-20</span><span>21-40</span><span>41-60</span><span>61-80</span><span>80+</span>
               </div>
             </div>
           </div>
@@ -140,7 +141,7 @@
             <div class="slider-container">
               <input type="range" id="autoFuelMissed" min="0" max="200" value="1" class="styled-slider" step="40">
               <div class="slider-notches">
-                <span>0</span><span>1-20</span><span>25-50</span><span>60-90</span><span>100-150</span><span>150+</span>
+                <span>0</span><span>1-20</span><span>21-40</span><span>41-60</span><span>61-80</span><span>80+</span>
               </div>
             </div>
           </div>
@@ -332,7 +333,7 @@
 
           <div class="form-group">
             <label>Notes</label>
-            <textarea id="endgameNotes" placeholder="Any observations…"></textarea>
+            <textarea id="endgameNotes" placeholder="Any observations… Please include information useful to our strategy team (Ex: always misses from one position) NOT 'Drivers did a cool dance before the match'"></textarea>
           </div>
 
         </div>
@@ -425,7 +426,7 @@
         <button class="btn btn-secondary" onclick="exportAllPitCSV()">Export All Pits</button>
         <button class="btn btn-secondary" onclick="exportAllMatchCSV()">Export All Matches</button>
         <button class="btn btn-danger"    onclick="clearHistory()">Clear All History</button>
-        <button class="btn btn-primary" onclick="syncToSheets()">Sync to Google Sheets</button>
+        <button class="btn btn-primary" onclick="syncToSheets()">Sync to Sheets</button>
       </div>
 
       <div id="historyList"></div>
@@ -559,7 +560,7 @@
 
         <div class="form-group">
           <label>Notes</label>
-          <textarea id="pitNotes" placeholder="Additional notes…"></textarea>
+          <textarea id="pitNotes" placeholder="Additional notes… Please include information useful to our strategy team (Ex: Geared for high torque) NOT 'Has nice drawing on the bellypan'"></textarea>
         </div>
 
       </div>

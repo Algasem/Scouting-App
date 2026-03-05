@@ -473,6 +473,15 @@ textarea {
   font-weight: 600;
   color: var(--text-dim);
   font-family: 'Space Mono', monospace;
+
+  padding-left: 18px;
+  padding-right: 0px;
+}
+
+@media (max-width: 600px) {
+  .slider-notches {
+    font-size: 9px;
+  }
 }
 
 /* ─── ACTION BUTTONS ─── */
@@ -710,9 +719,14 @@ details {
   margin-bottom: 16px;
 }
 
+.export-buttons .btn {
+  min-width: 160px; /* ← Add this line */
+}
+
 @media (min-width: 400px) {
   .export-buttons {
     flex-direction: row;
+    flex-wrap: wrap; /* ← Add this so buttons wrap */
   }
 }
 
@@ -857,56 +871,6 @@ details {
     border: 1px solid #d0d5dd;
     padding: 20px;
     margin-bottom: 20px;
-}
-
-.slider-container {
-    width: 100%;
-    padding: 10px 5px;
-}
-
-.styled-slider {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 100%;
-    height: 8px;
-    background: var(--white);
-    border-radius: 8px;
-    border-color: var(--yellow-soft);
-    outline: none;
-    cursor: pointer;
-}
-
-.styled-slider::-webkit-slider-thumb {
-    appearance: none;
-    width: 24px;
-    height: 24px;
-    background: #000000;
-    border-radius: 50%;
-    cursor: pointer;
-    border: 3px solid #ffffff;
-}
-
-.styled-slider::-moz-range-thumb {
-    width: 24px;
-    height: 24px;
-    background: #000000;
-    border-radius: 50%;
-    cursor: pointer;
-    border: 3px solid #ffffff;
-}
-
-.slider-notches {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px;
-    font-size: 12px;
-    font-weight: bold;
-    color: var(--yellow);
-}
-
-.slider-notches span {
-    width: 52px;
-    text-align: center;
 }
 
 .history-button{
