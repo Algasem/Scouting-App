@@ -688,8 +688,26 @@ function generateMatchCSV(){
         humanPlayerRoles = "Fed balls to Human Players";
     }
 
-    let autoClimbLevel = data.auto.climbLevel.substring(6);
-    let endgameClimbLevel = "L"+data.endgame.climbLevel.substring(6);
+    let autoClimbLevel = "";
+
+    if(data.auto.climbLevel == "Level 1"){
+        autoClimbLevel = "1";
+    }
+    else{
+        autoClimbLevel = "0";
+    }
+    
+    let endgameClimbLevel = "";
+
+    if(data.endgame.climbLevel.startsWith("Level")){
+        endgameClimbLevel = "L"+data.endgame.climbLevel.substring(6);
+    }
+    else if(data.endgame.climbLevel == "None"){
+        endgameClimbLevel = "None";
+    }
+    else{
+        endgameClimbLevel = "Failed";
+    }
 
     let autoFuelSCORE = 0;
 

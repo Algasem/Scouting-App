@@ -269,12 +269,12 @@ function switchTab(tabName) {
 function increment(buttonID){ 
     const value = document.getElementById(buttonID);
 
-    if(buttonID === 'humanPlayerFuelScored') {
-        const missed = parseInt(document.getElementById('humanPlayerFuelMissed').textContent);
-        if (parseInt(value.textContent) + 1 > missed) {
-            return;
-        }
-    }
+    // if(buttonID === 'humanPlayerFuelScored') {
+    //     const missed = parseInt(document.getElementById('humanPlayerFuelMissed').textContent);
+    //     if (parseInt(value.textContent) + 1 > missed) {
+    //         return;
+    //     }
+    // }
     value.textContent = parseInt(value.textContent) + 1;        
 }
 
@@ -285,12 +285,12 @@ function decrement(buttonID){
     if(value.textContent > 0){
         value.textContent = parseInt(value.textContent) -1;
 
-        if (buttonID === 'humanPlayerFuelMissed') {
-            const scored = document.getElementById('humanPlayerFuelScored');
-            if (parseInt(scored.textContent) > parseInt(value.textContent)) {
-                scored.textContent = value.textContent;
-            }
-        }
+        // if (buttonID === 'humanPlayerFuelMissed') {
+        //     const scored = document.getElementById('humanPlayerFuelScored');
+        //     if (parseInt(scored.textContent) > parseInt(value.textContent)) {
+        //         scored.textContent = value.textContent;
+        //     }
+        // }
     }
 }
 
@@ -298,14 +298,14 @@ function decrement(buttonID){
 function increment5(buttonID) {
     const value = document.getElementById(buttonID);
 
-    if (buttonID === 'humanPlayerFuelScored') {
-        const missed = parseInt(document.getElementById('humanPlayerFuelMissed').textContent);
-        const newValue = parseInt(value.textContent) + 5;
-        if (newValue > missed) {
-            value.textContent = missed; // Cap at max miss
-            return;
-        }
-    }
+    // if (buttonID === 'humanPlayerFuelScored') {
+    //     const missed = parseInt(document.getElementById('humanPlayerFuelMissed').textContent);
+    //     const newValue = parseInt(value.textContent) + 5;
+    //     if (newValue > missed) {
+    //         value.textContent = missed; // Cap at max miss
+    //         return;
+    //     }
+    // }
 
     value.textContent = parseInt(value.textContent) + 5;
 }
@@ -321,12 +321,12 @@ function decrement5(buttonID) {
         value.textContent = parseInt('0');
     }
 
-    if (buttonID === 'humanPlayerFuelMissed') {
-        const scored = document.getElementById('humanPlayerFuelScored');
-        if (parseInt(scored.textContent) > parseInt(value.textContent)) {
-            scored.textContent = value.textContent;
-        }
-    }
+    // if (buttonID === 'humanPlayerFuelMissed') {
+    //     const scored = document.getElementById('humanPlayerFuelScored');
+    //     if (parseInt(scored.textContent) > parseInt(value.textContent)) {
+    //         scored.textContent = value.textContent;
+    //     }
+    // }
 }
 
 // Reset all fields in the form
@@ -688,8 +688,26 @@ function generateMatchCSV(){
         humanPlayerRoles = "Fed balls to Human Players";
     }
 
-    let autoClimbLevel = data.auto.climbLevel.substring(6);
-    let endgameClimbLevel = "L"+data.endgame.climbLevel.substring(6);
+    let autoClimbLevel = "";
+
+    if(data.auto.climbLevel == "Level 1"){
+        autoClimbLevel = "1";
+    }
+    else{
+        autoClimbLevel = "0";
+    }
+    
+    let endgameClimbLevel = "";
+
+    if(data.endgame.climbLevel.startsWith("Level")){
+        endgameClimbLevel = "L"+data.endgame.climbLevel.substring(6);
+    }
+    else if(data.endgame.climbLevel == "None"){
+        endgameClimbLevel = "None";
+    }
+    else{
+        endgameClimbLevel = "Failed";
+    }
 
     let autoFuelSCORE = 0;
 
