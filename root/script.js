@@ -1,0 +1,1366 @@
+const USERNAME_KEY = "ScoutUsername_v1";
+
+const teamData = {
+    "188": "Blizzard",
+    "610": "Crescent Coyotes",
+    "771": "SWAT",
+    "772": "Sabre Bytes Robotics",
+    "781": "Kinetic Knights",
+    "854": "Iron Bears",
+    "865": "WARP7",
+    "919": "PANTHERA TIGRIS",
+    "1114": "Simbotics",
+    "1229": "Tidal Shift",
+    "1241": "THEORY6",
+    "1305": "Ice Cubed",
+    "1310": "Runnymede Robotics",
+    "1325": "Inverse Paradox",
+    "1334": "Red Devils",
+    "1360": "Orbit Robotics",
+    "2013": "Cybergnomes",
+    "2056": "OP Robotics",
+    "2200": "BCR Blackout",
+    "2386": "Trojans",
+    "2609": "Beaverworx",
+    "2634": "The Gryphons",
+    "2702": "Rebels",
+    "2706": "Merge Robotics",
+    "2708": "Lake Effect Robotics",
+    "2852": "DM High Voltage",
+    "2935": "NACI Robotics",
+    "3161": "Tronic Titans",
+    "3543": "C4 Robotics",
+    "3560": "MechaWolves",
+    "3683": "Team DAVE",
+    "3739": "Oakbotics",
+    "3756": "RamFerno",
+    "4015": "Jags",
+    "4039": "MakeShift Robotics",
+    "4069": "Lo-Ellen Robotics",
+    "4152": "Hoya Robotics",
+    "4308": "ABSOLUTE ROBOTICS",
+    "4476": "W.A.F.F.L.E.S.",
+    "4617": "DAUN",
+    "4678": "CyberCavs",
+    "4688": "Saints Bot",
+    "4907": "Thunderstamps",
+    "4917": "Sir Lancerbot",
+    "4920": "Belle River Boltheads",
+    "4940": "Knight Vision",
+    "4946": "The Alpha Dogs",
+    "4951": "CDS Cyclones",
+    "4976": "Revolt Robotics",
+    "5024": "Raider Robotics",
+    "5031": "Full Metal Mustangs",
+    "5032": "The Falcons",
+    "5036": "The Robo Devils",
+    "5406": "Celt-X",
+    "5408": "Kennedy Kinetics",
+    "5409": "Chargers",
+    "5596": "Wolverine Robotics",
+    "5672": "First Nations-STEM",
+    "5689": "CK Cyber Pack",
+    "5719": "Pink Titans",
+    "5870": "League of Logic",
+    "5885": "Villanova WiredCats",
+    "5912": "Copper Hawks",
+    "6110": "Doc Botics",
+    "6135": "Arctos",
+    "6162": "Cap Alpaca 6162",
+    "6397": "Romero Robotics",
+    "6632": "Northview Robotics",
+    "6725": "WildBOTS",
+    "6854": "Viking Robotics",
+    "6859": "Big Metal Lakers 6859- BML Robotics",
+    "6864": "GryphTech Robotics",
+    "6865": "Manitoulin Metal",
+    "6875": "Amazon Warriors Robotics",
+    "6975": "The Neil McNeil Brotherhood Bots",
+    "6978": "QuickStrike Niagara",
+    "7058": "StrathDroids",
+    "7200": "Banting Robotics",
+    "7476": "EOM Robotics 7476",
+    "7480": "Machine Mavericks",
+    "7520": "Team MineKee",
+    "7558": "ALT-F4",
+    "7603": "7603 VESPA ROBOTICS",
+    "7659": "HNMCS Robotics",
+    "7712": "ACCN UMOJA",
+    "7757": "Atomic Dishwashers",
+    "7902": "Markham FireBirds",
+    "8081": "UMEI Lightning Robotics",
+    "8089": "Rockway Robotics",
+    "8349": "Newbotics",
+    "8729": "Sparkling H2O",
+    "8764": "Thunder Robotics",
+    "8789": "The Lost 10mm Sockets",
+    "8850": "Ed Bears",
+    "8884": "Knight Owls",
+    "9062": "Critical Circuits",
+    "9098": "FireHawks",
+    "9262": "Humberside Huskies",
+    "9263": "ALD Lions",
+    "9562": "Royal Robotics",
+    "9569": "Milliken Mills Silver Knights",
+    "9575": "Silver Robotics",
+    "9580": "Grizzly Gears",
+    "9589": "Arcade Robotics",
+    "9592": "Blue's Bolts n' Bots",
+    "9659": "Vanier Vikings",
+    "9782": "Wextech Titans",
+    "9785": "Alectrona",
+    "10015": "Bubbles",
+    "10167": "Jeunes Sans Frontières",
+    "10514": "Mixed Métal",
+    "10554": "Team VIPER",
+    "10611": "Gemini Robotics",
+    "10924": "Titanium Titans",
+    "11002": "Montcalm Robotics",
+    "11215": "Les Panthères",
+    "11227": "Goose Goose Duck",
+    "11270": "Nova",
+    "11362": "RoBumpers",
+    "11428": "Corpus Christi"
+};
+
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyXn4Mg7BqH8f-KfDuZe77Wrf-JLUUrLtArWPhYjtdO-Q-wvtcJi3qP7_rW88yoJQCu7A/exec"; // Your URL
+
+async function syncToSheets() {
+  try {
+    if (!navigator.onLine) {
+      alert('❌ No internet connection');
+      return
+    }
+    
+    const matchCount = Number(localStorage.getItem("MatchCount")) || 0;
+    const pitCount = Number(localStorage.getItem("PitCount")) || 0;
+    
+    if (matchCount === 0 && pitCount === 0) {
+      alert('No data to sync');
+      return;
+    }
+    
+    // Collect matches - PROPER CSV PARSING
+    const matches = [];
+    for (let i = 0; i < matchCount; i++) {
+      const csv = localStorage.getItem("Match" + i);
+      if (csv) {
+        matches.push(parseCSVRow(csv));
+      }
+    }
+    
+    // Collect pits - PROPER CSV PARSING
+    const pits = [];
+    for (let i = 0; i < pitCount; i++) {
+      const csv = localStorage.getItem("Pit" + i);
+      if (csv) {
+        pits.push(parseCSVRow(csv));
+      }
+    }
+    
+    // Send to Google Sheets
+    const response = await fetch(SCRIPT_URL, {
+      method: 'POST',
+      body: JSON.stringify({ matches, pits })
+    });
+    
+    const result = await response.json();
+    
+    if (result.success) {
+      alert(`✓ Synced ${result.matches} matches, ${result.pits} pits`);
+    } else {
+      alert('❌ Sync failed: ' + result.error);
+    }
+    
+  } catch (error) {
+    alert('❌ Sync failed: ' + error.message);
+  }
+}
+
+// Proper CSV parser that handles quoted fields with commas
+function parseCSVRow(csvString) {
+  const result = [];
+  let current = '';
+  let inQuotes = false;
+  
+  for (let i = 0; i < csvString.length; i++) {
+    const char = csvString[i];
+    const nextChar = csvString[i + 1];
+    
+    if (char === '"') {
+      if (inQuotes && nextChar === '"') {
+        // Escaped quote ("")
+        current += '"';
+        i++; // Skip next quote
+      } else {
+        // Toggle quote state
+        inQuotes = !inQuotes;
+      }
+    } else if (char === ',' && !inQuotes) {
+      // End of field
+      result.push(current);
+      current = '';
+    } else {
+      current += char;
+    }
+  }
+  
+  // Add last field
+  result.push(current);
+  
+  return result;
+}
+
+function getTeamName(teamNumber) {
+    const name = teamData[String(teamNumber)];
+    return name || 'Unknown Team';
+}
+    
+function loadUsername() {
+    const saved = localStorage.getItem(USERNAME_KEY);
+    if (saved) {
+        document.getElementById('userName').value = saved;
+    }
+}
+
+function saveUsername() {
+    const val = document.getElementById('userName').value.trim();
+    if (val) {
+        localStorage.setItem(USERNAME_KEY, val);
+    } else {
+        localStorage.removeItem(USERNAME_KEY);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    loadUsername();
+    document.getElementById('userName').addEventListener('input', saveUsername);
+});
+
+// Switch between Scouting, Pit and History tabs
+function switchMainTab(tabName) {
+    // Only select the main tabs (first .tabs container that's a direct child of body)
+    const mainTabsContainer = document.querySelector('body > .tabs');
+    const mainTabs = mainTabsContainer.querySelectorAll('.tab');
+    
+    // Select only main content sections (scouting, pit, history)
+    const mainContents = document.querySelectorAll('body > .tab-content');
+    
+    mainTabs.forEach(tab => tab.classList.remove('active'));
+    mainContents.forEach(content => content.classList.remove('active'));
+    
+    event.target.classList.add('active');
+    document.getElementById(tabName).classList.add('active');
+}
+
+// Switch between Pit, Auto, Teleop, and Engame tabs
+function switchTab(tabName) {
+    const tabs = document.querySelectorAll('#scouting .tabs .tab');
+    const contents = document.querySelectorAll('#scouting .tab-content');
+    
+    tabs.forEach(tab => tab.classList.remove('active'));
+    contents.forEach(content => content.classList.remove('active'));
+    
+    event.target.classList.add('active');
+    document.getElementById(tabName).classList.add('active');
+}
+
+// Increment fuel buttons 
+function increment(buttonID){ 
+    const value = document.getElementById(buttonID);
+
+    if(buttonID === 'humanPlayerFuelScored') {
+        const missed = parseInt(document.getElementById('humanPlayerFuelMissed').textContent);
+        if (parseInt(value.textContent) + 1 > missed) {
+            return;
+        }
+    }
+    value.textContent = parseInt(value.textContent) + 1;        
+}
+
+// Decrement fuel buttons 
+function decrement(buttonID){ 
+    const value = document.getElementById(buttonID);
+
+    if(value.textContent > 0){
+        value.textContent = parseInt(value.textContent) -1;
+
+        if (buttonID === 'humanPlayerFuelMissed') {
+            const scored = document.getElementById('humanPlayerFuelScored');
+            if (parseInt(scored.textContent) > parseInt(value.textContent)) {
+                scored.textContent = value.textContent;
+            }
+        }
+    }
+}
+
+// Increment fuel buttons by 5 at once
+function increment5(buttonID) {
+    const value = document.getElementById(buttonID);
+
+    if (buttonID === 'humanPlayerFuelScored') {
+        const missed = parseInt(document.getElementById('humanPlayerFuelMissed').textContent);
+        const newValue = parseInt(value.textContent) + 5;
+        if (newValue > missed) {
+            value.textContent = missed; // Cap at max miss
+            return;
+        }
+    }
+
+    value.textContent = parseInt(value.textContent) + 5;
+}
+
+// Decrement fuel buttons by 5 at once
+function decrement5(buttonID) {
+    const value = document.getElementById(buttonID);
+
+    if(value.textContent - 5 >= 0) {
+        value.textContent = parseInt(value.textContent) -5;
+    }
+    else{
+        value.textContent = parseInt('0');
+    }
+
+    if (buttonID === 'humanPlayerFuelMissed') {
+        const scored = document.getElementById('humanPlayerFuelScored');
+        if (parseInt(scored.textContent) > parseInt(value.textContent)) {
+            scored.textContent = value.textContent;
+        }
+    }
+}
+
+// Reset all fields in the form
+function resetForm(){
+    
+    // Reset all +- buttons
+    const counterIds = [
+        'teleopFuelMissed','teleopFuelScored',
+        'autoFuelMissed','autoFuelScored','teleopFouls',
+        'humanPlayerFuelMissed','humanPlayerFuelScored'
+    ];
+    counterIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = '0';
+    });
+
+    // Reset all checkboxes
+    const allCheckboxes = document.querySelectorAll('input[type="checkbox"]');
+
+    allCheckboxes.forEach(checkbox => {
+        checkbox.checked = false;
+    })
+
+    const allRadios = document.querySelectorAll('input[type="radio"]');
+
+    allRadios.forEach(option => {
+        option.checked = false;
+    })
+
+    // Reset all text fields
+    const allText = document.querySelectorAll('input[type="text"], input[type="number"], textarea');
+
+    allText.forEach(text => {
+        text.value = '';
+    })
+
+    // Reset all drop down menu's
+    var allDropdowns = document.getElementsByTagName('select');
+    
+    for (var i = 0; i < allDropdowns.length; i++){
+        allDropdowns[i].selectedIndex = 0;
+    }            
+}
+
+// Error checking
+
+// Show the unified validation modal.
+function showValidationModal(required, warnings, onValid) {
+    const modal = document.getElementById('validationModal');
+    const requiredSection = document.getElementById('validationRequiredSection');
+    const warningSection = document.getElementById('validationWarningSection');
+    const requiredList = document.getElementById('validationRequiredList');
+    const warningList = document.getElementById('validationWarningList');
+    const saveAnywayBtn = document.getElementById('validationSaveAnyway');
+
+    requiredList.innerHTML = "";
+    warningList.innerHTML = "";
+
+    if (required.length > 0) {
+        requiredSection.style.display = '';
+        required.forEach(function(msg) {
+            const li = document.createElement('li');
+            li.textContent = msg;
+            li.className = 'error-item';
+            requiredList.appendChild(li);
+        });
+    } else {
+        requiredSection.style.display = 'none';
+    }
+
+    if (warnings.length > 0) {
+        warningSection.style.display = '';
+        warnings.forEach(function(msg) {
+            const li = document.createElement('li');
+            li.textContent = msg;
+            li.className = 'warning-item';
+            warningList.appendChild(li);
+        });
+    } else {
+        warningSection.style.display = 'none';
+    }
+
+    // Only show Save Anyway if there are no blocking errors
+    if (required.length === 0 && warnings.length > 0) {
+        saveAnywayBtn.style.display = '';
+        _pendingSaveCallback = onValid;
+    } else {
+        saveAnywayBtn.style.display = 'none';
+        _pendingSaveCallback = null;
+    }
+
+    modal.classList.add('active');
+}
+
+function closeValidationModal() {
+    document.getElementById('validationModal').classList.remove('active');
+    _pendingSaveCallback = null;
+}
+
+function saveAnywayFromModal() {
+    document.getElementById('validationModal').classList.remove('active');
+    if (_pendingSaveCallback) {
+        _pendingSaveCallback();
+    }
+    _pendingSaveCallback = null;
+}
+
+function validateMatch(onValid) {
+    const required = [];
+    const warnings = [];
+
+    const scoutName = document.getElementById('userName').value.trim();
+    if (!scoutName) {
+        required.push("Scout name is required.");
+    } else if (!/^[a-zA-Z\s]+$/.test(scoutName)) {
+        required.push("Scout name should only contain letters — no numbers or special characters.");
+    }
+
+    const matchStageChecked = document.querySelector('input[name="matchStage"]:checked');
+    if (!matchStageChecked) {
+        required.push("Match stage is required — select Playoffs or Qualification.");
+    }
+
+    const driverStation = document.getElementById('driverStation').value;
+    if (!driverStation) {
+        required.push("Driver Station is required.");
+    }
+
+    const matchNumVal = document.getElementById('matchNumber').value.trim();
+    if (!matchNumVal) {
+        required.push("Match number is required.");
+    } else if (parseInt(matchNumVal) > 100) {
+        required.push("Match number cannot exceed 100.");
+    }
+
+    const teamNumVal = document.getElementById('teamNumber').value.trim();
+    if (!teamNumVal) {
+        required.push("Team number is required.");
+    } else if (parseInt(teamNumVal) > 12000) {
+        required.push("Team number cannot exceed 12000.");
+    }
+
+    const disconnectChecked = document.querySelector('input[name="disconnect"]:checked');
+    if (!disconnectChecked) {
+        warnings.push("Disconnect status not selected (Endgame tab).");
+    }
+
+    const activeRoleAny = document.getElementById('activeRoleFunnel').checked ||
+        document.getElementById('activeRoleScoring').checked ||
+        document.getElementById('activeRoleDeliver').checked ||
+        document.getElementById('activeRoleDefend').checked ||
+        document.getElementById('activeRoleNoMove').checked;
+    if (!activeRoleAny) {
+        warnings.push("No Active Phase Role selected (Teleop tab).");
+    }
+
+    const inactiveRoleAny = document.getElementById('inactiveRoleLimit').checked ||
+        document.getElementById('inactiveRoleFunnel').checked ||
+        document.getElementById('inactiveRoleDeliver').checked ||
+        document.getElementById('inactiveRoleBlock').checked ||
+        document.getElementById('inactiveRoleRefill').checked ||
+        document.getElementById('inactiveRoleNoMove').checked;
+    if (!inactiveRoleAny) {
+        warnings.push("No Inactive Phase Role selected (Teleop tab).");
+    }
+
+    const transitionRoleAny = document.getElementById('transitionRoleScoring').checked ||
+        document.getElementById('transitionRoleLimit').checked ||
+        document.getElementById('transitionRoleFunnel').checked ||
+        document.getElementById('transitionRoleDeliver').checked ||
+        document.getElementById('transitionRoleBlock').checked ||
+        document.getElementById('transitionRoleRefill').checked ||
+        document.getElementById('transitionRoleNoMove').checked;
+    if (!transitionRoleAny) {
+        warnings.push("No Transition Phase Role selected (Teleop tab).");
+    }
+
+    const traversalChecked = document.querySelector('input[name="traversal"]:checked');
+    if (!traversalChecked) {
+        warnings.push("Traversal type not selected (Teleop tab).");
+    }
+
+    const notes = document.getElementById('endgameNotes').value.trim();
+    if (!notes) {
+        warnings.push("Notes are empty (Endgame tab).");
+    }
+
+    if (required.length > 0 || warnings.length > 0) {
+        showValidationModal(required, warnings, onValid);
+        return;
+    }
+
+    onValid();
+}
+
+function validatePit(onValid) {
+    const required = [];
+    const warnings = [];
+
+    const teamNumVal = document.getElementById('teamPitNum').value.trim();
+    if (!teamNumVal) {
+        required.push("Team number is required.");
+    } else if (parseInt(teamNumVal) > 12000) {
+        required.push("Team number cannot exceed 12000.");
+    }
+
+    const heightVal = document.getElementById('pitHeight').value.trim();
+    if (!heightVal) {
+        warnings.push("Height is empty.");
+    } else if (parseFloat(heightVal) > 30) {
+        required.push("Height cannot exceed 30 inches.");
+    }
+
+    const weightVal = document.getElementById('pitWeight').value.trim();
+    if (!weightVal) {
+        warnings.push("Weight is empty.");
+    } else if (parseFloat(weightVal) > 115) {
+        required.push("Weight cannot exceed 115 lbs.");
+    }
+
+    if (!document.getElementById('pitClimbLevel').value) {
+        warnings.push("Climb Level not selected.");
+    }
+
+    if (!document.getElementById('pitDriveMechanism').value) {
+        warnings.push("Drive Mechanism not selected.");
+    }
+
+    if (!document.getElementById('pitDriveExperience').value) {
+        warnings.push("Drive Experience not selected.");
+    }
+
+    if (!document.getElementById('pitHopperType').value) {
+        warnings.push("Hopper Type not selected.");
+    }
+
+    if (!document.getElementById('pitStrategy').value.trim()) {
+        warnings.push("General Strategy is empty.");
+    }
+
+    const outsidePerimeterChecked = document.querySelector('input[name="Outside Perimeter"]:checked');
+    if (!outsidePerimeterChecked) {
+        warnings.push("Outside Perimeter not selected.");
+    }
+
+    if (!document.getElementById('pitNotes').value.trim()) {
+        warnings.push("Notes are empty.");
+    }
+
+    if (required.length > 0 || warnings.length > 0) {
+        showValidationModal(required, warnings, onValid);
+        return;
+    }
+
+    onValid();
+}
+
+// Generate the CSV array for a match
+function generateMatchCSV(){
+    const data = collectMatchData();
+
+    // TELEOP ACTIVE
+    const teleopActiveRoleArr = [
+        data.teleop.activeRole.funnel ? "Funnel to Teammates" : null,
+        data.teleop.activeRole.score ? "Score" : null,
+        data.teleop.activeRole.deliver ? "Deliver to HP" : null,
+        data.teleop.activeRole.defend ? "Defend" : null,
+        data.teleop.activeRole.noMove ? "Didn't move" : null
+    ];
+    
+    let teleopActiveRole = "";
+    
+    for(let i = 0; i < teleopActiveRoleArr.length; i++){
+        if(teleopActiveRoleArr[i] != null){
+            teleopActiveRole += teleopActiveRoleArr[i] + ",";
+        }
+    }
+
+    // Remove trailing comma if it exists
+    if(teleopActiveRole.endsWith(",")){
+        teleopActiveRole = teleopActiveRole.slice(0, -1);
+    }
+    
+    // TELEOP INACTIVE
+    const teleopInactiveRoleArr = [
+        data.teleop.inactiveRole.limitingBalls ? "Limiting Balls" : null,
+        data.teleop.inactiveRole.funnel ? "Funnel to Teammates" : null,
+        data.teleop.inactiveRole.deliver ? "Deliver to HP" : null,
+        data.teleop.inactiveRole.blocking ? "Blocking" : null,
+        data.teleop.inactiveRole.refillHopper ? "Refill Hopper" : null,
+        data.teleop.inactiveRole.noMove ? "Didn't move" : null
+    ];
+
+    let teleopInactiveRole = "";
+    
+    for(let i = 0; i < teleopInactiveRoleArr.length; i++){
+        if(teleopInactiveRoleArr[i] != null){
+            teleopInactiveRole += teleopInactiveRoleArr[i] + ",";
+        }
+    }
+
+    // Remove trailing comma if it exists
+    if(teleopInactiveRole.endsWith(",")){
+        teleopInactiveRole = teleopInactiveRole.slice(0, -1);
+    }
+    
+    // TELEOP TRANSITION
+    const teleopTransitionRoleArr = [
+        data.teleop.transitionRole.score ? "Score" : null,
+        data.teleop.transitionRole.limitingBalls ? "Limiting Balls" : null,
+        data.teleop.transitionRole.funnel ? "Funnel to Teammates" : null,
+        data.teleop.transitionRole.deliver ? "Deliver to HP" : null,
+        data.teleop.transitionRole.blocking ? "Blocking" : null,
+        data.teleop.transitionRole.refillHopper ? "Refill Hopper" : null,
+        data.teleop.transitionRole.noMove ? "Didn't move" : null
+    ];
+
+    let teleopTransitionRole = "";
+    
+    for(let i = 0; i < teleopTransitionRoleArr.length; i++){
+        if(teleopTransitionRoleArr[i] != null){
+            teleopTransitionRole += teleopTransitionRoleArr[i] + ",";
+        }
+    }
+
+    // Remove trailing comma if it exists
+    if(teleopTransitionRole.endsWith(",")){
+        teleopTransitionRole = teleopTransitionRole.slice(0, -1);
+    }
+
+    let traversalType = "";
+    if(data.teleop.bumpTraversal){
+        traversalType = "Bump";
+    }
+    else if(data.teleop.trenchTraversal){
+        traversalType = "Trench";
+    }
+    else if(data.teleop.bothTraversal){
+        traversalType = "Both";
+    }
+
+    let matchType = "";
+    if(data.qualMatch){
+        matchType = "Q";
+    }
+    else if(data.playoffMatch){
+        matchType = "P";
+    }
+
+    let totalMatch = matchType + data.matchNumber;
+
+    console.log(totalMatch);
+
+    let humanPlayerRoles = "";
+    if(data.humanPlayer.fedRobot){
+        humanPlayerRoles = "Fed balls to Robot";
+    }
+    else if(data.humanPlayer.fedHumanPlayers){
+        humanPlayerRoles = "Fed balls to Human Players";
+    }
+
+    let autoClimbLevel = data.auto.climbLevel.substring(6);
+    let endgameClimbLevel = "L"+data.endgame.climbLevel.substring(6);
+
+    let autoFuelSCORE = 0;
+
+    switch (data.auto.fuelScored) {
+        case "0":
+            autoFuelSCORE = 0;
+            break;
+        case "40":
+            autoFuelSCORE = 1;
+            break;
+        case "80":
+            autoFuelSCORE = 2;
+            break;
+        case "120":
+            autoFuelSCORE = 3;
+            break;
+        case "160":
+            autoFuelSCORE = 4;
+            break;
+        case "200":
+            autoFuelSCORE = 5;
+            break;
+        default:
+            autoFuelSCORE = 0;
+    }  
+    
+    let autoFuelMISS = 0;
+
+    switch (data.auto.fuelMissed) {
+        case "0":
+            autoFuelMISS = 0;
+            break;
+        case "40":
+            autoFuelMISS = 1;
+            break;
+        case "80":
+            autoFuelMISS = 2;
+            break;
+        case "120":
+            autoFuelMISS = 3;
+            break;
+        case "160":
+            autoFuelMISS = 4;
+            break;
+        case "200":
+            autoFuelMISS = 5;
+            break;
+        default:
+            autoFuelMISS = 0;
+    }
+
+    let fuelSCORE = 0;
+
+    switch (data.teleop.fuelScored) {
+        case "0":
+            fuelSCORE = 0;
+            break;
+        case "40":
+            fuelSCORE = 1;
+            break;
+        case "80":
+            fuelSCORE = 2;
+            break;
+        case "120":
+            fuelSCORE = 3;
+            break;
+        case "160":
+            fuelSCORE = 4;
+            break;
+        case "200":
+            fuelSCORE = 5;
+            break;
+        default:
+            fuelSCORE = 0;
+    }
+
+    let fuelMISS = 0;
+
+    switch (data.teleop.fuelMissed) {
+        case "0":
+            fuelMISS = 0;
+            break;
+        case "40":
+            fuelMISS = 1;
+            break;
+        case "80":
+            fuelMISS = 2;
+            break;
+        case "120":
+            fuelMISS = 3;
+            break;
+        case "160":
+            fuelMISS = 4;
+            break;
+        case "200":
+            fuelMISS = 5;
+            break;
+        default:
+            fuelMISS = 0;
+    }
+
+    const values = [
+
+        // General  
+        data.teamNumber,
+        data.event,
+        totalMatch,
+        data.driverStation,
+        data.scoutName,
+
+        // Auto Scouting
+        autoFuelSCORE,
+        autoFuelMISS,
+        autoClimbLevel,
+        "",
+        // data.auto.ballsCollectedToOurSide,
+
+        // Teleop Scouting
+        fuelSCORE,
+        fuelMISS,
+        data.humanPlayer.fuelScored,
+        data.humanPlayer.fuelMissed,
+        teleopActiveRole,
+        teleopInactiveRole,
+        teleopTransitionRole,
+        endgameClimbLevel,
+        data.teleop.fouls,
+
+        data.teleop.drivingScore,
+        data.teleop.collaborationScore,
+        data.endgame.disconnect,
+        data.endgame.climbSpeed,
+        data.endgame.notes,
+        data.auto.ballsCollectedToOurSide,
+        traversalType,
+        humanPlayerRoles,
+        data.humanPlayer.HPnotes
+    ]
+
+    for(let i = 0; i < values.length; i++){
+        values[i] = '"' + values[i] + '"';
+    }
+
+    return values.join(',');
+}
+
+// Generate the CSV array for a pit scouting
+function generatePitCSV(){
+    const pitData = collectPitData();
+    
+    const featuresArr = [
+        pitData.features.vision ? "Vision" : null,
+        pitData.features.adjustableScoring ? "Adjustable Scoring" : null
+    ];
+    
+    let features = "";
+    
+    for(let i = 0; i < featuresArr.length; i++){
+        if(featuresArr[i] != null){
+            features += featuresArr[i] + ",";
+        }
+    }
+
+    // Remove trailing comma if it exists
+    if (features.endsWith(",")) {
+        features = features.slice(0, -1);
+    }
+
+    const intakeTypeArr = [
+        pitData.intakeType.overTheBumper ? "Over The Bumper" : null,
+        pitData.intakeType.inPerimeter ? "In Perimeter" : null,
+        pitData.intakeType.stationIntake ? "Station Intake" : null
+    ];
+    
+    let intakeType = "";
+    
+    for(let i = 0; i < intakeTypeArr.length; i++){
+        if(intakeTypeArr[i] != null){
+            intakeType += intakeTypeArr[i] + ",";
+        }
+    }
+
+    // Remove trailing comma if it exists
+    if(intakeType.endsWith(",")){
+        intakeType = intakeType.slice(0, -1);
+    }
+
+    const teamName = getTeamName(pitData.teamNumber);
+
+    const values = [
+        // Pit Scouting
+        pitData.teamNumber,
+        teamName,
+        pitData.climbLevel,
+        pitData.heightInches,
+        pitData.weightLbs,
+        intakeType,
+        pitData.driveMechanism,
+        pitData.strategy,
+        features,
+        pitData.hopperType,
+        pitData.hopperCapacity,
+        pitData.driveExperience,
+        pitData.buildQuality,
+        pitData.outsidePerimeter,
+        pitData.breakdowns,
+        pitData.notes,
+    ]
+
+    for(let i = 0; i < values.length; i++){
+        values[i] = '"' + values[i] + '"';
+    }
+
+    return values.join(',');
+}
+
+// Create object of all match data points being collected
+function collectMatchData(){
+
+    const data = {
+        // timestamp: new Date().toISOString(),
+
+        // Match info
+        event: document.getElementById('event').value,
+        qualMatch: document.getElementById('qualification').checked,
+        playoffMatch: document.getElementById('playoff').checked,
+        matchNumber: document.getElementById('matchNumber').value,
+        teamNumber: document.getElementById('teamNumber').value,
+        scoutName: document.getElementById('userName').value,
+        driverStation: document.getElementById('driverStation').value,
+
+        auto: {
+            climbLevel: document.getElementById('autoClimbLevel').value,
+
+            fuelScored: document.getElementById('autoFuelScored').value,
+            fuelMissed: document.getElementById('autoFuelMissed').value,
+
+            ballsCollectedToOurSide: document.getElementById('autoBallsCollected').checked,
+        },
+
+        teleop: {
+            fuelScored: document.getElementById('teleopFuelScored').value,
+            fuelMissed: document.getElementById('teleopFuelMissed').value,
+
+            bumpTraversal: document.getElementById('Bump').checked,
+            trenchTraversal: document.getElementById('Trench').checked,
+            bothTraversal: document.getElementById('Both').checked,
+
+            activeRole: {
+                funnel: document.getElementById('activeRoleFunnel').checked,
+                score: document.getElementById('activeRoleScoring').checked,
+                deliver: document.getElementById('activeRoleDeliver').checked,
+                defend: document.getElementById('activeRoleDefend').checked,
+                noMove: document.getElementById('activeRoleNoMove').checked,
+
+            },
+
+            inactiveRole: {
+                limitingBalls: document.getElementById('inactiveRoleLimit').checked,
+                funnel: document.getElementById('inactiveRoleFunnel').checked,
+                deliver: document.getElementById('inactiveRoleDeliver').checked,
+                blocking: document.getElementById('inactiveRoleBlock').checked,
+                refillHopper: document.getElementById('inactiveRoleRefill').checked,
+                noMove: document.getElementById('inactiveRoleNoMove').checked
+
+            },
+
+            transitionRole: {
+                limitingBalls: document.getElementById('transitionRoleLimit').checked,
+                score: document.getElementById('transitionRoleScoring').checked,
+                deliver: document.getElementById('transitionRoleDeliver').checked,
+                blocking: document.getElementById('transitionRoleBlock').checked,
+                funnel: document.getElementById('transitionRoleFunnel').checked,
+                refillHopper: document.getElementById('transitionRoleRefill').checked,
+                noMove: document.getElementById('transitionRoleNoMove').checked
+            },
+
+            fouls: parseInt(document.getElementById('teleopFouls').textContent),
+
+            collaborationScore: document.getElementById('teleopCollaboration').value,
+            drivingScore: document.getElementById('drivingScore').value,
+        },
+
+        endgame: {
+            climbLevel: document.getElementById('endgameClimbLevel').value,
+            climbSpeed: document.getElementById('endgameClimbSpeed').value,
+
+            //fuelScored: parseInt(document.getElementById('endgameFuelScored').textContent),
+            //fuelMissed: parseInt(document.getElementById('endgameFuelMissed').textContent),
+            
+            disconnect: document.querySelector('input[name="disconnect"]:checked')?.value || "",           
+            notes: document.getElementById('endgameNotes').value,
+        },
+
+        humanPlayer: {
+            fuelMissed: parseInt(document.getElementById('humanPlayerFuelMissed').textContent),
+            fuelScored: parseInt(document.getElementById('humanPlayerFuelScored').textContent),
+        
+            fedRobot: document.getElementById('fedRobot').checked,
+            fedHumanPlayers: document.getElementById('fedHumanPlayers').checked,
+        
+           HPnotes: (document.getElementById('humanPlayerNotes') || document.getElementById('endgameNotes') || {value:''}).value
+        }
+        
+    }
+    return data;
+}
+
+// Create object of all pit data points being collected
+function collectPitData(){
+    const pitData = {
+        teamNumber: document.getElementById('teamPitNum').value,
+        climbLevel: document.getElementById('pitClimbLevel').value,
+        heightInches: document.getElementById('pitHeight').value,
+        weightLbs: document.getElementById('pitWeight').value,
+        intakeType: {
+            overTheBumper: document.getElementById('otbIntake').checked,
+            inPerimeter: document.getElementById('perimeterIntake').checked,
+            stationIntake: document.getElementById('stationIntake').checked
+        },
+        driveMechanism: document.getElementById('pitDriveMechanism').value,
+        strategy: document.getElementById('pitStrategy').value,
+
+        features: {
+            vision: document.getElementById('pitVision').checked,
+            adjustableScoring: document.getElementById('pitAdjustable').checked
+        },
+        hopperType: document.getElementById('pitHopperType').value,
+        hopperCapacity: document.getElementById('pitHopperCapacity').value,
+        driveExperience: document.getElementById('pitDriveExperience').value,
+        buildQuality: document.getElementById('pitBuildQuality').value,
+        outsidePerimeter: document.querySelector('input[name="Outside Perimeter"]:checked')?.value || "",             
+        breakdowns: document.getElementById('pitBreakdowns').value,
+        notes: document.getElementById('pitNotes').value
+    }
+
+    return pitData;
+}
+
+function downloadCSV(csvContent, filename) {
+    const blob = new Blob(["\uFEFF", csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    link.click();
+
+    // Clean up
+    URL.revokeObjectURL(url);
+}
+
+let count = Number(localStorage.getItem("MatchCount")) || 0;
+
+function saveMatch() {
+    validateMatch(function() {
+        const csv = generateMatchCSV();
+        downloadCSV(csv, new Date().toISOString() + ".csv");
+
+        localStorage.setItem("Match" + count, csv);
+        count++;
+
+        localStorage.setItem("MatchCount", count);
+
+        for (let i = 0; i < count; i++) {
+            console.log(localStorage.getItem("Match" + i));
+        }
+
+        updateMatchCount();
+        pastMatchesQR();
+    });
+}
+
+let pitCount = Number(localStorage.getItem("PitCount")) || 0;
+
+function savePit(){
+    validatePit(function() {
+        const csv = generatePitCSV();
+        downloadCSV(csv, new Date().toISOString() + ".csv");
+
+        localStorage.setItem("Pit" + pitCount, csv);
+        pitCount++;
+
+        localStorage.setItem("PitCount", pitCount);
+
+        updatePitCount();
+        pastPitsQR();
+    });
+}
+
+function pastMatchesQR() {
+    const matchContent = document.getElementById("matchContent");
+    matchContent.innerHTML = "";
+    let allMatches = [];
+
+    for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i); 
+        if (key.startsWith("Match") && !key.startsWith("MatchCount")) {
+            const matchIndex = parseInt(key.replace("Match", ""), 10);
+            allMatches[matchIndex] = localStorage.getItem(key);
+        }
+    }
+
+    for (let i = 0; i < allMatches.length; i++) {
+        let tempArr = parseCSVRow(allMatches[i]);
+
+        const matchDiv = document.createElement("div");
+        matchDiv.style.cssText = "display:flex; gap:6px;";
+        
+        const matchButton = document.createElement("button");
+        matchButton.textContent = tempArr[0] + " -- " + tempArr[2];
+        matchButton.className = "match-button";
+        matchButton.style.flex = "1";
+        matchButton.onclick = () => openQRModal(allMatches[i], "Match QR");
+        
+        const editBtn = document.createElement("button");
+        editBtn.textContent = "✏️";
+        editBtn.className = "match-button";
+        editBtn.style.cssText = "width:50px; flex-shrink:0;";
+        editBtn.onclick = () => openEditModal(i, allMatches[i], tempArr[0] + " -- " + tempArr[2]);
+        
+        matchDiv.appendChild(matchButton);
+        matchDiv.appendChild(editBtn);
+        matchContent.appendChild(matchDiv);
+    }
+}
+
+let editingIndex = null;
+let editingType = 'match';
+let _pendingSaveCallback = null;
+
+function openEditModal(index, csv, title) {
+    editingIndex = index;
+    editingType = 'match';
+    document.getElementById('editModalTitle').textContent = 'Edit: ' + title;
+    document.getElementById('editCSV').value = csv;
+    document.getElementById('editModal').classList.add('active');
+}
+
+function closeEditModal() {
+    document.getElementById('editModal').classList.remove('active');
+    editingIndex = null;
+}
+
+function saveEdit() {
+    const newCSV = document.getElementById('editCSV').value.trim();
+    
+    if (!newCSV) {
+        alert('CSV cannot be empty');
+        return;
+    }
+    
+    const key = editingType === 'match' ? "Match" : "Pit";
+    localStorage.setItem(key + editingIndex, newCSV);
+    
+    closeEditModal();
+    
+    if (editingType === 'match') {
+        pastMatchesQR();
+    } else {
+        pastPitsQR();
+    }
+    
+    alert('Saved!');
+}
+
+function fillTestData() {
+    // Match info
+    document.getElementById('event').value = 'North Bay';
+    document.getElementById('qualification').checked = true;
+    document.getElementById('matchNumber').value = Math.floor(Math.random() * 50) + 1;
+    document.getElementById('teamNumber').value = Math.floor(Math.random() * 10000) + 1000;
+    document.getElementById('driverStation').value = ['R1', 'R2', 'R3', 'B1', 'B2', 'B3'][Math.floor(Math.random() * 6)];
+    document.getElementById('userName').value = 'Test Scout';
+    
+    // Auto
+    document.getElementById('autoFuelScored').textContent = Math.floor(Math.random() * 10);
+    document.getElementById('autoFuelMissed').textContent = Math.floor(Math.random() * 5);
+    document.getElementById('autoClimbLevel').value = ['None', 'Level 1'][Math.floor(Math.random() * 2)];
+    document.getElementById('autoBallsCollected').checked = Math.random() > 0.5;
+    
+    // Teleop
+    document.getElementById('teleopFuelScored').textContent = Math.floor(Math.random() * 20);
+    document.getElementById('teleopFuelMissed').textContent = Math.floor(Math.random() * 10);
+    document.getElementById('humanPlayerFuelMissed').textContent = Math.floor(Math.random() * 15);
+    document.getElementById('humanPlayerFuelScored').textContent = Math.floor(Math.random() * parseInt(document.getElementById('humanPlayerFuelMissed').textContent));
+    
+    // Roles
+    document.getElementById('activeRoleFunnel').checked = Math.random() > 0.5;
+    document.getElementById('activeRoleScoring').checked = Math.random() > 0.5;
+    document.getElementById('inactiveRoleLimit').checked = Math.random() > 0.5;
+    document.getElementById('transitionRoleScoring').checked = Math.random() > 0.5;
+    
+    // Traversal
+    const traversals = ['Bump', 'Trench', 'Both'];
+    document.getElementById(traversals[Math.floor(Math.random() * 3)]).checked = true;
+    
+    document.getElementById('teleopFouls').textContent = Math.floor(Math.random() * 3);
+    document.getElementById('teleopCollaboration').value = Math.floor(Math.random() * 4) + 1;
+    document.getElementById('drivingScore').value = Math.floor(Math.random() * 4) + 1;
+    
+    // Update slider displays
+    document.getElementById('collab-val').textContent = document.getElementById('teleopCollaboration').value;
+    document.getElementById('drive-val').textContent = document.getElementById('drivingScore').value;
+    
+    // Endgame
+    document.getElementById('endgameClimbLevel').value = ['None', 'Level 1', 'Level 2', 'Level 3'][Math.floor(Math.random() * 4)];
+    document.getElementById('endgameClimbSpeed').value = ['N/A', 'Slow', 'Medium', 'Fast'][Math.floor(Math.random() * 4)];
+    document.getElementById('disconnectNo').checked = true;
+    document.getElementById('endgameNotes').value = 'Auto-generated test data';
+    
+    alert('✓ Form filled with test data!');
+}
+
+function deleteFromEdit() {
+    if (confirm('Delete this? Cannot be undone.')) {
+        const key = editingType === 'match' ? "Match" : "Pit";
+        const countKey = editingType === 'match' ? "MatchCount" : "PitCount";
+        
+        // Get current count
+        let currentCount = Number(localStorage.getItem(countKey)) || 0;
+        
+        // Remove the item
+        localStorage.removeItem(key + editingIndex);
+        
+        // Shift all items after this one down
+        for (let i = editingIndex + 1; i < currentCount; i++) {
+            const item = localStorage.getItem(key + i);
+            if (item) {
+                localStorage.setItem(key + (i - 1), item);
+                localStorage.removeItem(key + i);
+            }
+        }
+        
+        // Update count
+        localStorage.setItem(countKey, currentCount - 1);
+        
+        closeEditModal();
+        
+        // Refresh without reload
+        if (editingType === 'match') {
+            count = currentCount - 1; // Update global count
+            updateMatchCount();
+            pastMatchesQR();
+        } else {
+            pitCount = currentCount - 1; // Update global pitCount
+            updatePitCount();
+            pastPitsQR();
+        }
+    }
+}
+
+function pastPitsQR() {
+    const pitContent = document.getElementById("pitContent");
+    pitContent.innerHTML = "";
+    let allPits = [];
+
+    for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key.startsWith("Pit") && !key.startsWith("PitCount")) {
+            const pitIndex = parseInt(key.replace("Pit", ""), 10);
+            allPits[pitIndex] = localStorage.getItem(key);
+        }
+    }
+
+    for (let i = 0; i < allPits.length; i++) {
+        let tempArr = parseCSVRow(allPits[i]);
+
+        const pitDiv = document.createElement("div");
+        pitDiv.style.cssText = "display:flex; gap:6px;";
+        
+        const pitButton = document.createElement("button");
+        pitButton.textContent = "Pit " + tempArr[0];
+        pitButton.className = "match-button";
+        pitButton.style.flex = "1";
+        pitButton.onclick = () => openQRModal(allPits[i], "Pit QR");
+        
+        const editBtn = document.createElement("button");
+        editBtn.textContent = "✏️";
+        editBtn.className = "match-button";
+        editBtn.style.cssText = "width:50px; flex-shrink:0;";
+        editBtn.onclick = () => {
+            editingType = 'pit';
+            openEditModal(i, allPits[i], "Pit " + tempArr[0]);
+        };
+        
+        pitDiv.appendChild(pitButton);
+        pitDiv.appendChild(editBtn);
+        pitContent.appendChild(pitDiv);
+    }
+}
+
+function openQRModal(text, title) {
+    const modal = document.getElementById("qrModal");
+    const qrTitle = document.getElementById("qrModalTitle");
+    const qrCodeDiv = document.getElementById("qrcode");
+
+    qrTitle.textContent = title;
+    qrCodeDiv.innerHTML = "";
+
+    const size = Math.min(window.innerWidth * 0.8, 450);
+
+    new QRCode(qrCodeDiv, {
+        text: text,
+        width: size,
+        height: size,
+        colorDark: "#da4416",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.L,
+    });
+
+    modal.classList.add("active");
+}
+
+function closeQRModal() {
+    const modal = document.getElementById("qrModal");
+    const qrCodeDiv = document.getElementById("qrcode");
+    modal.classList.remove("active");
+    qrCodeDiv.innerHTML = "";
+    const existing = document.getElementById("modalDeleteBtn");
+    if (existing) existing.remove();
+}
+
+window.onload = function () {
+    updateMatchCount();
+    updatePitCount();
+    pastMatchesQR();
+    pastPitsQR();
+};
+
+function updateMatchCount() {
+    const count = Number(localStorage.getItem("MatchCount")) || 0;
+    document.getElementById("matchHistoryCount").textContent = count;
+}
+
+function updatePitCount() {
+    const count = Number(localStorage.getItem("PitCount")) || 0;
+    document.getElementById("pitHistoryCount").textContent = count;
+}
+
+function exportAllPitCSV(){
+    let totalPit = "";
+    const pitCount = Number(localStorage.getItem("PitCount")) || 0;
+
+    for(let i = 0; i < pitCount; i++){
+        const pit = localStorage.getItem("Pit" + i);
+        if (pit) {
+            totalPit += pit + "\n";
+        }
+    }
+
+    downloadCSV(totalPit, "ALL_PITS");
+    openQRModal(totalPit, "ALL PITS");
+}
+
+function exportAllMatchCSV(){
+    let totalMatch = "";
+    const matchCount = Number(localStorage.getItem("MatchCount")) || 0;
+
+    for(let i = 0; i < count; i++){
+        const match = localStorage.getItem("Match" + i);
+        if (match) {
+            totalMatch += match + "\n";
+        }
+    }
+
+    downloadCSV(totalMatch, "ALL_MATCHES");
+    openQRModal(totalMatch, "ALL MATCHES");
+}
+
+function clearHistory(){
+    localStorage.clear();
+    window.location.reload();
+}
