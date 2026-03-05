@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>FRC 7476 Scouting</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#da4416">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="apple-touch-icon" href="icon-192.png">
+</head>
+<body>
+
+  <!-- ─── HEADER ─── -->
+  <header class="app-header">
+    <h1>FRC <span class="header-accent">7476</span> SPONGEBOTICS</h1>
+    <div class="username-wrapper">
+      <label>Scout</label>
+      <input type="text" id="userName" placeholder="Your name…">
+    </div>
+  </header>
+
+  <div class="main-content">
+
+    <!-- ─── MAIN TABS ─── -->
+    <div class="main-tabs">
+      <button class="main-tab active" onclick="switchMainTab('scouting', this)">Scouting</button>
+      <button class="main-tab"        onclick="switchMainTab('history', this)">History</button>
+      <button class="main-tab"        onclick="switchMainTab('pit', this)">Pit</button>
+    </div>
+
+    <!-- ══════════ SCOUTING TAB ══════════ -->
+    <div id="scouting" class="tab-content active">
+
+      <!-- Match Info -->
+      <div class="card">
+        <div class="card-title">Match Info</div>
+        <div class="match-info-grid">
+
+          <div class="form-group span-2">
+            <label>Event</label>
+            <select id="event">
+              <option value="North Bay">North Bay</option>
+              <option value="Humber Polytechnic">Humber Polytechnic</option>
+              <option value="Durham College">Durham College</option>
+              <option value="McMaster University">McMaster University</option>
+              <option value="University of Waterloo">University of Waterloo</option>
+              <option value="Georgian College">Georgian College</option>
+              <option value="Windsor Essex">Windsor Essex</option>
+              <option value="Niagara College">Niagara College</option>
+              <option value="Ontario Provincial Championship">Ontario Provincial Championship</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Match #</label>
+            <input type="number" id="matchNumber" min="1" max="100" oninput="if(this.value > 100) this.value = 100; if(this.value < 1 && this.value !== '') this.value = 1;">
+          </div>
+          <div class="form-group">
+              <label>Team #</label>
+              <input type="number" id="teamNumber" min="1" max="12000" oninput="if(this.value > 12000) this.value = 12000; if(this.value < 1 && this.value !== '') this.value = 1;">
+          </div>
+
+          <div class="form-group">
+            <label>Driver Station</label>
+            <select id="driverStation">
+              <option value="" disabled selected>Select…</option>
+              <option value="R1">R1</option>
+              <option value="R2">R2</option>
+              <option value="R3">R3</option>
+              <option value="B1">B1</option>
+              <option value="B2">B2</option>
+              <option value="B3">B3</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Match Stage</label>
+            <div class="stage-group">
+              <label class="toggle-label">
+                <input type="radio" name="matchStage" id="qualification" value="both">
+                <span class="toggle-pill">Quals</span>
+              </label>
+              <label class="toggle-label">
+                <input type="radio" name="matchStage" id="playoff" value="no">
+                <span class="toggle-pill">Playoffs</span>
+              </label>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Sub Tabs -->
+      <div class="sub-tabs">
+        <button class="sub-tab active" onclick="switchTab('auto', this)">Auto</button>
+        <button class="sub-tab"        onclick="switchTab('teleop', this)">Teleop</button>
+        <button class="sub-tab"        onclick="switchTab('endgame', this)">Endgame</button>
+        <button class="sub-tab"        onclick="switchTab('humanPlayer', this)">Human Player</button>
+      </div>
+
+      <!-- ── AUTO ── -->
+      <div id="auto" class="tab-content active">
+        <div class="card">
+          <div class="card-title">Autonomous</div>
+
+          <div class="form-group">
+            <label>Climb Level</label>
+            <select id="autoClimbLevel">
+              <option value="None">None</option>
+              <option value="Level 1">Level 1</option>
+            </select>
+          </div>
+
+          <!-- <div class="form-group">
+            <div class="counter">
+              <span class="counter-label">Fuel Scored</span>
+              <button class="counter-btn big-step" onclick="decrement5('autoFuelScored')">-5</button>
+              <button class="counter-btn" onclick="decrement('autoFuelScored')">−</button>
+              <span class="counter-value" id="autoFuelScored">0</span>
+              <button class="counter-btn" onclick="increment('autoFuelScored')">+</button>
+              <button class="counter-btn big-step" onclick="increment5('autoFuelScored')">+5</button>
+            </div>
+          </div> -->
+
+          <div class="form-group">
+            <label>Fuel Scored: </label>
+            <div class="slider-container">
+              <input type="range" id="autoFuelScored" min="0" max="200" value="1" class="styled-slider" step="40">
+              <div class="slider-notches">
+                <span>0</span><span>1-20</span><span>25-50</span><span>60-90</span><span>100-150</span><span>150+</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Fuel Missed: </label>
+            <div class="slider-container">
+              <input type="range" id="autoFuelMissed" min="0" max="200" value="1" class="styled-slider" step="40">
+              <div class="slider-notches">
+                <span>0</span><span>1-20</span><span>25-50</span><span>60-90</span><span>100-150</span><span>150+</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- <div class="form-group">
+            <div class="counter">
+              <span class="counter-label">Fuel Missed</span>
+              <button class="counter-btn big-step" onclick="decrement5('autoFuelMissed')">-5</button>
+              <button class="counter-btn" onclick="decrement('autoFuelMissed')">−</button>
+              <span class="counter-value" id="autoFuelMissed">0</span>
+              <button class="counter-btn" onclick="increment('autoFuelMissed')">+</button>
+              <button class="counter-btn big-step" onclick="increment5('autoFuelMissed')">+5</button>
+            </div>
+          </div> -->
+
+          <div class="form-group">
+            <label>Balls Collected</label>
+            <label class="toggle-label">
+              <input type="checkbox" id="autoBallsCollected">
+              <span class="toggle-pill">Collected to Our Side</span>
+            </label>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ── TELEOP ── -->
+      <div id="teleop" class="tab-content">
+        <div class="card">
+          <div class="card-title">Teleoperated</div>
+
+          <div class="form-group">
+            <label>Fuel Scored: </label>
+            <div class="slider-container">
+              <input type="range" id="teleopFuelScored" min="0" max="200" value="1" class="styled-slider" step="40">
+              <div class="slider-notches">
+                <span>0</span><span>1-20</span><span>25-50</span><span>60-90</span><span>100-150</span><span>150+</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- <button class="counter-btn big-step" onclick="decrement5('teleopFuelScored')">-5</button>
+          <button class="counter-btn" onclick="decrement('teleopFuelScored')">−</button>
+          <span class="counter-value" id="teleopFuelScored">0</span>
+          <button class="counter-btn" onclick="increment('teleopFuelScored')">+</button>
+          <button class="counter-btn big-step" onclick="increment5('teleopFuelScored')">+5</button> -->
+
+          <div class="form-group">
+            <label>Fuel Missed: </label>
+            <div class="slider-container">
+              <input type="range" id="teleopFuelMissed" min="0" max="200" value="1" class="styled-slider" step="40">
+              <div class="slider-notches">
+                <span>0</span><span>1-20</span><span>25-50</span><span>60-90</span><span>100-150</span><span>150+</span>
+              </div>
+            </div>
+          </div>
+              
+          <!-- <button class="counter-btn big-step" onclick="decrement5('teleopFuelMissed')">-5</button>
+          <button class="counter-btn" onclick="decrement('teleopFuelMissed')">−</button>
+          <span class="counter-value" id="teleopFuelMissed">0</span>
+          <button class="counter-btn" onclick="increment('teleopFuelMissed')">+</button>
+          <button class="counter-btn big-step" onclick="increment5('teleopFuelMissed')">+5</button> -->
+
+          <div class="form-group">
+            <label>Traversal</label>
+            <div class="toggle-group">
+              <label class="toggle-label">
+                <input type="radio" name="traversal" id="Bump" value="yes">
+                <span class="toggle-pill">Bump</span>
+              </label>
+              <label class="toggle-label">
+                <input type="radio" name="traversal" id="Trench" value="no">
+                <span class="toggle-pill">Trench</span>
+              </label>
+              <label class="toggle-label">
+                <input type="radio" name="traversal" id="Both" value="both">
+                <span class="toggle-pill">Both</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Active Phase Role</label>
+            <div class="toggle-group">
+              <label class="toggle-label"><input type="checkbox" id="activeRoleFunnel"><span class="toggle-pill">Funnel to Teammates</span></label>
+              <label class="toggle-label"><input type="checkbox" id="activeRoleScoring"><span class="toggle-pill">Score</span></label>
+              <label class="toggle-label"><input type="checkbox" id="activeRoleDeliver"><span class="toggle-pill">Deliver to HP</span></label>
+              <label class="toggle-label"><input type="checkbox" id="activeRoleDefend"><span class="toggle-pill">Defend</span></label>
+              <label class="toggle-label"><input type="checkbox" id="activeRoleNoMove"><span class="toggle-pill">Didn't Move</span></label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Inactive Phase Role</label>
+            <div class="toggle-group">
+              <label class="toggle-label"><input type="checkbox" id="inactiveRoleLimit"><span class="toggle-pill">Limiting Balls</span></label>
+              <label class="toggle-label"><input type="checkbox" id="inactiveRoleFunnel"><span class="toggle-pill">Funnel to Teammates</span></label>
+              <label class="toggle-label"><input type="checkbox" id="inactiveRoleDeliver"><span class="toggle-pill">Deliver to HP</span></label>
+              <label class="toggle-label"><input type="checkbox" id="inactiveRoleBlock"><span class="toggle-pill">Blocking</span></label>
+              <label class="toggle-label"><input type="checkbox" id="inactiveRoleRefill"><span class="toggle-pill">Refill Hopper</span></label>
+              <label class="toggle-label"><input type="checkbox" id="inactiveRoleNoMove"><span class="toggle-pill">Didn't Move</span></label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Transition Phase Role</label>
+            <div class="toggle-group">
+              <label class="toggle-label"><input type="checkbox" id="transitionRoleScoring"><span class="toggle-pill">Score</span></label>
+              <label class="toggle-label"><input type="checkbox" id="transitionRoleLimit"><span class="toggle-pill">Limiting Balls</span></label>
+              <label class="toggle-label"><input type="checkbox" id="transitionRoleFunnel"><span class="toggle-pill">Funnel to Teammates</span></label>
+              <label class="toggle-label"><input type="checkbox" id="transitionRoleDeliver"><span class="toggle-pill">Deliver to HP</span></label>
+              <label class="toggle-label"><input type="checkbox" id="transitionRoleBlock"><span class="toggle-pill">Blocking</span></label>
+              <label class="toggle-label"><input type="checkbox" id="transitionRoleRefill"><span class="toggle-pill">Refill Hopper</span></label>
+              <label class="toggle-label"><input type="checkbox" id="transitionRoleNoMove"><span class="toggle-pill">Didn't Move</span></label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="counter">
+              <span class="counter-label">Fouls</span>
+              <button class="counter-btn" onclick="decrement('teleopFouls')">−</button>
+              <span class="counter-value" id="teleopFouls">0</span>
+              <button class="counter-btn" onclick="increment('teleopFouls')">+</button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Collaboration — <span id="collab-val">1</span>/4</label>
+            <div class="slider-container">
+              <input type="range" id="teleopCollaboration" min="1" max="4" value="1" class="styled-slider"
+                     oninput="document.getElementById('collab-val').textContent=this.value">
+              <div class="slider-notches">
+              <span>1</span><span>2</span><span>3</span><span>4</span></div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Driving Skill — <span id="drive-val">1</span>/4</label>
+            <div class="slider-container">
+              <input type="range" id="drivingScore" min="1" max="4" value="1" class="styled-slider"
+                     oninput="document.getElementById('drive-val').textContent=this.value">
+              <div class="slider-notches">
+              <span>1</span><span>2</span><span>3</span><span>4</span></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ── ENDGAME ── -->
+      <div id="endgame" class="tab-content">
+        <div class="card">
+          <div class="card-title">Endgame</div>
+
+          <div class="form-group">
+            <label>Climb Level</label>
+            <select id="endgameClimbLevel">
+              <option value="None">None</option>
+              <option value="Level 1">Level 1</option>
+              <option value="Level 2">Level 2</option>
+              <option value="Level 3">Level 3</option>
+              <option value="Failed">Failed</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Climb Speed</label>
+            <select id="endgameClimbSpeed">
+              <option value="N/A">N/A</option>
+              <option value="Slow">Slow</option>
+              <option value="Medium">Medium</option>
+              <option value="Fast">Fast</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Disconnect?</label>
+            <div class="toggle-group">
+              <label class="toggle-label">
+                <input type="radio" name="disconnect" id="disconnectYes" value="yes">
+                <span class="toggle-pill">Yes</span>
+              </label>
+              <label class="toggle-label">
+                <input type="radio" name="disconnect" id="disconnectNo" value="no">
+                <span class="toggle-pill">No</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Notes</label>
+            <textarea id="endgameNotes" placeholder="Any observations…"></textarea>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ── HUMAN PLAYER ── -->
+      <div id="humanPlayer" class="tab-content">
+        <div class="card">
+          <div class="card-title">Human Player</div>
+
+          <div class="form-group">
+            <div class="counter">
+              <span class="counter-label">Fuel Missed</span>
+              <button class="counter-btn big-step" onclick="decrement5('humanPlayerFuelMissed')">-5</button>
+              <button class="counter-btn" onclick="decrement('humanPlayerFuelMissed')">−</button>
+              <span class="counter-value" id="humanPlayerFuelMissed">0</span>
+              <button class="counter-btn" onclick="increment('humanPlayerFuelMissed')">+</button>
+              <button class="counter-btn big-step" onclick="increment5('humanPlayerFuelMissed')">+5</button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="counter">
+              <span class="counter-label">Fuel Scored</span>
+              <button class="counter-btn big-step" onclick="decrement5('humanPlayerFuelScored')">-5</button>
+              <button class="counter-btn" onclick="decrement('humanPlayerFuelScored')">−</button>
+              <span class="counter-value" id="humanPlayerFuelScored">0</span>
+              <button class="counter-btn" onclick="increment('humanPlayerFuelScored')">+</button>
+              <button class="counter-btn big-step" onclick="increment5('humanPlayerFuelScored')">+5</button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Actions</label>
+            <div class="toggle-group">
+              <label class="toggle-label">
+                <input type="checkbox" id="fedRobot">
+                <span class="toggle-pill">Fed balls to Robot</span>
+              </label>
+              <label class="toggle-label">
+                <input type="checkbox" id="fedHumanPlayers">
+                <span class="toggle-pill">Fed balls to Human Players</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Notes</label>
+            <textarea id="humanPlayerNotes" placeholder="Any observations…"></textarea>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="action-buttons">
+        <button class="btn btn-secondary" onclick="resetForm()">Reset</button>
+        <!--<button class="btn btn-secondary" onclick="fillTestData()" style="flex:1;">Fill Match Form</button>-->
+        <button class="btn btn-primary"   onclick="saveMatch()">Save Match</button>
+      </div>
+
+    </div>
+    <!-- ══════════ END SCOUTING ══════════ -->
+
+
+    <!-- ══════════ HISTORY TAB ══════════ -->
+    <div id="history" class="tab-content">
+
+      <div class="card">
+        <div class="card-title">Match History</div>
+        <div class="history-count-bar">
+          <span class="history-stat" id="matchHistoryCount">0</span>
+          <span class="history-stat-label">matches saved</span>
+        </div>
+        <div id="matchContent" class="history-button-grid"></div>
+        <div id="qr-code"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Pit History</div>
+        <div class="history-count-bar">
+          <span class="history-stat" id="pitHistoryCount">0</span>
+          <span class="history-stat-label">pits saved</span>
+        </div>
+        <div id="pitContent" class="history-button-grid"></div>
+        <div id="qr-code-pit"></div>
+      </div>
+
+      <div class="export-buttons">
+        <button class="btn btn-secondary" onclick="exportAllPitCSV()">Export All Pits</button>
+        <button class="btn btn-secondary" onclick="exportAllMatchCSV()">Export All Matches</button>
+        <button class="btn btn-danger"    onclick="clearHistory()">Clear All History</button>
+        <button class="btn btn-primary" onclick="syncToSheets()">Sync to Google Sheets</button>
+      </div>
+
+      <div id="historyList"></div>
+    </div>
+    <!-- ══════════ END HISTORY ══════════ -->
+
+
+    <!-- ══════════ PIT SCOUTING TAB ══════════ -->
+    <div id="pit" class="tab-content">
+      <div class="card">
+        <div class="card-title">Pit Scouting</div>
+
+        <div class="form-group">
+          <label>Team Number</label>
+          <input type="number" id="teamPitNum" min="1" max="12000" oninput="if(this.value > 12000) this.value = 12000; if(this.value < 1 && this.value !== '') this.value = 1;">
+        </div>
+
+        <div class="form-group">
+          <label>Climb Level</label>
+          <select id="pitClimbLevel">
+            <option value="">Select…</option>
+            <option value="None">None</option>
+            <option value="L1">L1</option>
+            <option value="L2">L2</option>
+            <option value="L3">L3</option>
+          </select>
+        </div>
+
+        <div class="match-info-grid">
+          <div class="form-group">
+            <label>Height (inches)</label>
+            <input type="number" id="pitHeight" step="0.1" max="30" oninput="if(this.value > 30) this.value = 30; if(this.value < 0) this.value = 0;">
+          </div>
+            
+          <div class="form-group">
+            <label>Weight (lbs)</label>
+            <input type="number" id="pitWeight" step="0.1" max="115" oninput="if(this.value > 115) this.value = 115; if(this.value < 0) this.value = 0;">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Intake Type</label>
+          <div class="toggle-group">
+            <label class="toggle-label"><input type="checkbox" id="otbIntake"><span class="toggle-pill">Over The Bumper</span></label>
+            <label class="toggle-label"><input type="checkbox" id="perimeterIntake"><span class="toggle-pill">In Perimeter</span></label>
+            <label class="toggle-label"><input type="checkbox" id="stationIntake"><span class="toggle-pill">Station Intake</span></label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Drive Mechanism</label>
+          <select id="pitDriveMechanism">
+            <option value="">Select…</option>
+            <option value="Tank">Tank</option>
+            <option value="Swerve">Swerve</option>
+            <option value="Mecanum">Mecanum</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>General Strategy</label>
+          <textarea id="pitStrategy" placeholder="Describe their strategy…"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Features</label>
+          <div class="toggle-group">
+            <label class="toggle-label"><input type="checkbox" id="pitVision"><span class="toggle-pill">Vision</span></label>
+            <label class="toggle-label"><input type="checkbox" id="pitAdjustable"><span class="toggle-pill">Adjustable Scoring</span></label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Hopper Type</label>
+          <select id="pitHopperType">
+            <option value="">Select…</option>
+            <option value="Fixed">Fixed</option>
+            <option value="Extendable Horizontally">Extendable Horizontally</option>
+            <option value="Extendable Vertically">Extendable Vertically</option>
+            <option value="None">None</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Hopper Capacity</label>
+          <input type="number" id="pitHopperCapacity" step="0.1" placeholder="0">
+        </div>
+
+        <div class="form-group">
+          <label>Drive Experience</label>
+          <select id="pitDriveExperience">
+            <option value="">Select…</option>
+            <option value="Rookie">Rookie</option>
+            <option value="Intermediate">Intermediate</option>
+            <option value="Advanced">Advanced</option>
+            <option value="Expert">Expert</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Build Quality — <span id="build-quality-val">5</span>/10</label>
+          <div class="slider-container">
+            <input type="range" id="pitBuildQuality" min="1" max="10" value="5" class="styled-slider"
+                   oninput="document.getElementById('build-quality-val').textContent=this.value">
+            <div class="slider-notches">
+              <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
+              <span>6</span><span>7</span><span>8</span><span>9</span><span>10</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Outside Perimeter?</label>
+          <div class="toggle-group">
+            <label class="toggle-label">
+              <input type="radio" name="Outside Perimeter" id="perimeterYes" value="Yes">
+              <span class="toggle-pill">Yes</span>
+            </label>
+            <label class="toggle-label">
+              <input type="radio" name="Outside Perimeter" id="perimeterNo" value="No">
+              <span class="toggle-pill">No</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Breakdowns</label>
+          <textarea id="pitBreakdowns" placeholder="Note any breakdowns or issues…"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Notes</label>
+          <textarea id="pitNotes" placeholder="Additional notes…"></textarea>
+        </div>
+
+      </div>
+      
+      <div class="action-buttons">
+        <button class="btn btn-secondary" onclick="resetForm()">Reset</button>
+        <button class="btn btn-primary"   onclick="savePit()">Save Pit</button>
+      </div>
+
+    </div>
+    <!-- ══════════ END PIT ══════════ -->
+
+  </div><!-- .main-content -->
+
+
+  <!-- QR Modal -->
+  <div id="qrModal" class="modal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeQRModal()">✕</button>
+      <h2 id="qrModalTitle">QR Code</h2>
+      <div id="qrcode"></div>
+      <p class="modal-hint">Scan to get the CSV data</p>
+    </div>
+  </div>
+
+  <!-- Edit Modal -->
+<div id="editModal" class="modal">
+  <div class="modal-content" style="max-width:600px;">
+    <button class="modal-close" onclick="closeEditModal()">✕</button>
+    <h2 id="editModalTitle">Edit Match</h2>
+    
+    <p style="font-size:11px; color:var(--text-dim); margin-bottom:8px;">
+      Edit CSV values below. Separate fields with commas. Use quotes around text with commas.
+    </p>
+
+    <details>   
+      <summary>PIT format</summary>   
+        Team #,	Team Name, Climb Level, Height (inches), Weight (lbs), Intake, Drive Mechanism, General Strategy,	Features,	Hopper Type, Hopper Capacity,	Drive Experience,	Build Quality, Extends Outside Perimeter?, Breakdowns, Notes.
+    </details>
+    <details>   
+      <summary>MATCH format</summary>   
+        Team #,	Event,	Match,	Driver Station,	Scout,	Auto HUB,	Auto HUB Missed, Auto Tower, Tele HUB, Tele HUB Missed,	Human Player Scored, Human Player Missed, Active Phase Role, Inactive Phase Role,	Transition Phase Role, Endgame Climb Level, Fouls, Driving Score,	Collaboration Score, Disconnected, Climb Speed,	Notes,	Auto Balls Collected,	Traversal Type,	Human Player Roles,	Human Player Notes.
+    </details>
+    
+    <textarea id="editCSV" 
+      style="width:100%; height:300px; font-family:monospace; font-size:13px; padding:12px; border:1px solid var(--border); border-radius:var(--radius); background:var(--surface-2); color:var(--text); resize:vertical;"
+    ></textarea>
+    
+    <div style="display:flex; gap:10px; margin-top:16px; flex-wrap:wrap;">
+      <button class="btn btn-secondary" onclick="closeEditModal()" style="flex:1;">Cancel</button>
+      <button class="btn btn-danger" onclick="deleteFromEdit()" style="flex:1;">Delete</button>
+      <button class="btn btn-primary" onclick="saveEdit()" style="flex:1;">Save</button>
+    </div>
+  </div>
+</div>
+
+  <!-- Data Preview Modal -->
+  <div id="previewModal" class="modal">
+    <div class="modal-content">
+      <h2>Data Preview</h2>
+      <div id="previewContent"></div>
+      <button class="btn btn-secondary" onclick="closePreviewModal()" style="margin-top:14px;width:100%">Close</button>
+    </div>
+  </div>
+
+   <!-- Unified Validation Modal -->
+   <div id="validationModal" class="modal">
+    <div class="modal-content validation-modal-content">
+        <button class="modal-close" onclick="closeValidationModal()" aria-label="Close">X</button>
+        <div class="validation-modal-icon">⚠️</div>
+        <h2 class="validation-modal-title">Before You Save</h2>
+
+        <!-- Required errors — blocks saving -->
+        <div id="validationRequiredSection">
+            <div class="validation-section-header required-header">
+                <span class="validation-section-badge required-badge">Required</span>
+                <span class="validation-section-sub">Fix these before saving</span>
+            </div>
+            <ul id="validationRequiredList" class="validation-error-list"></ul>
+        </div>
+
+        <!-- Warnings -->
+        <div id="validationWarningSection">
+            <div class="validation-section-header warning-header">
+                <span class="validation-section-badge warning-badge">Heads Up</span>
+                <span class="validation-section-sub">These fields are blank</span>
+            </div>
+            <ul id="validationWarningList" class="validation-error-list"></ul>
+        </div>
+
+        <div class="validation-modal-buttons">
+            <button class="validation-cancel-btn" onclick="closeValidationModal()">Go Back</button>
+            <button class="validation-ok-btn" id="validationSaveAnyway" onclick="saveAnywayFromModal()">Save Anyway</button>
+        </div>
+    </div>
+</div>
+
+  <script src="script.js"></script>
+  <script>
+    // Updated tab switchers that accept the element directly (no reliance on event global)
+    function switchMainTab(tabName, el) {
+      document.querySelectorAll('.main-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('body .tab-content').forEach(c => c.classList.remove('active'));
+      el.classList.add('active');
+      document.getElementById(tabName).classList.add('active');
+    }
+
+    function switchTab(tabName, el) {
+      document.querySelectorAll('.sub-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('#scouting > .tab-content').forEach(c => c.classList.remove('active'));
+      el.classList.add('active');
+      document.getElementById(tabName).classList.add('active');
+    }
+  </script>
+</body>
+</html>
