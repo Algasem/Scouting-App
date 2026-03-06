@@ -594,7 +594,8 @@ function generateMatchCSV(){
         data.teleop.activeRole.score ? "Score" : null,
         data.teleop.activeRole.deliver ? "Deliver to HP" : null,
         data.teleop.activeRole.defend ? "Defend" : null,
-        data.teleop.activeRole.noMove ? "Didn't move" : null
+        data.teleop.activeRole.noMove ? "Didn't move" : null,
+        data.teleop.activeRole.refillHopper ? "Refill Hopper" : null
     ];
     
     let teleopActiveRole = "";
@@ -962,6 +963,7 @@ function collectMatchData(){
                 deliver: document.getElementById('activeRoleDeliver').checked,
                 defend: document.getElementById('activeRoleDefend').checked,
                 noMove: document.getElementById('activeRoleNoMove').checked,
+                refillHopper: document.getElementById('activeRoleRefill').checked,
 
             },
 
