@@ -3889,6 +3889,20 @@ function getTeamName(teamNumber) {
     const name = teamData[String(teamNumber)];
     return name || 'Unknown Team';
 }
+
+function compareTeamNumber (teamNumber) {
+    if (!teamNumber) {
+        return false;
+    }
+    const trimmed = teamNumber.trim();
+
+    if (!/^[0-9]+$/.test(trimmed)) {
+        return false;
+    }
+
+    const key = String(parseInt(trimmed, 10));
+    return Object.prototype.hasOwnProperty.call(teamData, key);
+}
     
 function loadUsername() {
     const saved = localStorage.getItem(USERNAME_KEY);
@@ -4170,6 +4184,8 @@ function validateMatch(onValid) {
         required.push("Team number is required.");
     } else if (parseInt(teamNumVal) > 12000) {
         required.push("Team number cannot exceed 12000.");
+    } else if (!compareTeamNumber(teamNumVal)) {
+        required.push("Team number must be one of the known teams (enter a valid numeric ID).");
     }
 
     const disconnectChecked = document.querySelector('input[name="disconnect"]:checked');
