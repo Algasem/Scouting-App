@@ -3986,12 +3986,6 @@ function switchTab(tabName) {
 function increment(buttonID){ 
     const value = document.getElementById(buttonID);
 
-    // if(buttonID === 'humanPlayerFuelScored') {
-    //     const missed = parseInt(document.getElementById('humanPlayerFuelMissed').textContent);
-    //     if (parseInt(value.textContent) + 1 > missed) {
-    //         return;
-    //     }
-    // }
     value.textContent = parseInt(value.textContent) + 1;        
 }
 
@@ -4001,28 +3995,12 @@ function decrement(buttonID){
 
     if(value.textContent > 0){
         value.textContent = parseInt(value.textContent) -1;
-
-        // if (buttonID === 'humanPlayerFuelMissed') {
-        //     const scored = document.getElementById('humanPlayerFuelScored');
-        //     if (parseInt(scored.textContent) > parseInt(value.textContent)) {
-        //         scored.textContent = value.textContent;
-        //     }
-        // }
     }
 }
 
 // Increment fuel buttons by 5 at once
 function increment5(buttonID) {
     const value = document.getElementById(buttonID);
-
-    // if (buttonID === 'humanPlayerFuelScored') {
-    //     const missed = parseInt(document.getElementById('humanPlayerFuelMissed').textContent);
-    //     const newValue = parseInt(value.textContent) + 5;
-    //     if (newValue > missed) {
-    //         value.textContent = missed; // Cap at max miss
-    //         return;
-    //     }
-    // }
 
     value.textContent = parseInt(value.textContent) + 5;
 }
@@ -4037,13 +4015,6 @@ function decrement5(buttonID) {
     else{
         value.textContent = parseInt('0');
     }
-
-    // if (buttonID === 'humanPlayerFuelMissed') {
-    //     const scored = document.getElementById('humanPlayerFuelScored');
-    //     if (parseInt(scored.textContent) > parseInt(value.textContent)) {
-    //         scored.textContent = value.textContent;
-    //     }
-    // }
 }
 
 function resetForm(){
@@ -4448,106 +4419,6 @@ function generateMatchCSV(){
         endgameClimbLevel = "Failed";
     }
 
-    // let autoFuelSCORE = 0;
-
-    // switch (data.auto.fuelScored) {
-    //     case "0":
-    //         autoFuelSCORE = 0;
-    //         break;
-    //     case "40":
-    //         autoFuelSCORE = 1;
-    //         break;
-    //     case "80":
-    //         autoFuelSCORE = 2;
-    //         break;
-    //     case "120":
-    //         autoFuelSCORE = 3;
-    //         break;
-    //     case "160":
-    //         autoFuelSCORE = 4;
-    //         break;
-    //     case "200":
-    //         autoFuelSCORE = 5;
-    //         break;
-    //     default:
-    //         autoFuelSCORE = 0;
-    // }  
-    
-    // let autoFuelMISS = 0;
-
-    // switch (data.auto.fuelMissed) {
-    //     case "0":
-    //         autoFuelMISS = 0;
-    //         break;
-    //     case "40":
-    //         autoFuelMISS = 1;
-    //         break;
-    //     case "80":
-    //         autoFuelMISS = 2;
-    //         break;
-    //     case "120":
-    //         autoFuelMISS = 3;
-    //         break;
-    //     case "160":
-    //         autoFuelMISS = 4;
-    //         break;
-    //     case "200":
-    //         autoFuelMISS = 5;
-    //         break;
-    //     default:
-    //         autoFuelMISS = 0;
-    // }
-
-    // let fuelSCORE = 0;
-
-    // switch (data.teleop.fuelScored) {
-    //     case "0":
-    //         fuelSCORE = 0;
-    //         break;
-    //     case "40":
-    //         fuelSCORE = 1;
-    //         break;
-    //     case "80":
-    //         fuelSCORE = 2;
-    //         break;
-    //     case "120":
-    //         fuelSCORE = 3;
-    //         break;
-    //     case "160":
-    //         fuelSCORE = 4;
-    //         break;
-    //     case "200":
-    //         fuelSCORE = 5;
-    //         break;
-    //     default:
-    //         fuelSCORE = 0;
-    // }
-
-    // let fuelMISS = 0;
-
-    // switch (data.teleop.fuelMissed) {
-    //     case "0":
-    //         fuelMISS = 0;
-    //         break;
-    //     case "40":
-    //         fuelMISS = 1;
-    //         break;
-    //     case "80":
-    //         fuelMISS = 2;
-    //         break;
-    //     case "120":
-    //         fuelMISS = 3;
-    //         break;
-    //     case "160":
-    //         fuelMISS = 4;
-    //         break;
-    //     case "200":
-    //         fuelMISS = 5;
-    //         break;
-    //     default:
-    //         fuelMISS = 0;
-    // }
-
     const values = [
 
         // General  
@@ -4668,8 +4539,6 @@ function generatePitCSV(){
 function collectMatchData(){
 
     const data = {
-        // timestamp: new Date().toISOString(),
-
         // Match info
         event: document.getElementById('event').value,
         qualMatch: document.getElementById('qualification').checked,
@@ -4684,8 +4553,6 @@ function collectMatchData(){
 
             fuelScored: document.getElementById('auto-points-estimate').textContent,
             fuelMissed: document.getElementById('auto-missed-estimate').textContent,
-            // fuelScored: document.getElementById('autoFuelScored').value,
-            // fuelMissed: document.getElementById('autoFuelMissed').value,
 
             fuelContributed: document.getElementById('auto-points-estimate'),
 
@@ -4693,9 +4560,6 @@ function collectMatchData(){
         },
 
         teleop: {
-            // fuelScored: document.getElementById('teleopFuelScored').value,
-            // fuelMissed: document.getElementById('teleopFuelMissed').value,
-            
             fuelScored: document.getElementById('teleop-points-estimate').textContent,
             fuelMissed: document.getElementById('teleop-missed-estimate').textContent,
 

@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="style.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#da4416">
+  <!--<meta name="theme-color" content="#da4416">-->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <link rel="apple-touch-icon" href="icon-192.png">
 </head>
@@ -88,8 +88,8 @@
     <!-- ─── MAIN TABS ─── -->
     <div class="main-tabs">
       <button class="main-tab active" onclick="switchMainTab('scouting', this)">Scouting</button>
-      <button class="main-tab"        onclick="switchMainTab('history', this)">History</button>
-      <button class="main-tab"        onclick="switchMainTab('pit', this)">Pit</button>
+      <button class="main-tab" onclick="switchMainTab('history', this)">History</button>
+      <button class="main-tab" onclick="switchMainTab('pit', this)">Pit</button>
     </div>
 
     <!-- ══════════ SCOUTING TAB ══════════ -->
@@ -208,49 +208,6 @@
             </div>
           </div>
 
-          
-          <!-- <div class="form-group">
-            <div class="counter">
-              <span class="counter-label">Fuel Scored</span>
-              <button class="counter-btn big-step" onclick="decrement5('autoFuelScored')">-5</button>
-              <button class="counter-btn" onclick="decrement('autoFuelScored')">−</button>
-              <span class="counter-value" id="autoFuelScored">0</span>
-              <button class="counter-btn" onclick="increment('autoFuelScored')">+</button>
-              <button class="counter-btn big-step" onclick="increment5('autoFuelScored')">+5</button>
-            </div>
-          </div> -->
-
-          <!-- <div class="form-group">
-            <label>Fuel Scored: </label>
-            <div class="slider-container">
-              <input type="range" id="autoFuelScored" min="0" max="200" value="1" class="styled-slider" step="40">
-              <div class="slider-notches">
-                <span>0</span><span>1-20</span><span>21-40</span><span>41-60</span><span>61-80</span><span>80+</span>
-              </div>
-            </div>
-          </div> -->
-
-          <!-- <div class="form-group">
-            <label>Fuel Missed: </label>
-            <div class="slider-container">
-              <input type="range" id="autoFuelMissed" min="0" max="200" value="1" class="styled-slider" step="40">
-              <div class="slider-notches">
-                <span>0</span><span>1-20</span><span>21-40</span><span>41-60</span><span>61-80</span><span>80+</span>
-              </div>
-            </div>
-          </div> -->
-
-          <!-- <div class="form-group">
-            <div class="counter">
-              <span class="counter-label">Fuel Missed</span>
-              <button class="counter-btn big-step" onclick="decrement5('autoFuelMissed')">-5</button>
-              <button class="counter-btn" onclick="decrement('autoFuelMissed')">−</button>
-              <span class="counter-value" id="autoFuelMissed">0</span>
-              <button class="counter-btn" onclick="increment('autoFuelMissed')">+</button>
-              <button class="counter-btn big-step" onclick="increment5('autoFuelMissed')">+5</button>
-            </div>
-          </div> -->
-
           <div class="form-group">
             <label>Balls Collected</label>
             <label class="toggle-label">
@@ -267,22 +224,6 @@
         <div class="card">
           <div class="card-title">Teleoperated</div>
 
-          <!-- <div class="form-group">
-            <label>Fuel Scored: </label>
-            <div class="slider-container">
-              <input type="range" id="teleopFuelScored" min="0" max="200" value="1" class="styled-slider" step="40">
-              <div class="slider-notches">
-                <span>0</span><span>1-20</span><span>25-50</span><span>60-90</span><span>100-150</span><span>150+</span>
-              </div>
-            </div>
-          </div> -->
-
-          <!-- <button class="counter-btn big-step" onclick="decrement5('teleopFuelScored')">-5</button>
-          <button class="counter-btn" onclick="decrement('teleopFuelScored')">−</button>
-          <span class="counter-value" id="teleopFuelScored">0</span>
-          <button class="counter-btn" onclick="increment('teleopFuelScored')">+</button>
-          <button class="counter-btn big-step" onclick="increment5('teleopFuelScored')">+5</button> -->
-          
           <div class="form-group">
             <label>Alliance Total Points (from match stats)</label>
             <input type="number" id="allianceTotalPoints" min="0" placeholder="Total match points for your alliance" oninput="updateTeleopEstimate()">
@@ -315,24 +256,6 @@
               </div>
             </div>
           </div>
-
-          
-          
-          <!-- <div class="form-group">
-            <label>Fuel Missed: </label>
-            <div class="slider-container">
-              <input type="range" id="teleopFuelMissed" min="0" max="200" value="1" class="styled-slider" step="40">
-              <div class="slider-notches">
-                <span>0</span><span>1-20</span><span>25-50</span><span>60-90</span><span>100-150</span><span>150+</span>
-              </div>
-            </div>
-          </div> -->
-              
-          <!-- <button class="counter-btn big-step" onclick="decrement5('teleopFuelMissed')">-5</button>
-          <button class="counter-btn" onclick="decrement('teleopFuelMissed')">−</button>
-          <span class="counter-value" id="teleopFuelMissed">0</span>
-          <button class="counter-btn" onclick="increment('teleopFuelMissed')">+</button>
-          <button class="counter-btn big-step" onclick="increment5('teleopFuelMissed')">+5</button> -->
 
           <div class="form-group">
             <label>Traversal</label>
@@ -776,36 +699,36 @@
     </div>
   </div>
 
-   <!-- Unified Validation Modal -->
-   <div id="validationModal" class="modal">
-    <div class="modal-content validation-modal-content">
-        <button class="modal-close" onclick="closeValidationModal()" aria-label="Close">X</button>
-        <div class="validation-modal-icon">⚠️</div>
-        <h2 class="validation-modal-title">Before You Save</h2>
+  <!-- Unified Validation Modal -->
+  <div id="validationModal" class="modal">
+  <div class="modal-content validation-modal-content">
+      <button class="modal-close" onclick="closeValidationModal()" aria-label="Close">X</button>
+      <div class="validation-modal-icon">⚠️</div>
+      <h2 class="validation-modal-title">Before You Save</h2>
 
-        <!-- Required errors — blocks saving -->
-        <div id="validationRequiredSection">
-            <div class="validation-section-header required-header">
-                <span class="validation-section-badge required-badge">Required</span>
-                <span class="validation-section-sub">Fix these before saving</span>
-            </div>
-            <ul id="validationRequiredList" class="validation-error-list"></ul>
-        </div>
+      <!-- Required errors — blocks saving -->
+      <div id="validationRequiredSection">
+          <div class="validation-section-header required-header">
+              <span class="validation-section-badge required-badge">Required</span>
+              <span class="validation-section-sub">Fix these before saving</span>
+          </div>
+          <ul id="validationRequiredList" class="validation-error-list"></ul>
+      </div>
 
-        <!-- Warnings -->
-        <div id="validationWarningSection">
-            <div class="validation-section-header warning-header">
-                <span class="validation-section-badge warning-badge">Heads Up</span>
-                <span class="validation-section-sub">These fields are blank</span>
-            </div>
-            <ul id="validationWarningList" class="validation-error-list"></ul>
-        </div>
+      <!-- Warnings -->
+      <div id="validationWarningSection">
+          <div class="validation-section-header warning-header">
+              <span class="validation-section-badge warning-badge">Heads Up</span>
+              <span class="validation-section-sub">These fields are blank</span>
+          </div>
+          <ul id="validationWarningList" class="validation-error-list"></ul>
+      </div>
 
-        <div class="validation-modal-buttons">
-            <button class="validation-cancel-btn" onclick="closeValidationModal()">Go Back</button>
-            <button class="validation-ok-btn" id="validationSaveAnyway" onclick="saveAnywayFromModal()">Save Anyway</button>
-        </div>
-    </div>
+      <div class="validation-modal-buttons">
+          <button class="validation-cancel-btn" onclick="closeValidationModal()">Go Back</button>
+          <button class="validation-ok-btn" id="validationSaveAnyway" onclick="saveAnywayFromModal()">Save Anyway</button>
+      </div>
+  </div>
 </div>
 
   <script src="script.js"></script>
