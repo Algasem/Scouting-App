@@ -4032,13 +4032,11 @@ function decrement5(buttonID) {
     // }
 }
 
-// Reset all fields in the form
 function resetForm(){
     
     // Reset all +- buttons
     const counterIds = [
-        'teleopFuelMissed','teleopFuelScored',
-        'autoFuelMissed','autoFuelScored','teleopFouls',
+        'teleopFouls',
         'humanPlayerFuelMissed','humanPlayerFuelScored'
     ];
     counterIds.forEach(id => {
@@ -4046,35 +4044,56 @@ function resetForm(){
         if (el) el.textContent = '0';
     });
 
+    // Reset sliders to default values
+    document.getElementById('autoContribution').value = 33;
+    document.getElementById('auto-contribution-val').textContent = '33';
+    document.getElementById('autoMissed').value = 0;
+    document.getElementById('auto-missed-val').textContent = '0';
+    
+    document.getElementById('teleopContribution').value = 33;
+    document.getElementById('teleop-contribution-val').textContent = '33';
+    document.getElementById('teleopMissed').value = 0;
+    document.getElementById('teleop-missed-val').textContent = '0';
+    
+    document.getElementById('teleopCollaboration').value = 1;
+    document.getElementById('collab-val').textContent = '1';
+    document.getElementById('drivingScore').value = 1;
+    document.getElementById('drive-val').textContent = '1';
+    document.getElementById('pitBuildQuality').value = 5;
+    document.getElementById('build-quality-val').textContent = '5';
+
+    // Reset alliance points and ALL estimates
+    document.getElementById('allianceAutoPoints').value = '';
+    document.getElementById('allianceTotalPoints').value = '';
+    document.getElementById('auto-points-estimate').textContent = '0';
+    document.getElementById('auto-missed-estimate').textContent = '0';
+    document.getElementById('teleop-points-estimate').textContent = '0';
+    document.getElementById('teleop-missed-estimate').textContent = '0';
+
     // Reset all checkboxes
     const allCheckboxes = document.querySelectorAll('input[type="checkbox"]');
-
     allCheckboxes.forEach(checkbox => {
         checkbox.checked = false;
-    })
+    });
 
+    // Reset all radio buttons
     const allRadios = document.querySelectorAll('input[type="radio"]');
-
     allRadios.forEach(option => {
         option.checked = false;
-    })
+    });
 
     // Reset all text fields
     const allText = document.querySelectorAll('input[type="text"], input[type="number"], textarea');
-
     allText.forEach(text => {
         text.value = '';
-    })
+    });
 
-    // Reset all drop down menu's
+    // Reset all dropdown menus
     var allDropdowns = document.getElementsByTagName('select');
-    
     for (var i = 0; i < allDropdowns.length; i++){
         allDropdowns[i].selectedIndex = 0;
     }            
 }
-
-// Error checking
 
 // Show the unified validation modal.
 function showValidationModal(required, warnings, onValid) {
@@ -4789,6 +4808,7 @@ function saveMatch() {
 
         updateMatchCount();
         pastMatchesQR();
+        resetForm();
     });
 }
 
