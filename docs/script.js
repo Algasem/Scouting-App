@@ -4390,8 +4390,6 @@ function generateMatchCSV(){
     }
 
     let totalMatch = matchType + data.matchNumber;
-
-    console.log(totalMatch);
     
     const humanPlayerRoles = [
         data.humanPlayer.fedRobot ? "Fed balls to Robot" : null,
@@ -4433,7 +4431,6 @@ function generateMatchCSV(){
         data.auto.fuelMissed,
         autoClimbLevel,
         "",
-        // data.auto.ballsCollectedToOurSide,
 
         // Teleop Scouting
         data.teleop.fuelScored,
@@ -4682,10 +4679,6 @@ function saveMatch() {
 
         localStorage.setItem("MatchCount", count);
 
-        for (let i = 0; i < count; i++) {
-            console.log(localStorage.getItem("Match" + i));
-        }
-
         updateMatchCount();
         pastMatchesQR();
         resetForm();
@@ -4706,24 +4699,20 @@ function savePit(){
 
         updatePitCount();
         pastPitsQR();
+        resetForm();
     });
 }
 
 function pastMatchesQR() {
     const matchContent = document.getElementById("matchContent");
     matchContent.innerHTML = "";
-    let allMatches = [];
+    const totalMatches = Number(localStorage.getItem("MatchCount")) || 0;
 
-    for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i); 
-        if (key.startsWith("Match") && !key.startsWith("MatchCount")) {
-            const matchIndex = parseInt(key.replace("Match", ""), 10);
-            allMatches[matchIndex] = localStorage.getItem(key);
-        }
-    }
+    for (let i = 0; i < totalMatches; i++) {
+        const csv = localStorage.getItem("Match" + i);
+        if (!csv) continue;
 
-    for (let i = 0; i < allMatches.length; i++) {
-        let tempArr = parseCSVRow(allMatches[i]);
+        let tempArr = parseCSVRow(csv);
 
         const matchDiv = document.createElement("div");
         matchDiv.style.cssText = "display:flex; gap:6px;";
@@ -4732,13 +4721,13 @@ function pastMatchesQR() {
         matchButton.textContent = tempArr[0] + " -- " + tempArr[2];
         matchButton.className = "match-button";
         matchButton.style.flex = "1";
-        matchButton.onclick = () => openQRModal(allMatches[i], "Match QR");
+        matchButton.onclick = ((data) => () => openQRModal(data, "Match QR"))(csv);
         
         const editBtn = document.createElement("button");
         editBtn.textContent = "✏️";
         editBtn.className = "match-button";
         editBtn.style.cssText = "width:50px; flex-shrink:0;";
-        editBtn.onclick = () => openEditModal(i, allMatches[i], tempArr[0] + " -- " + tempArr[2]);
+        editBtn.onclick = ((idx, data, label) => () => openEditModal(idx, data, label))(i, csv, tempArr[0] + " -- " + tempArr[2]);
         
         matchDiv.appendChild(matchButton);
         matchDiv.appendChild(editBtn);
@@ -4750,9 +4739,9 @@ let editingIndex = null;
 let editingType = 'match';
 let _pendingSaveCallback = null;
 
-function openEditModal(index, csv, title) {
+function openEditModal(index, csv, title, type = 'match') {
     editingIndex = index;
-    editingType = 'match';
+    editingType = type;
     document.getElementById('editModalTitle').textContent = 'Edit: ' + title;
     document.getElementById('editCSV').value = csv;
     document.getElementById('editModal').classList.add('active');
@@ -4874,18 +4863,13 @@ function deleteFromEdit() {
 function pastPitsQR() {
     const pitContent = document.getElementById("pitContent");
     pitContent.innerHTML = "";
-    let allPits = [];
+    const totalPits = Number(localStorage.getItem("PitCount")) || 0;
 
-    for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        if (key.startsWith("Pit") && !key.startsWith("PitCount")) {
-            const pitIndex = parseInt(key.replace("Pit", ""), 10);
-            allPits[pitIndex] = localStorage.getItem(key);
-        }
-    }
+    for (let i = 0; i < totalPits; i++) {
+        const csv = localStorage.getItem("Pit" + i);
+        if (!csv) continue;
 
-    for (let i = 0; i < allPits.length; i++) {
-        let tempArr = parseCSVRow(allPits[i]);
+        let tempArr = parseCSVRow(csv);
 
         const pitDiv = document.createElement("div");
         pitDiv.style.cssText = "display:flex; gap:6px;";
@@ -4894,22 +4878,20 @@ function pastPitsQR() {
         pitButton.textContent = "Pit " + tempArr[0];
         pitButton.className = "match-button";
         pitButton.style.flex = "1";
-        pitButton.onclick = () => openQRModal(allPits[i], "Pit QR");
+        pitButton.onclick = ((data) => () => openQRModal(data, "Pit QR"))(csv);
         
         const editBtn = document.createElement("button");
         editBtn.textContent = "✏️";
         editBtn.className = "match-button";
         editBtn.style.cssText = "width:50px; flex-shrink:0;";
-        editBtn.onclick = () => {
-            editingType = 'pit';
-            openEditModal(i, allPits[i], "Pit " + tempArr[0]);
-        };
+        editBtn.onclick = ((idx, data, label) => () => openEditModal(idx, data, "Pit " + label, 'pit'))(i, csv, tempArr[0]);
         
         pitDiv.appendChild(pitButton);
         pitDiv.appendChild(editBtn);
         pitContent.appendChild(pitDiv);
     }
 }
+
 
 function openQRModal(text, title) {
     const modal = document.getElementById("qrModal");
@@ -4978,7 +4960,7 @@ function exportAllMatchCSV(){
     let totalMatch = "";
     const matchCount = Number(localStorage.getItem("MatchCount")) || 0;
 
-    for(let i = 0; i < count; i++){
+        for(let i = 0; i < matchCount; i++){
         const match = localStorage.getItem("Match" + i);
         if (match) {
             totalMatch += match + "\n";
