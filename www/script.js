@@ -4260,6 +4260,10 @@ function validatePit(onValid) {
         warnings.push("Climb Level not selected.");
     }
 
+    if (!document.getElementById('pitLauncherType').value) {
+        warnings.push("Launcher Type not selected.");
+    }
+
     if (!document.getElementById('pitDriveMechanism').value) {
         warnings.push("Drive Mechanism not selected.");
     }
@@ -4513,6 +4517,7 @@ function generatePitCSV(){
         pitData.heightInches,
         pitData.weightLbs,
         intakeType,
+        pitData.launcherType,
         pitData.driveMechanism,
         pitData.strategy,
         features,
@@ -4635,6 +4640,7 @@ function collectPitData(){
             inPerimeter: document.getElementById('perimeterIntake').checked,
             stationIntake: document.getElementById('stationIntake').checked
         },
+        launcherType: document.getElementById('pitLauncherType').value,
         driveMechanism: document.getElementById('pitDriveMechanism').value,
         strategy: document.getElementById('pitStrategy').value,
 
