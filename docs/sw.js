@@ -1,4 +1,6 @@
-const CACHE_NAME = 'scout-v1';
+const CACHE_VERSION = 'v1.0.1';
+const CACHE_NAME = `scout-${CACHE_VERSION}`;
+
 const ASSETS = [
   '/2026-Scouting-App/',
   '/2026-Scouting-App/index.html',
@@ -28,7 +30,33 @@ self.addEventListener('activate', event => {
 });
 
 self.addEventListener('fetch', event => {
-  event.respondWith(
-    caches.match(event.request).then(cached => cached || fetch(event.request))
-  );
+  const url = new URL(event.request.url);
+  
+  if (url.pathname.endsWith('.html') || 
+      url.pathname.endsWith('.css') || 
+      url.pathname.endsWith('.js') ||
+      url.pathname === '/2026-Scouting-App/') {
+    
+    event.respondWith(
+      fetch(event.request)
+        .then(response => {
+          // Update cache with fresh version
+          const responseClone = response.clone();
+          caches.open(CACHE_NAME).then(cache => {
+            cache.put(event.request, responseClone);
+          });
+          return response;
+        })
+        .catch(() => {
+          // Fallback to cache if offline
+          return caches.match(event.request);
+        })
+    );
+  } 
+  // Cache-first for static assets (icons, fonts, external libs)
+  else {
+    event.respondWith(
+      caches.match(event.request).then(cached => cached || fetch(event.request))
+    );
+  }
 });
