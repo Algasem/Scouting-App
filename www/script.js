@@ -3929,29 +3929,125 @@ function updateAutoEstimate() {
     const total = parseInt(document.getElementById('allianceAutoPoints').value) || 0;
     const percent = parseInt(document.getElementById('autoContribution').value) || 0;
     const estimate = Math.round(total * percent / 100);
-    document.getElementById('auto-points-estimate').textContent = estimate;
+    document.getElementById('autoFuelScored').value = estimate;
+    updateAutoMissed();
 }
 
 function updateTeleopEstimate() {
     const total = parseInt(document.getElementById('allianceTotalPoints').value) || 0;
     const percent = parseInt(document.getElementById('teleopContribution').value) || 0;
     const estimate = Math.round(total * percent / 100);
-    document.getElementById('teleop-points-estimate').textContent = estimate;
+    document.getElementById('teleopFuelScored').value = estimate;
+    updateTeleopMissed();
+}
+
+function updateAutoScoredFromManual() {
+    const scored = parseInt(document.getElementById('autoFuelScored').value) || 0;
+    const allianceTotal = parseInt(document.getElementById('allianceAutoPoints').value) || 0;
+    
+    if (allianceTotal > 0) {
+        let percent = Math.round((scored / allianceTotal) * 100);
+        // Cap at 100%
+        percent = Math.min(100, percent);
+        // Round to nearest 5 to match slider steps
+        percent = Math.round(percent / 5) * 5;
+        
+        // Update slider position and display
+        document.getElementById('autoContribution').value = percent;
+        document.getElementById('auto-contribution-val').textContent = percent;
+    }
+    
+    updateAutoMissed();
+}
+
+function updateTeleopScoredFromManual() {
+    const scored = parseInt(document.getElementById('teleopFuelScored').value) || 0;
+    const allianceTotal = parseInt(document.getElementById('allianceTotalPoints').value) || 0;
+    
+    if (allianceTotal > 0) {
+        let percent = Math.round((scored / allianceTotal) * 100);
+        percent = Math.min(100, percent);
+        percent = Math.round(percent / 5) * 5;
+        
+        document.getElementById('teleopContribution').value = percent;
+        document.getElementById('teleop-contribution-val').textContent = percent;
+    }
+    
+    updateTeleopMissed();
+}
+
+function updateAutoMissedFromManual() {
+    const scored = parseInt(document.getElementById('autoFuelScored').value) || 0;
+    const missed = parseInt(document.getElementById('autoFuelMissed').value) || 0;
+    
+    const totalShots = scored + missed;
+    
+    if (totalShots === 0) {
+        document.getElementById('autoAccuracy').value = 50;
+        document.getElementById('auto-accuracy-val').textContent = '50';
+        return;
+    }
+    
+    let accuracy = Math.round((scored / totalShots) * 100);
+    accuracy = Math.round(accuracy / 5) * 5; // Snap to nearest 5%
+    
+    document.getElementById('autoAccuracy').value = accuracy;
+    document.getElementById('auto-accuracy-val').textContent = accuracy;
+}
+
+function updateTeleopMissedFromManual() {
+    const scored = parseInt(document.getElementById('teleopFuelScored').value) || 0;
+    const missed = parseInt(document.getElementById('teleopFuelMissed').value) || 0;
+    
+    const totalShots = scored + missed;
+    
+    if (totalShots === 0) {
+        document.getElementById('teleopAccuracy').value = 50;
+        document.getElementById('teleop-accuracy-val').textContent = '50';
+        return;
+    }
+    
+    let accuracy = Math.round((scored / totalShots) * 100);
+    accuracy = Math.round(accuracy / 5) * 5; // Snap to nearest 5%
+    
+    document.getElementById('teleopAccuracy').value = accuracy;
+    document.getElementById('teleop-accuracy-val').textContent = accuracy;
 }
 
 function updateAutoMissed() {
-    const totalScored = parseInt(document.getElementById('auto-points-estimate').textContent) || 0;
-    const percentMissed = parseInt(document.getElementById('autoMissed').value) || 0;
-    const shotsMissed = Math.round((percentMissed/(100-percentMissed))*totalScored);
-    document.getElementById('auto-missed-estimate').textContent = shotsMissed;
+    const scored = parseInt(document.getElementById('autoFuelScored').value) || 0;
+    const accuracy = parseInt(document.getElementById('autoAccuracy').value);
+    
+    if (accuracy === 0) {
+        document.getElementById('autoFuelMissed').value = scored;
+        return;
+    }
+    
+    if (scored === 0) {
+        document.getElementById('autoFuelMissed').value = 0;
+        return;
+    }
+    
+    const missed = Math.round(scored * (100 - accuracy) / accuracy);
+    document.getElementById('autoFuelMissed').value = missed;
 }
 
-
 function updateTeleopMissed() {
-    const totalScored = parseInt(document.getElementById('teleop-points-estimate').textContent) || 0;
-    const percentMissed = parseInt(document.getElementById('teleopMissed').value) || 0;
-    const shotsMissed = Math.round((percentMissed/(100-percentMissed))*totalScored);
-    document.getElementById('teleop-missed-estimate').textContent = shotsMissed;
+    const scored = parseInt(document.getElementById('teleopFuelScored').value) || 0;
+    const accuracy = parseInt(document.getElementById('teleopAccuracy').value);
+    
+    if (accuracy === 0) {
+        document.getElementById('teleopFuelMissed').value = scored;
+        return;
+    }
+    
+    if (scored === 0) {
+        document.getElementById('teleopFuelMissed').value = 0;
+        return;
+    }
+    
+    const missed = Math.round(scored * (100 - accuracy) / accuracy);
+    document.getElementById('teleopFuelMissed').value = missed;
 }
 
 // Switch between Scouting, Pit and History tabs
@@ -4035,10 +4131,10 @@ function resetForm(){
     document.getElementById('autoMissed').value = 0;
     document.getElementById('auto-missed-val').textContent = '0';
     
-    document.getElementById('teleopContribution').value = 33;
-    document.getElementById('teleop-contribution-val').textContent = '33';
-    document.getElementById('teleopMissed').value = 0;
-    document.getElementById('teleop-missed-val').textContent = '0';
+    document.getElementById('autoFuelScored').value = '0';
+    document.getElementById('autoFuelMissed').value = '0';
+    document.getElementById('teleopFuelScored').value = '0';
+    document.getElementById('teleopFuelMissed').value = '0';
     
     document.getElementById('teleopCollaboration').value = 1;
     document.getElementById('collab-val').textContent = '1';
@@ -4552,18 +4648,14 @@ function collectMatchData(){
 
         auto: {
             climbLevel: document.getElementById('autoClimbLevel').value,
-
-            fuelScored: document.getElementById('auto-points-estimate').textContent,
-            fuelMissed: document.getElementById('auto-missed-estimate').textContent,
-
-            fuelContributed: document.getElementById('auto-points-estimate'),
-
+            fuelScored: document.getElementById('autoFuelScored').value,
+            fuelMissed: document.getElementById('autoFuelMissed').value,
             ballsCollectedToOurSide: document.getElementById('autoBallsCollected').checked,
-        },
+        },        
 
         teleop: {
-            fuelScored: document.getElementById('teleop-points-estimate').textContent,
-            fuelMissed: document.getElementById('teleop-missed-estimate').textContent,
+            fuelScored: document.getElementById('teleopFuelScored').value,
+            fuelMissed: document.getElementById('teleopFuelMissed').value,
 
             bumpTraversal: document.getElementById('Bump').checked,
             trenchTraversal: document.getElementById('Trench').checked,
