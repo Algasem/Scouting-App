@@ -4139,26 +4139,27 @@ function decrement5(buttonID) {
 
 function resetForm(){
     
-    // Reset all +- buttons
+    // Reset counter buttons (textContent elements)
     const counterIds = [
         'teleopFouls',
-        'humanPlayerFuelMissed','humanPlayerFuelScored'
+        'humanPlayerFuelMissed',
+        'humanPlayerFuelScored'
     ];
     counterIds.forEach(id => {
         const el = document.getElementById(id);
         if (el) el.textContent = '0';
     });
 
-    // Reset sliders to default values
+    // Reset sliders and their display values
     document.getElementById('autoContribution').value = 33;
     document.getElementById('auto-contribution-val').textContent = '33';
-    document.getElementById('autoMissed').value = 0;
-    document.getElementById('auto-missed-val').textContent = '0';
+    document.getElementById('autoAccuracy').value = 50;
+    document.getElementById('auto-accuracy-val').textContent = '50';
     
-    document.getElementById('autoFuelScored').value = '0';
-    document.getElementById('autoFuelMissed').value = '0';
-    document.getElementById('teleopFuelScored').value = '0';
-    document.getElementById('teleopFuelMissed').value = '0';
+    document.getElementById('teleopContribution').value = 33;
+    document.getElementById('teleop-contribution-val').textContent = '33';
+    document.getElementById('teleopAccuracy').value = 50;
+    document.getElementById('teleop-accuracy-val').textContent = '50';
     
     document.getElementById('teleopCollaboration').value = 1;
     document.getElementById('collab-val').textContent = '1';
@@ -4167,13 +4168,19 @@ function resetForm(){
     document.getElementById('pitBuildQuality').value = 5;
     document.getElementById('build-quality-val').textContent = '5';
 
-    // Reset alliance points and ALL estimates
+    // Reset fuel input fields (these are now <input type="number">)
+    document.getElementById('autoFuelScored').value = '0';
+    document.getElementById('autoFuelMissed').value = '0';
+    document.getElementById('teleopFuelScored').value = '0';
+    document.getElementById('teleopFuelMissed').value = '0';
+    
+    // Reset alliance points fields
     document.getElementById('allianceAutoPoints').value = '';
     document.getElementById('allianceTotalPoints').value = '';
-    document.getElementById('auto-points-estimate').textContent = '0';
-    document.getElementById('auto-missed-estimate').textContent = '0';
-    document.getElementById('teleop-points-estimate').textContent = '0';
-    document.getElementById('teleop-missed-estimate').textContent = '0';
+    
+    // Reset fuel input placeholders
+    document.getElementById('autoFuelMissed').placeholder = 'Shots missed';
+    document.getElementById('teleopFuelMissed').placeholder = 'Shots missed';
 
     // Reset all checkboxes
     const allCheckboxes = document.querySelectorAll('input[type="checkbox"]');
@@ -4187,17 +4194,21 @@ function resetForm(){
         option.checked = false;
     });
 
-    // Reset all text fields
+    // Reset all text/number fields and textareas EXCEPT userName
     const allText = document.querySelectorAll('input[type="text"], input[type="number"], textarea');
     allText.forEach(text => {
-        text.value = '';
+        if (text.id !== 'userName') {
+            text.value = '';
+        }
     });
 
-    // Reset all dropdown menus
-    var allDropdowns = document.getElementsByTagName('select');
-    for (var i = 0; i < allDropdowns.length; i++){
-        allDropdowns[i].selectedIndex = 0;
-    }            
+    // Reset all dropdowns EXCEPT userName select
+    const allDropdowns = document.getElementsByTagName('select');
+    for (let i = 0; i < allDropdowns.length; i++){
+        if (allDropdowns[i].id !== 'userName') {
+            allDropdowns[i].selectedIndex = 0;
+        }
+    }
 }
 
 // Show the unified validation modal.
