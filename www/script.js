@@ -4460,6 +4460,13 @@ function validatePit(onValid) {
         required.push(asciiErrors[i]);
     }
 
+    const scoutName = document.getElementById('userName').value.trim();
+    if (!scoutName) {
+        required.push("Scout name is required.");
+    } else if (!/^[a-zA-Z\s]+$/.test(scoutName)) {
+        required.push("Scout name should only contain letters — no numbers or special characters.");
+    }
+    
     const teamNumVal = document.getElementById('teamPitNum').value.trim();
     if (!teamNumVal) {
         required.push("Team number is required.");
@@ -4745,6 +4752,7 @@ function generatePitCSV(){
         pitData.launcherType,
         pitData.driveMechanism,
         pitData.strategy,
+        pitData.auto,
         features,
         pitData.hopperType,
         pitData.hopperCapacity,
@@ -4866,6 +4874,7 @@ function collectPitData(){
         launcherType: document.getElementById('pitLauncherType').value,
         driveMechanism: document.getElementById('pitDriveMechanism').value,
         strategy: document.getElementById('pitStrategy').value,
+        auto: document.getElementById('autoStrategy').value,
 
         features: {
             vision: document.getElementById('pitVision').checked,
