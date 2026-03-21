@@ -4466,7 +4466,7 @@ function validatePit(onValid) {
     } else if (!/^[a-zA-Z\s]+$/.test(scoutName)) {
         required.push("Scout name should only contain letters — no numbers or special characters.");
     }
-    
+
     const teamNumVal = document.getElementById('teamPitNum').value.trim();
     if (!teamNumVal) {
         required.push("Team number is required.");
@@ -4702,6 +4702,17 @@ function generateMatchCSV(){
 function generatePitCSV(){
     const pitData = collectPitData();
     
+    let traversalTypePit = "";
+    if(pitData.auto.bumpTraversalPit){
+        traversalTypePit = "Bump";
+    }
+    else if(pitData.auto.trenchTraversalPit){
+        traversalTypePit = "Trench";
+    }
+    else if(pitData.auto.bothTraversalPit){
+        traversalTypePit = "Both";
+    }
+
     const featuresArr = [
         pitData.features.vision ? "Vision" : null,
         pitData.features.adjustableScoring ? "Adjustable Scoring" : null
@@ -4749,6 +4760,7 @@ function generatePitCSV(){
         pitData.heightInches,
         pitData.weightLbs,
         intakeType,
+        traversalTypePit,
         pitData.launcherType,
         pitData.driveMechanism,
         pitData.strategy,
@@ -4866,6 +4878,9 @@ function collectPitData(){
         climbLevel: document.getElementById('pitClimbLevel').value,
         heightInches: document.getElementById('pitHeight').value,
         weightLbs: document.getElementById('pitWeight').value,
+        bumpTraversalPit: document.getElementById('BumpTrav').checked,
+        trenchTraversalPit: document.getElementById('TrenchTrav').checked,
+        bothTraversalPit: document.getElementById('BothTrav').checked,
         intakeType: {
             overTheBumper: document.getElementById('otbIntake').checked,
             inPerimeter: document.getElementById('perimeterIntake').checked,
