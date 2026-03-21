@@ -4271,9 +4271,31 @@ function saveAnywayFromModal() {
     }
     _pendingSaveCallback = null;
 }
+
+function checkNonAscii(fields) {
+    var errors = [];
+    for (var i = 0; i < fields.length; i++) {
+        var el = document.getElementById(fields[i].id);
+        if (!el) continue;
+        var val = el.value;
+        var match = val.match(/[^\x00-\x7F]/);
+        if (match) {
+            errors.push(fields[i].label + " contains a special character: \" " + match[0] + " \" — please retype it using a normal keyboard character.");
+        }
+    }
+    return errors;
+}
 function validateMatch(onValid) {
     const required = [];
     const warnings = [];
+
+    var asciiErrors = checkNonAscii([
+        { id: "endgameNotes",     label: "Endgame Notes" },
+        { id: "humanPlayerNotes", label: "Human Player Notes" }
+    ]);
+    for (var i = 0; i < asciiErrors.length; i++) {
+        required.push(asciiErrors[i]);
+    }
 
     const scoutName = document.getElementById('userName').value.trim();
     if (!scoutName) {
@@ -4428,6 +4450,15 @@ function validateMatch(onValid) {
 function validatePit(onValid) {
     const required = [];
     const warnings = [];
+
+    var asciiErrors = checkNonAscii([
+        { id: "pitStrategy",   label: "General Strategy" },
+        { id: "pitBreakdowns", label: "Breakdowns" },
+        { id: "pitNotes",      label: "Notes" }
+    ]);
+    for (var i = 0; i < asciiErrors.length; i++) {
+        required.push(asciiErrors[i]);
+    }
 
     const teamNumVal = document.getElementById('teamPitNum').value.trim();
     if (!teamNumVal) {
