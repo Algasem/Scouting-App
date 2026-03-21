@@ -4722,6 +4722,7 @@ function generatePitCSV(){
         pitData.outsidePerimeter,
         pitData.breakdowns,
         pitData.notes,
+        pitData.scoutName
     ]
 
     for(let i = 0; i < values.length; i++){
@@ -4821,6 +4822,7 @@ function collectMatchData(){
 // Create object of all pit data points being collected
 function collectPitData(){
     const pitData = {
+        scoutName: document.getElementById('userName').value,
         teamNumber: document.getElementById('teamPitNum').value,
         climbLevel: document.getElementById('pitClimbLevel').value,
         heightInches: document.getElementById('pitHeight').value,
