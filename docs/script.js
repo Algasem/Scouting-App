@@ -4703,13 +4703,13 @@ function generatePitCSV(){
     const pitData = collectPitData();
     
     let traversalTypePit = "";
-    if(pitData.auto.bumpTraversalPit){
+    if(pitData.bumpTraversalPit){
         traversalTypePit = "Bump";
     }
-    else if(pitData.auto.trenchTraversalPit){
+    else if(pitData.trenchTraversalPit){
         traversalTypePit = "Trench";
     }
-    else if(pitData.auto.bothTraversalPit){
+    else if(pitData.bothTraversalPit){
         traversalTypePit = "Both";
     }
 
