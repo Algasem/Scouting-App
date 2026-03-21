@@ -47,6 +47,7 @@
         <option value="Fiona Bellomo">Fiona Bellomo</option>
         <option value="Gavin Xu">Gavin Xu</option>
         <option value="Grace Bellomo">Grace Bellomo</option>
+        <option value="Gavin O'Connor">Gavin O'Connor</option>
         <option value="Ian Gibson">Ian Gibson</option>
         <option value="Jane Zhao">Jane Zhao</option>
         <option value="Javis Tsai">Javis Tsai</option>
@@ -79,7 +80,8 @@
         <option value="Wilson Yu">Wilson Yu</option>
         <option value="Yicheng Xu">Yicheng Xu</option>
         <option value="Zoey Chen">Zoey Chen</option>
-      </select>
+        <option value="Other">Other</option>
+      </select> 
     </div>
   </header>
 
@@ -177,35 +179,49 @@
           </div>
 
           <div class="form-group">
-            <label>Alliance Auto Points</label>
-            <input type="number" id="allianceAutoPoints" min="0" placeholder="Total auto points for your alliance" oninput="updateAutoEstimate()">
+            <label>Alliance Auto Fuel Points</label>
+            <input type="number" id="allianceAutoPoints" min="0" placeholder="Total FUEL ONLY auto points for your alliance" oninput="updateAutoEstimate()">
           </div>
 
-          <div class="form-group">
-            <label>This Robot's Contribution — <span id="auto-contribution-val">33</span>%</label>
-            <p style="font-size:12px; color:var(--text-dim); margin-top:4px;">
-            ≈ <span id="auto-points-estimate">0</span> points from this robot
-            </p>
-            <div class="slider-container">
-              <input type="range" id="autoContribution" min="0" max="100" value="33" step="5" class="styled-slider"
-                oninput="document.getElementById('auto-contribution-val').textContent=this.value; updateAutoEstimate()">
-              <div class="slider-notches">
-                <span>0%</span><span>25%</span><span>50%</span><span>75%</span><span>100%</span>
+          <div class="stat-section stat-section--scored">
+            <div class="stat-section__title">Scoring Estimate</div>
+              <div class="form-group">
+                <label>This Robot's Contribution — <span id="auto-contribution-val">33</span>%</label>
+                <div class="slider-container">
+                  <input type="range" id="autoContribution" min="0" max="100" value="33" step="5" class="styled-slider"
+                    oninput="document.getElementById('auto-contribution-val').textContent=this.value; updateAutoEstimate()">
+                  <div class="slider-notches">
+                    <span>0%</span><span>25%</span><span>50%</span><span>75%</span><span>100%</span>
+                  </div>
+                </div>
               </div>
-            </div>
+          
+              <div class="form-group">
+                <label>Fuel Scored</label>
+                <input type="number" id="autoFuelScored" min="0" value="0" placeholder="Points scored" 
+                  oninput="updateAutoScoredFromManual()" 
+                  style="width:100%; padding:10px 12px; border:1px solid var(--border); border-radius:var(--radius); background:var(--surface-2); color:var(--text); font-size:14px;">
+              </div>
           </div>
-          <div class="form-group">
-            <label>Shots Missed % — <span id="auto-missed-val">0</span>%</label>
-            <p style="font-size:12px; color:var(--text-dim); margin-top:4px;">
-              ≈ <span id="auto-missed-estimate">0</span> missed fuel from this robot
-            </p>
-            <div class="slider-container">
-              <input type="range" id="autoMissed" min="0" max="100" value="0" step="5" class="styled-slider"
-                oninput="document.getElementById('auto-missed-val').textContent=this.value; updateAutoMissed()">
-              <div class="slider-notches">
-                <span>0%</span><span>25%</span><span>50%</span><span>75%</span><span>100%</span>
+          <div class="stat-section stat-section--accuracy">
+            <div class="stat-section__title">Accuracy / Missed</div>
+              <div class="form-group">
+                <label>Shot Accuracy — <span id="auto-accuracy-val">50</span>%</label>
+                <div class="slider-container">
+                  <input type="range" id="autoAccuracy" min="0" max="100" value="50" step="5" class="styled-slider"
+                    oninput="document.getElementById('auto-accuracy-val').textContent=this.value; updateAutoMissed()">
+                  <div class="slider-notches">
+                    <span>0%</span><span>25%</span><span>50%</span><span>75%</span><span>100%</span>
+                  </div>
+                </div>
               </div>
-            </div>
+          
+              <div class="form-group">
+                <label>Fuel Missed</label>
+                <input type="number" id="autoFuelMissed" min="0" value="0" placeholder="Shots missed"
+                  oninput="updateAutoMissedFromManual()"
+                  style="width:100%; padding:10px 12px; border:1px solid var(--border); border-radius:var(--radius); background:var(--surface-2); color:var(--text); font-size:14px;">
+              </div>
           </div>
 
           <div class="form-group">
@@ -215,7 +231,6 @@
               <span class="toggle-pill">Collected to Our Side</span>
             </label>
           </div>
-
         </div>
       </div>
 
@@ -225,35 +240,51 @@
           <div class="card-title">Teleoperated</div>
 
           <div class="form-group">
-            <label>Alliance Total Points (from match stats)</label>
-            <input type="number" id="allianceTotalPoints" min="0" placeholder="Total match points for your alliance" oninput="updateTeleopEstimate()">
+            <label>Alliance Total Fuel Points (from match stats)</label>
+            <input type="number" id="allianceTotalPoints" min="0" placeholder="Total match FUEL ONLY points for your alliance" oninput="updateTeleopEstimate()">
           </div>
 
-          <div class="form-group">
-            <label>This Robot's Contribution — <span id="teleop-contribution-val">0</span>%</label>
-            <p style="font-size:12px; color:var(--text-dim); margin-top:4px;">
-              ≈ <span id="teleop-points-estimate">0</span> points from this robot
-            </p>
-            <div class="slider-container">
-              <input type="range" id="teleopContribution" min="0" max="100" value="0" step="5" class="styled-slider"
-                oninput="document.getElementById('teleop-contribution-val').textContent=this.value; updateTeleopEstimate()">
-              <div class="slider-notches">
-                <span>0%</span><span>25%</span><span>50%</span><span>75%</span><span>100%</span>
+          <div class="stat-section stat-section--scored">
+            <div class="stat-section__title">Scoring Estimate</div>
+          
+            <div class="form-group">
+              <label>This Robot's Contribution — <span id="teleop-contribution-val">33</span>%</label>
+              <div class="slider-container">
+                <input type="range" id="teleopContribution" min="0" max="100" value="33" step="5" class="styled-slider"
+                  oninput="document.getElementById('teleop-contribution-val').textContent=this.value; updateTeleopEstimate()">
+                <div class="slider-notches">
+                  <span>0%</span><span>25%</span><span>50%</span><span>75%</span><span>100%</span>
+                </div>
               </div>
             </div>
+          
+            <div class="form-group">
+              <label>Fuel Scored</label>
+              <input type="number" id="teleopFuelScored" min="0" value="0" placeholder="Points scored"
+                oninput="updateTeleopScoredFromManual()"
+                style="width:100%; padding:10px 12px; border:1px solid var(--border); border-radius:var(--radius); background:var(--surface-2); color:var(--text); font-size:14px;">
+            </div>
           </div>
-
-          <div class="form-group">
-            <label>Shots Missed % — <span id="teleop-missed-val">0</span>%</label>
-            <p style="font-size:12px; color:var(--text-dim); margin-top:4px;">
-              ≈ <span id="teleop-missed-estimate">0</span> missed fuel from this robot
-            </p>
-            <div class="slider-container">
-              <input type="range" id="teleopMissed" min="0" max="100" value="0" step="5" class="styled-slider"
-                oninput="document.getElementById('teleop-missed-val').textContent=this.value; updateTeleopMissed()">
-              <div class="slider-notches">
-                <span>0%</span><span>25%</span><span>50%</span><span>75%</span><span>100%</span>
+      
+          <div class="stat-section stat-section--accuracy">
+            <div class="stat-section__title">Accuracy / Missed</div>
+          
+            <div class="form-group">
+              <label>Shot Accuracy — <span id="teleop-accuracy-val">50</span>%</label>
+              <div class="slider-container">
+                <input type="range" id="teleopAccuracy" min="0" max="100" value="50" step="5" class="styled-slider"
+                  oninput="document.getElementById('teleop-accuracy-val').textContent=this.value; updateTeleopMissed()">
+                <div class="slider-notches">
+                  <span>0%</span><span>25%</span><span>50%</span><span>75%</span><span>100%</span>
+                </div>
               </div>
+            </div>
+          
+            <div class="form-group">
+              <label>Fuel Missed</label>
+              <input type="number" id="teleopFuelMissed" min="0" value="0" placeholder="Shots missed"
+                oninput="updateTeleopMissedFromManual()"
+                style="width:100%; padding:10px 12px; border:1px solid var(--border); border-radius:var(--radius); background:var(--surface-2); color:var(--text); font-size:14px;">
             </div>
           </div>
 
@@ -609,7 +640,7 @@
         </div>
 
         <div class="form-group">
-          <label>Outside Perimeter?</label>
+          <label>Does any part of robot extend outside past the perimeter?</label>
           <div class="toggle-group">
             <label class="toggle-label">
               <input type="radio" name="Outside Perimeter" id="perimeterYes" value="Yes">
@@ -743,6 +774,13 @@
       el.classList.add('active');
       document.getElementById(tabName).classList.add('active');
     }
+
+    if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js')
+      .then(() => console.log('SW registered'))
+      .catch(err => console.error('SW failed:', err));
+  }
+  
   </script>
 </body>
 </html>

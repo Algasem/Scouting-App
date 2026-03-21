@@ -451,6 +451,36 @@ textarea {
   transition: transform 0.15s;
 }
 
+.stat-section {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.03);
+  padding: 14px;
+  margin: 12px 0;
+}
+
+.stat-section--scored {
+  background: rgba(71, 65, 49, 0.08);
+  border-color: rgba(212, 160, 23, 0.25);
+}
+
+.stat-section--accuracy {
+  background: rgba(35, 45, 37, 0.455);
+  border-color: rgba(60, 180, 90, 0.25);
+}
+
+.stat-section__title {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-size: 16px;
+  color: var(--text-dim);
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
 .styled-slider::-webkit-slider-thumb:hover {
   transform: scale(1.2);
 }
