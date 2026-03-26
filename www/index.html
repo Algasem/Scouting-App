@@ -479,7 +479,7 @@
 
       <!-- Action Buttons -->
       <div class="action-buttons">
-        <button class="btn btn-secondary" onclick="resetForm()">Reset</button>
+        <button class="btn btn-secondary" onclick="confirmResetForm()">Reset</button>
         <!-- <button class="btn btn-secondary" onclick="fillTestData()" style="flex:1;">Fill Match Form</button> -->
         <button class="btn btn-primary"   onclick="saveMatch()">Save Match</button>
       </div>
@@ -514,7 +514,7 @@
       <div class="export-buttons">
         <button class="btn btn-secondary" onclick="exportAllPitCSV()">Export All Pits</button>
         <button class="btn btn-secondary" onclick="exportAllMatchCSV()">Export All Matches</button>
-        <button class="btn btn-danger"    onclick="clearHistory()">Clear All History</button>
+        <button class="btn btn-danger"    onclick="confirmClearHistory()">Clear All History</button>
         <button class="btn btn-primary" onclick="syncToSheets()">Sync to Sheets</button>
       </div>
 
@@ -691,7 +691,7 @@
       </div>
       
       <div class="action-buttons">
-        <button class="btn btn-secondary" onclick="resetForm()">Reset</button>
+        <button class="btn btn-secondary" onclick="confirmResetForm()">Reset</button>
         <button class="btn btn-primary"   onclick="savePit()">Save Pit</button>
       </div>
 
@@ -780,6 +780,20 @@
           <button class="validation-cancel-btn" onclick="closeValidationModal()">Go Back</button>
           <button class="validation-ok-btn" id="validationSaveAnyway" onclick="saveAnywayFromModal()">Save Anyway</button>
       </div>
+  </div>
+</div>
+
+<!-- Confirm Action Modal -->
+<div id="confirmModal" class="modal">
+  <div class="modal-content validation-modal-content">
+    <button class="modal-close" onclick="closeConfirmModal()" aria-label="Close">X</button>
+    <div class="validation-modal-icon">🗑️</div>
+    <h2 class="validation-modal-title" id="confirmModalTitle">Are you sure?</h2>
+    <p id="confirmModalMessage" style="text-align:center; color:var(--text-dim); margin-bottom:20px; font-size:14px;"></p>
+    <div class="validation-modal-buttons">
+      <button class="validation-cancel-btn" onclick="closeConfirmModal()">Cancel</button>
+      <button class="validation-ok-btn" id="confirmModalAction" style="background:transparent;">Yes, do it</button>
+    </div>
   </div>
 </div>
 

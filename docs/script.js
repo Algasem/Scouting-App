@@ -4529,6 +4529,14 @@ function validatePit(onValid) {
     onValid();
 }
 
+function confirmReset(onValid) {
+    if (resetForm() == true) {
+        warnings.push("Confirm you want to clear your information.");
+        showValidationModal(warnings, onValid);
+        return;
+    }
+}
+
 // Generate the CSV array for a match
 function generateMatchCSV(){
     const data = collectMatchData();
@@ -5113,6 +5121,7 @@ function deleteFromEdit() {
     }
 }
 
+
 function pastPitsQR() {
     const pitContent = document.getElementById("pitContent");
     pitContent.innerHTML = "";
@@ -5222,6 +5231,43 @@ function exportAllMatchCSV(){
 
     downloadCSV(totalMatch, "ALL_MATCHES");
     openQRModal(totalMatch, "ALL MATCHES");
+}
+
+// ═══ CONFIRMATION MODALS ═══
+let _confirmCallback = null;
+
+function showConfirmModal(title, message, onConfirm) {
+    _confirmCallback = onConfirm;
+    document.getElementById('confirmModalTitle').textContent = title;
+    document.getElementById('confirmModalMessage').textContent = message;
+    const actionBtn = document.getElementById('confirmModalAction');
+    actionBtn.onclick = function() {
+        var cb = _confirmCallback; 
+        closeConfirmModal();        
+        if (cb) cb();                
+};
+    document.getElementById('confirmModal').classList.add('active');
+}
+
+function closeConfirmModal() {
+    document.getElementById('confirmModal').classList.remove('active');
+    _confirmCallback = null;
+}
+
+function confirmResetForm() {
+    showConfirmModal(
+        'Reset Form?',
+        'This will clear all fields in the current form. This action cannot be undone.',
+        resetForm
+    );
+}
+
+function confirmClearHistory() {
+    showConfirmModal(
+        'Clear All History?',
+        'This will permanently delete all saved matches and pit entries. This action cannot be undone.',
+        clearHistory
+    );
 }
 
 function clearHistory(){
