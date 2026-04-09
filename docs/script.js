@@ -3941,6 +3941,22 @@ function updateTeleopEstimate() {
     updateTeleopMissed();
 }
 
+function handleAllianceTotalPointsInput() {
+    const total = parseInt(document.getElementById('allianceTotalPoints').value) || 0;
+    const scored = parseInt(document.getElementById('teleopFuelScored').value) || 0;
+
+    if (total > 0) {
+        let percent = Math.round((scored / total) * 100);
+        percent = Math.min(100, percent);
+        percent = Math.round(percent / 5) * 5;
+        document.getElementById('teleopContribution').value = percent;
+        document.getElementById('teleop-contribution-val').textContent = percent;
+    } else {
+        document.getElementById('teleopContribution').value = 0;
+        document.getElementById('teleop-contribution-val').textContent = '0';
+    }
+}
+
 function updateAutoScoredFromManual() {
     const scored = parseInt(document.getElementById('autoFuelScored').value) || 0;
     const allianceTotal = parseInt(document.getElementById('allianceAutoPoints').value) || 0;
@@ -4073,6 +4089,21 @@ function updateTeleopMissed() {
     document.getElementById('teleopFuelMissed').placeholder = 'Shots missed';
 }
 
+function syncTeleopShotsToPostMatch() {
+    const scored = parseInt(document.getElementById('teleopShotsScored').textContent) || 0;
+    const missed = parseInt(document.getElementById('teleopShotsMissed').textContent) || 0;
+
+    document.getElementById('teleopFuelScored').value = scored;
+    document.getElementById('teleopFuelMissed').value = missed;
+
+    updateTeleopMissedFromManual();
+
+    const allianceTotal = parseInt(document.getElementById('allianceTotalPoints').value) || 0;
+    if (allianceTotal > 0 && scored > 0) {
+        handleAllianceTotalPointsInput();
+    }
+}
+
 
 // Switch between Scouting, Pit and History tabs
 function switchMainTab(tabName) {
@@ -4109,12 +4140,40 @@ function increment(buttonID){
     value.textContent = parseInt(value.textContent) + 1;        
 }
 
+function incrementBy(buttonID, amount) {
+    const value = document.getElementById(buttonID);
+    let nextValue = (parseInt(value.textContent) || 0) + amount;
+
+    if (buttonID === 'teleopShotsScored') {
+        const allianceTotal = parseInt(document.getElementById('allianceTotalPoints').value) || 0;
+        if (allianceTotal > 0) {
+            nextValue = Math.min(nextValue, allianceTotal);
+        }
+    }
+
+    value.textContent = String(nextValue);
+
+    if (buttonID === 'teleopShotsScored' || buttonID === 'teleopShotsMissed') {
+        syncTeleopShotsToPostMatch();
+    }
+}
+
 // Decrement fuel buttons 
 function decrement(buttonID){ 
     const value = document.getElementById(buttonID);
 
     if(value.textContent > 0){
         value.textContent = parseInt(value.textContent) -1;
+    }
+}
+
+function decrementBy(buttonID, amount) {
+    const value = document.getElementById(buttonID);
+    const nextValue = Math.max(0, (parseInt(value.textContent) || 0) - amount);
+    value.textContent = String(nextValue);
+
+    if (buttonID === 'teleopShotsScored' || buttonID === 'teleopShotsMissed') {
+        syncTeleopShotsToPostMatch();
     }
 }
 
@@ -4141,6 +4200,8 @@ function resetForm(){
     
     // Reset counter buttons (textContent elements)
     const counterIds = [
+        'teleopShotsScored',
+        'teleopShotsMissed',
         'teleopFouls',
         'humanPlayerFuelMissed',
         'humanPlayerFuelScored'
@@ -4151,20 +4212,21 @@ function resetForm(){
     });
 
     // Reset sliders and their display values
-    document.getElementById('autoContribution').value = 33;
-    document.getElementById('auto-contribution-val').textContent = '33';
-    document.getElementById('autoAccuracy').value = 50;
-    document.getElementById('auto-accuracy-val').textContent = '50';
+    document.getElementById('autoContribution').value = 0;
+    document.getElementById('auto-contribution-val').textContent = '0';
+    document.getElementById('autoAccuracy').value = 0;
+    document.getElementById('auto-accuracy-val').textContent = '0';
     
-    document.getElementById('teleopContribution').value = 33;
-    document.getElementById('teleop-contribution-val').textContent = '33';
-    document.getElementById('teleopAccuracy').value = 50;
-    document.getElementById('teleop-accuracy-val').textContent = '50';
+    document.getElementById('teleopContribution').value = 0;
+    document.getElementById('teleop-contribution-val').textContent = '0';
+    document.getElementById('teleopAccuracy').value = 0;
+    document.getElementById('teleop-accuracy-val').textContent = '0';
     
     document.getElementById('teleopCollaboration').value = 1;
     document.getElementById('collab-val').textContent = '1';
     document.getElementById('drivingScore').value = 1;
     document.getElementById('drive-val').textContent = '1';
+    document.getElementById('defence-val').textContent = '1';
     document.getElementById('pitBuildQuality').value = 5;
     document.getElementById('build-quality-val').textContent = '5';
 
@@ -4289,6 +4351,25 @@ function validateMatch(onValid) {
     const required = [];
     const warnings = [];
 
+    const nonNegativeMatchFields = [
+        { id: 'matchNumber', label: 'Match number' },
+        { id: 'teamNumber', label: 'Team number' },
+        { id: 'allianceAutoPoints', label: 'Alliance Auto Points' },
+        { id: 'autoFuelScored', label: 'Auto Fuel Scored' },
+        { id: 'autoFuelMissed', label: 'Auto Fuel Missed' },
+        { id: 'allianceTotalPoints', label: 'Alliance Total Points' },
+        { id: 'teleopFuelScored', label: 'Teleop Fuel Scored' },
+        { id: 'teleopFuelMissed', label: 'Teleop Fuel Missed' }
+    ];
+    nonNegativeMatchFields.forEach(function(field) {
+        const input = document.getElementById(field.id);
+        if (!input) return;
+        const raw = String(input.value).trim();
+        if (raw !== '' && parseFloat(raw) < 0) {
+            required.push(field.label + " cannot be negative.");
+        }
+    });
+
     var asciiErrors = checkNonAscii([
         { id: "endgameNotes",     label: "Endgame Notes" },
         { id: "humanPlayerNotes", label: "Human Player Notes" }
@@ -4386,11 +4467,11 @@ function validateMatch(onValid) {
     const teleopContribution = parseInt(document.getElementById('teleopContribution').value);
     
     if (teleopScored > 0 && allianceTotalPoints === 0) {
-        warnings.push("Teleop: Alliance Total Points is 0 but robot scored fuel (Teleop tab).");
+        required.push("Teleop: Alliance Total Points is 0 but robot scored fuel (Teleop tab).");
     }
     
     if (allianceTotalPoints > 0 && teleopScored > allianceTotalPoints) {
-        required.push("Teleop: Robot's Fuel Scored (" + teleopScored + ") cannot exceed Alliance Total Points (" + allianceTotalPoints + ") (Teleop tab).");
+        required.push("Teleop: Robot's Fuel Scored (" + teleopScored + ") cannot exceed Alliance Total Points (" + allianceTotalPoints + ") (Post Match tab).");
     }
 
     // ═══ EXISTING VALIDATIONS ═══
@@ -4450,6 +4531,21 @@ function validateMatch(onValid) {
 function validatePit(onValid) {
     const required = [];
     const warnings = [];
+
+    const nonNegativePitFields = [
+        { id: 'teamPitNum', label: 'Team number' },
+        { id: 'pitHeight', label: 'Height' },
+        { id: 'pitWeight', label: 'Weight' },
+        { id: 'pitHopperCapacity', label: 'Maximum Hopper Capacity' }
+    ];
+    nonNegativePitFields.forEach(function(field) {
+        const input = document.getElementById(field.id);
+        if (!input) return;
+        const raw = String(input.value).trim();
+        if (raw !== '' && parseFloat(raw) < 0) {
+            required.push(field.label + " cannot be negative.");
+        }
+    });
 
     var asciiErrors = checkNonAscii([
         { id: "pitStrategy",   label: "General Strategy" },
@@ -4638,7 +4734,7 @@ function generateMatchCSV(){
     const humanPlayerRoles = [
         data.humanPlayer.fedRobot ? "Fed balls to Robot" : null,
         data.humanPlayer.fedHumanPlayers ? "Fed balls to Human Players" : null
-    ];
+    ].filter(Boolean).join('; ');
 
     let autoClimbLevel = "";
 
@@ -4696,7 +4792,10 @@ function generateMatchCSV(){
         data.auto.ballsCollectedToOurSide,
         traversalType,
         humanPlayerRoles,
-        data.humanPlayer.HPnotes
+        data.humanPlayer.HPnotes,
+        data.defence.rating,
+        data.defence.notes,
+        data.defence.rewatchWorthy
     ]
 
     for(let i = 0; i < values.length; i++){
@@ -4872,6 +4971,12 @@ function collectMatchData(){
             fedHumanPlayers: document.getElementById('fedHumanPlayers').checked,
         
            HPnotes: (document.getElementById('humanPlayerNotes') || document.getElementById('endgameNotes') || {value:''}).value
+        },
+
+        defence: {
+            rating: (document.getElementById('defenceRating') || { value: '' }).value,
+            notes: (document.getElementById('defenceNotes') || { value: '' }).value,
+            rewatchWorthy: document.querySelector('input[name="defenceRewatch"]:checked')?.value || ""
         }
         
     }

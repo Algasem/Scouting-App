@@ -17,7 +17,7 @@
   <header class="app-header">
     <h1>FRC <span class="header-accent">7476</span> SPONGEBOTICS</h1>
     <div class="username-wrapper">
-      <label>Scout</label>
+      <label>SCOUT</label>
       <select id="userName">
         <option value="" disabled selected>Select name…</option>
         <option value="Advita Verma">Advita Verma</option>
@@ -37,6 +37,7 @@
         <option value="Chloe Huang">Chloe Huang</option>
         <option value="Claire Zhong">Claire Zhong</option>
         <option value="Claire Zhu">Claire Zhu</option>
+        <option value="Elizabeth Huang">Elizabeth Huang</option>
         <option value="Elliott Lascelle">Elliott Lascelle</option>
         <option value="Elliott Starosta">Elliott Starosta</option>
         <option value="Emma Valceanu">Emma Valceanu</option>
@@ -56,6 +57,7 @@
         <option value="Jiayi Chi">Jiayi Chi</option>
         <option value="Jiayuan Wang">Jiayuan Wang</option>
         <option value="Jocelyn Lau">Jocelyn Lau</option>
+        <option value="Jolina Wong">Jolina Wong</option>
         <option value="Jonathan Saji">Jonathan Saji</option>
         <option value="Kat Wang">Kat Wang</option>
         <option value="Katherine Lam">Katherine Lam</option>
@@ -69,6 +71,7 @@
         <option value="Micheal Zhang">Micheal Zhang</option>
         <option value="Muhammad Samman">Muhammad Samman</option>
         <option value="Nick Few">Nick Few</option>
+        <option value="Pascal Huang">Pascal Huang</option>       
         <option value="Rahmah Rizwan">Rahmah Rizwan</option>
         <option value="Sadra Hemmati">Sadra Hemmati</option>
         <option value="Sally Shi">Sally Shi</option>
@@ -162,7 +165,8 @@
         <button class="sub-tab active" onclick="switchTab('auto', this)">Auto</button>
         <button class="sub-tab" onclick="switchTab('teleop', this)">Teleop</button>
         <button class="sub-tab" onclick="switchTab('endgame', this)">Endgame</button>
-        <button class="sub-tab" onclick="switchTab('humanPlayer', this)">Human Player</button>
+        <!--<button class="sub-tab" onclick="switchTab('humanPlayer', this)">Human Player</button> -->
+        <button class="sub-tab" onclick="switchTab('postMatch', this)">Post Match</button>
       </div>
 
       <!-- ── AUTO ── -->
@@ -186,9 +190,9 @@
           <div class="stat-section stat-section--scored">
             <div class="stat-section__title">Scoring Estimate</div>
               <div class="form-group">
-                <label>This Robot's Contribution — <span id="auto-contribution-val">33</span>%</label>
+                <label>This Robot's Contribution — <span id="auto-contribution-val">0</span>%</label>
                 <div class="slider-container">
-                  <input type="range" id="autoContribution" min="0" max="100" value="33" step="5" class="styled-slider"
+                  <input type="range" id="autoContribution" min="0" max="100" value="0" step="5" class="styled-slider"
                     oninput="document.getElementById('auto-contribution-val').textContent=this.value; updateAutoEstimate()">
                   <div class="slider-notches">
                     <span>0%</span><span>25%</span><span>50%</span><span>75%</span><span>100%</span>
@@ -206,9 +210,9 @@
           <div class="stat-section stat-section--accuracy">
             <div class="stat-section__title">Accuracy / Missed</div>
               <div class="form-group">
-                <label>Shot Accuracy — <span id="auto-accuracy-val">50</span>%</label>
+                <label>Shot Accuracy — <span id="auto-accuracy-val">0</span>%</label>
                 <div class="slider-container">
-                  <input type="range" id="autoAccuracy" min="0" max="100" value="50" step="5" class="styled-slider"
+                  <input type="range" id="autoAccuracy" min="0" max="100" value="0" step="5" class="styled-slider"
                     oninput="document.getElementById('auto-accuracy-val').textContent=this.value; updateAutoMissed()">
                   <div class="slider-notches">
                     <span>0%</span><span>25%</span><span>50%</span><span>75%</span><span>100%</span>
@@ -240,51 +244,32 @@
           <div class="card-title">Teleoperated</div>
 
           <div class="form-group">
-            <label>Alliance Total Fuel Points (from match stats)</label>
-            <input type="number" id="allianceTotalPoints" min="0" placeholder="Total match FUEL ONLY points for your alliance" oninput="updateTeleopEstimate()">
+            <div class="counter shot-counter">
+              <span class="counter-label">Shots Scored</span>
+              <button class="counter-btn shot-step-btn" onclick="decrementBy('teleopShotsScored', 25)">-25</button>
+              <button class="counter-btn shot-step-btn" onclick="decrementBy('teleopShotsScored', 10)">-10</button>
+              <button class="counter-btn shot-step-btn" onclick="decrementBy('teleopShotsScored', 5)">-5</button>
+              <button class="counter-btn shot-step-btn" onclick="decrementBy('teleopShotsScored', 1)">-1</button>
+              <span class="counter-value" id="teleopShotsScored">0</span>
+              <button class="counter-btn shot-step-btn" onclick="incrementBy('teleopShotsScored', 1)">+1</button>
+              <button class="counter-btn shot-step-btn" onclick="incrementBy('teleopShotsScored', 5)">+5</button>
+              <button class="counter-btn shot-step-btn" onclick="incrementBy('teleopShotsScored', 10)">+10</button>
+              <button class="counter-btn shot-step-btn" onclick="incrementBy('teleopShotsScored', 25)">+25</button>
+            </div>
           </div>
 
-          <div class="stat-section stat-section--scored">
-            <div class="stat-section__title">Scoring Estimate</div>
-          
-            <div class="form-group">
-              <label>This Robot's Contribution — <span id="teleop-contribution-val">33</span>%</label>
-              <div class="slider-container">
-                <input type="range" id="teleopContribution" min="0" max="100" value="33" step="5" class="styled-slider"
-                  oninput="document.getElementById('teleop-contribution-val').textContent=this.value; updateTeleopEstimate()">
-                <div class="slider-notches">
-                  <span>0%</span><span>25%</span><span>50%</span><span>75%</span><span>100%</span>
-                </div>
-              </div>
-            </div>
-          
-            <div class="form-group">
-              <label>Fuel Scored</label>
-              <input type="number" id="teleopFuelScored" min="0" value="0" placeholder="Points scored"
-                oninput="updateTeleopScoredFromManual()"
-                style="width:100%; padding:10px 12px; border:1px solid var(--border); border-radius:var(--radius); background:var(--surface-2); color:var(--text); font-size:14px;">
-            </div>
-          </div>
-      
-          <div class="stat-section stat-section--accuracy">
-            <div class="stat-section__title">Accuracy / Missed</div>
-          
-            <div class="form-group">
-              <label>Shot Accuracy — <span id="teleop-accuracy-val">50</span>%</label>
-              <div class="slider-container">
-                <input type="range" id="teleopAccuracy" min="0" max="100" value="50" step="5" class="styled-slider"
-                  oninput="document.getElementById('teleop-accuracy-val').textContent=this.value; updateTeleopMissed()">
-                <div class="slider-notches">
-                  <span>0%</span><span>25%</span><span>50%</span><span>75%</span><span>100%</span>
-                </div>
-              </div>
-            </div>
-          
-            <div class="form-group">
-              <label>Fuel Missed</label>
-              <input type="number" id="teleopFuelMissed" min="0" value="0" placeholder="Shots missed"
-                oninput="updateTeleopMissedFromManual()"
-                style="width:100%; padding:10px 12px; border:1px solid var(--border); border-radius:var(--radius); background:var(--surface-2); color:var(--text); font-size:14px;">
+          <div class="form-group">
+            <div class="counter shot-counter">
+              <span class="counter-label">Shots Missed</span>
+              <button class="counter-btn shot-step-btn" onclick="decrementBy('teleopShotsMissed', 25)">-25</button>
+              <button class="counter-btn shot-step-btn" onclick="decrementBy('teleopShotsMissed', 10)">-10</button>
+              <button class="counter-btn shot-step-btn" onclick="decrementBy('teleopShotsMissed', 5)">-5</button>
+              <button class="counter-btn shot-step-btn" onclick="decrementBy('teleopShotsMissed', 1)">-1</button>
+              <span class="counter-value" id="teleopShotsMissed">0</span>
+              <button class="counter-btn shot-step-btn" onclick="incrementBy('teleopShotsMissed', 1)">+1</button>
+              <button class="counter-btn shot-step-btn" onclick="incrementBy('teleopShotsMissed', 5)">+5</button>
+              <button class="counter-btn shot-step-btn" onclick="incrementBy('teleopShotsMissed', 10)">+10</button>
+              <button class="counter-btn shot-step-btn" onclick="incrementBy('teleopShotsMissed', 25)">+25</button>
             </div>
           </div>
 
@@ -345,35 +330,6 @@
                 <input type="radio" name="traversal" id="No" value="yes">
                 <span class="toggle-pill">Didn't Move</span>
               </label>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <div class="counter">
-              <span class="counter-label">Fouls</span>
-              <button class="counter-btn" onclick="decrement('teleopFouls')">−</button>
-              <span class="counter-value" id="teleopFouls">0</span>
-              <button class="counter-btn" onclick="increment('teleopFouls')">+</button>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label>Collaboration — <span id="collab-val">1</span>/4</label>
-            <div class="slider-container">
-              <input type="range" id="teleopCollaboration" min="1" max="4" value="1" class="styled-slider"
-                     oninput="document.getElementById('collab-val').textContent=this.value">
-              <div class="slider-notches">
-              <span>1</span><span>2</span><span>3</span><span>4</span></div>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label>Driving Skill — <span id="drive-val">1</span>/4</label>
-            <div class="slider-container">
-              <input type="range" id="drivingScore" min="1" max="4" value="1" class="styled-slider"
-                     oninput="document.getElementById('drive-val').textContent=this.value">
-              <div class="slider-notches">
-              <span>1</span><span>2</span><span>3</span><span>4</span></div>
             </div>
           </div>
 
@@ -473,6 +429,125 @@
             <label>Notes</label>
             <textarea id="humanPlayerNotes" placeholder="Any observations…"></textarea>
           </div>
+
+        </div>
+      </div>
+
+      <!-- ── POST MATCH ── -->
+      <div id="postMatch" class="tab-content">
+        <div class="card">
+          <div class="card-title">Post Match</div>
+
+          <div class="form-group">
+            <label>Alliance Total Fuel Points (from match stats)</label>
+            <input type="number" id="allianceTotalPoints" min="0" placeholder="Total match FUEL ONLY points for your alliance" oninput="handleAllianceTotalPointsInput()">
+          </div>
+
+          <div class="stat-section stat-section--scored">
+            <div class="stat-section__title">Scoring Estimate</div>
+          
+            <div class="form-group">
+              <label>This Robot's Contribution — <span id="teleop-contribution-val">0</span>%</label>
+              <div class="slider-container">
+                <input type="range" id="teleopContribution" min="0" max="100" value="0" step="5" class="styled-slider"
+                  oninput="document.getElementById('teleop-contribution-val').textContent=this.value; updateTeleopEstimate()">
+                <div class="slider-notches">
+                  <span>0%</span><span>25%</span><span>50%</span><span>75%</span><span>100%</span>
+                </div>
+              </div>
+            </div>
+          
+            <div class="form-group">
+              <label>Fuel Scored</label>
+              <input type="number" id="teleopFuelScored" min="0" value="0" placeholder="Points scored"
+                oninput="updateTeleopScoredFromManual()"
+                style="width:100%; padding:10px 12px; border:1px solid var(--border); border-radius:var(--radius); background:var(--surface-2); color:var(--text); font-size:14px;">
+            </div>
+          </div>
+      
+          <div class="stat-section stat-section--accuracy">
+            <div class="stat-section__title">Accuracy / Missed</div>
+          
+            <div class="form-group">
+              <label>Shot Accuracy — <span id="teleop-accuracy-val">0</span>%</label>
+              <div class="slider-container">
+                <input type="range" id="teleopAccuracy" min="0" max="100" value="0" step="5" class="styled-slider"
+                  oninput="document.getElementById('teleop-accuracy-val').textContent=this.value; updateTeleopMissed()">
+                <div class="slider-notches">
+                  <span>0%</span><span>25%</span><span>50%</span><span>75%</span><span>100%</span>
+                </div>
+              </div>
+            </div>
+          
+            <div class="form-group">
+              <label>Fuel Missed</label>
+              <input type="number" id="teleopFuelMissed" min="0" value="0" placeholder="Shots missed"
+                oninput="updateTeleopMissedFromManual()"
+                style="width:100%; padding:10px 12px; border:1px solid var(--border); border-radius:var(--radius); background:var(--surface-2); color:var(--text); font-size:14px;">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="counter">
+              <span class="counter-label">Fouls</span>
+              <button class="counter-btn" onclick="decrement('teleopFouls')">−</button>
+              <span class="counter-value" id="teleopFouls">0</span>
+              <button class="counter-btn" onclick="increment('teleopFouls')">+</button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Collaboration — <span id="collab-val">1</span>/4</label>
+            <div class="slider-container">
+              <input type="range" id="teleopCollaboration" min="1" max="4" value="1" class="styled-slider"
+                     oninput="document.getElementById('collab-val').textContent=this.value">
+              <div class="slider-notches">
+              <span>1</span><span>2</span><span>3</span><span>4</span></div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Driving Skill — <span id="drive-val">1</span>/4</label>
+            <div class="slider-container">
+              <input type="range" id="drivingScore" min="1" max="4" value="1" class="styled-slider"
+                     oninput="document.getElementById('drive-val').textContent=this.value">
+              <div class="slider-notches">
+              <span>1</span><span>2</span><span>3</span><span>4</span></div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Defence Rating — <span id="defence-val">1</span>/4</label>
+            <div class="slider-container">
+              <input type="range" id="defenceRating" min="1" max="4" value="1" class="styled-slider"
+                     oninput="document.getElementById('defence-val').textContent=this.value">
+              <div class="slider-notches">
+              <span>1</span><span>2</span><span>3</span><span>4</span></div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Defence Notes</label>
+            <textarea id="defenceNotes" placeholder="Note any defensive observations.."></textarea>
+          </div>
+
+         <div class="form-group">
+          <label>Defence Rewatch Worthy?</label>
+          <div class="toggle-group">
+            <label class="toggle-label">
+              <input type="radio" name="defenceRewatch" id="rewatchYes" value="yes">
+              <span class="toggle-pill">Yes</span>
+            </label>
+            <label class="toggle-label">
+              <input type="radio" name="defenceRewatch" id="rewatchNo" value="no">
+              <span class="toggle-pill">No</span>
+            </label>
+            <p class="micro-hint">Please check yes if there were any outstanding/smart defensive plays that should be rewatched by the Strategy subteam.</p>
+
+          </div>
+        </div>
+
+          
 
         </div>
       </div>

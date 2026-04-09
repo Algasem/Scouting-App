@@ -422,6 +422,49 @@ textarea {
   color: #fff;
 }
 
+.shot-counter {
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 6px;
+  padding: 8px;
+  overflow-x: auto;
+}
+
+.shot-counter .counter-label {
+  flex: 0 0 auto;
+  min-width: 110px;
+  padding: 0 8px 0 4px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.shot-counter .counter-value {
+  min-width: 56px;
+  font-size: 18px;
+  padding: 0 2px;
+}
+
+.shot-counter .shot-step-btn {
+  width: 46px;
+  height: 38px;
+  border: 1px solid var(--gold);
+  border-radius: 8px;
+  background: linear-gradient(180deg, rgba(212,160,23,0.2), rgba(212,160,23,0.08));
+  color: var(--gold-bright);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.shot-counter .shot-step-btn:hover {
+  background: linear-gradient(180deg, rgba(212,160,23,0.35), rgba(212,160,23,0.16));
+  color: #fff;
+  border-color: var(--gold-bright);
+}
+
+.shot-counter .shot-step-btn:active {
+  background: rgba(212,160,23,0.45);
+}
+
 /* ─── SLIDERS ─── */
 .slider-container {
   padding: 6px 0 0;
