@@ -437,11 +437,11 @@
           </div>
 
           <div class="form-group">
-            <div class="counter">
-              <span class="counter-label">Fouls</span>
-              <button class="counter-btn" onclick="decrement('teleopFouls')">−</button>
+            <div class="counter-foul">
+              <span class="counter-label-foul">Fouls</span>
+              <button class="counter-btn-foul" onclick="decrementBy('teleopFouls', 1)">−</button>
               <span class="counter-value" id="teleopFouls">0</span>
-              <button class="counter-btn" onclick="increment('teleopFouls')">+</button>
+              <button class="counter-btn-foul" onclick="incrementBy('teleopFouls', 1)">+</button>
             </div>
           </div>
 
@@ -504,7 +504,6 @@
       <!-- Action Buttons -->
       <div class="action-buttons">
         <button class="btn btn-secondary" onclick="confirmResetForm()">Reset</button>
-        <!-- <button class="btn btn-secondary" onclick="fillTestData()" style="flex:1;">Fill Match Form</button> -->
         <button class="btn btn-primary"   onclick="saveMatch()">Save Match</button>
       </div>
 
