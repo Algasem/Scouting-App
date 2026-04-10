@@ -15,6 +15,9 @@
   <!-- ─── HEADER ─── -->
   <header class="app-header">
     <h1>FRC <span class="header-accent">7476</span> SPONGEBOTICS</h1>
+    <div>
+      <button class="toggle-pill" onclick="displayHelp()">Help/Tutorial</button>
+    </div>
     <div class="username-wrapper">
       <label>SCOUT</label>
       <select id="userName">
@@ -819,6 +822,160 @@
     </div>
   </div>
 </div>
+
+
+<button type="button" class="btn btn-secondary" onclick="displayHelp()">Help</button>
+
+<div id="helpModal" class="modal" aria-hidden="true">
+  <div class="modal-content help-modal-content" role="dialog" aria-modal="true" aria-label="Scouting App Guide">
+    <button type="button" class="modal-close" aria-label="Close" onclick="closeHelp()">✕</button>
+
+    <div class="card-title">7476 Scouting App - User Guide</div>
+
+    <div class="help-body">
+      <h2>Match Scouting</h2>
+      <p><strong>Before the Match (Fill this BEFORE scouting)</strong></p>
+      <ul>
+        <li><strong>Event:</strong> Select the competition</li>
+        <li><strong>Match Stage:</strong> Playoffs or Qualification</li>
+        <li><strong>Driver Station:</strong> Check where the drivers are standing or check Blue Alliance</li>
+        <li><strong>Match #:</strong> Current match number</li>
+        <li><strong>Team #:</strong> Team you're scouting</li>
+        <li><strong>Scout:</strong> Select your name from the dropdown</li>
+      </ul>
+
+      <h3>Auto Tab</h3>
+      <ul>
+        <li><strong>Climb Level:</strong> Did they climb in auto? (None or Level 1)</li>
+        <li><strong>Alliance Auto Fuel Points:</strong> Total fuel-only points scored in autonomous by the alliance not including penalties</li>
+        <li><strong>This Robot's Contribution:</strong> Use the slider to estimate what percentage of the alliance's auto fuel this robot scored. The Fuel Scored field will auto-calculate, but you can also type it in manually</li>
+        <li><strong>Shot Accuracy:</strong> Use the slider to estimate accuracy. Fuel Missed will auto-calculate. You can also type missed shots in manually</li>
+        <li><strong>Balls Collected:</strong> Check if they collected balls to their side</li>
+      </ul>
+
+      <h3>Teleop Tab</h3>
+      <ul>
+        <li><strong>Shots Scored / Shots Missed:</strong> Use the counter buttons (+1, +5, +10, +25) to track shots in real time during the match. These will carry over to Post Match automatically</li>
+        <li><strong>Transition Phase Role:</strong> What the robot did during the transition phase (can select multiple)</li>
+        <li><strong>Active Phase Role:</strong> What the robot did during the active phase (can select multiple)</li>
+        <li><strong>Inactive Phase Role:</strong> What the robot did during the inactive phase (can select multiple)</li>
+        <li><strong>Traversal:</strong> Bump, Trench, Both, or Didn't Move</li>
+      </ul>
+
+      <h3>Endgame Tab</h3>
+      <ul>
+        <li><strong>Climb Level:</strong> None, L1, L2, L3, or Failed</li>
+        <li><strong>Climb Speed:</strong> N/A, Slow, Medium, or Fast</li>
+        <li><strong>Disconnect:</strong> Did the robot disconnect? Yes or No</li>
+        <li><strong>Notes:</strong> Important observations only: breakdowns, impressive plays, strategy notes. Concise is better. Only write things useful to the strategy team</li>
+      </ul>
+
+      <h3>Post Match Tab (Fill this AFTER the match ends)</h3>
+      <ul>
+        <li><strong>Alliance Total Fuel Points:</strong> Total fuel-only points scored in teleop by the alliance (shown in match stats after the match) — not including tower or penalties</li>
+        <li><strong>This Robot's Contribution:</strong> Adjust the slider to reflect what percentage of the alliance's teleop fuel this robot scored. Fuel Scored syncs automatically from the Teleop counters but can be manually adjusted</li>
+        <li><strong>Shot Accuracy / Fuel Missed:</strong> Adjust if needed based on final stats</li>
+        <li><strong>Fouls:</strong> Count technical and regular fouls committed by the scouted robot</li>
+        <li><strong>Collaboration, Driving Skill:</strong> Rate 1–4 (1 = poor, 4 = excellent teamwork)</li>
+        <li><strong>Defence Rating:</strong> Rate 1–4 how effective their defence was</li>
+        <li><strong>Defence Notes:</strong> Note any defensive plays worth flagging</li>
+        <li><strong>Defence Rewatch Worthy:</strong> Mark Yes if there were outstanding or smart defensive plays the strategy team should rewatch</li>
+      </ul>
+
+      <h3>After the Match</h3>
+      <ol>
+        <li>Click <strong>Save Match</strong> button</li>
+        <li>Match is saved to History tab. Also, a copy of the CSV will be saved to your device. We will have the option to disable this shortly.</li>
+        <li>After 1 or several matches, go to the head scout and let them scan the QR code for each match. If you have internet connection, simply <strong>Sync to Spreadsheet</strong> and delete the match. You still need to tell the head scout you have scouted that match.</li>
+        <li>After scanning or syncing, delete the match from history.</li>
+        <li><strong>Ensure the match has been synced or added before deleting</strong>, we do not want any progress lost!</li>
+      </ol>
+
+      <h2>Pit Scouting</h2>
+      <ul>
+        <li>Switch to <strong>Pit</strong> tab at top</li>
+        <li>Fill out all fields:</li>
+      </ul>
+      <ul>
+        <li><strong>Team Number:</strong> Team you're interviewing</li>
+        <li><strong>Climb Level:</strong> Their max climb capability</li>
+        <li><strong>Height/Weight:</strong> Robot dimensions</li>
+        <li><strong>Intake Type:</strong> How they intake (can select multiple)</li>
+        <li><strong>Drive Mechanism:</strong> Tank, Swerve, Mecanum, or Other</li>
+        <li><strong>General Strategy:</strong> Ask them about their strategy (what do they do in a match)</li>
+        <li><strong>Features:</strong> Vision tracking, adjustable scoring</li>
+        <li><strong>Hopper Type:</strong> Fixed, Extendable (H/V), or None</li>
+        <li><strong>Hopper Capacity:</strong> How many balls</li>
+        <li><strong>Drive Experience:</strong> Rookie, Intermediate, Advanced, or Expert</li>
+        <li><strong>Build Quality:</strong> Rate 1-10</li>
+        <li><strong>Outside Perimeter:</strong> Does anything extend outside the frame perimeter?</li>
+        <li><strong>Breakdowns:</strong> Any known issues or weaknesses</li>
+        <li><strong>Notes:</strong> Additional observations</li>
+      </ul>
+
+      <h2>History Tab</h2>
+
+      <h3>Viewing Saved Data</h3>
+      <ul>
+        <li><strong>Match History:</strong> Shows all saved matches as "Team# -- Match#"</li>
+        <li><strong>Pit History:</strong> Shows all saved pits as "Pit Team#"</li>
+        <li>Click any entry to see QR code</li>
+        <li>Click ✏️ button to edit the data</li>
+        <li>If sync doesn't work, use QR or find Michael T or Algasem</li>
+      </ul>
+
+      <h3>Editing Data</h3>
+      <ul>
+        <li>Click ✏️ next to any match/pit</li>
+        <li>Edit the CSV text directly (follow format!!!)</li>
+        <li>Click <strong>Save Changes</strong></li>
+        <li>Or click <strong>Delete</strong> to remove match</li>
+      </ul>
+
+      <h2>Troubleshooting</h2>
+      <h3>"I saved but don't see it in History"</h3>
+      <ul>
+        <li>Refresh the History tab (switch away and back)</li>
+        <li>Check if the match count increased</li>
+      </ul>
+
+      <h3>"Sync to Google Sheets failed"</h3>
+      <ul>
+        <li>Check internet connection</li>
+        <li>Make sure you're connected to WiFi or have data</li>
+        <li>Try again in 30 seconds</li>
+        <li>If it doesn't work find a strategy member and ask them</li>
+      </ul>
+
+      <h3>"QR code won't scan"</h3>
+      <ul>
+        <li>Make sure screen brightness is at 100%</li>
+        <li>Hold scanner steady</li>
+        <li>Try zooming in on the QR code</li>
+      </ul>
+
+      <h3>"I scouted the wrong team!"</h3>
+      <ol>
+        <li>Go to History tab</li>
+        <li>Click ✏️ next to the match</li>
+        <li>Edit the team number in the CSV</li>
+        <li>Save changes</li>
+      </ol>
+
+      <h2>Getting Help</h2>
+      <h3>Before Asking for Help</h3>
+      <ul>
+        <li>Try restarting the app</li>
+        <li>Check if you're on the latest version</li>
+        <li>Read this guide thoroughly</li>
+      </ul>
+
+      <h3>Contact</h3>
+      <p><strong>MICHAEL TETELBAUM</strong> or <strong>ALGASEM ZABARAH</strong> on slack or email</p>
+    </div>
+  </div>
+</div>
+
 
   <script src="script.js"></script>
   <script>
