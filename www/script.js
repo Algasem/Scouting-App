@@ -4203,8 +4203,6 @@ function resetForm(){
         'teleopShotsScored',
         'teleopShotsMissed',
         'teleopFouls',
-        'humanPlayerFuelMissed',
-        'humanPlayerFuelScored'
     ];
     counterIds.forEach(id => {
         const el = document.getElementById(id);
@@ -4372,7 +4370,6 @@ function validateMatch(onValid) {
 
     var asciiErrors = checkNonAscii([
         { id: "endgameNotes",     label: "Endgame Notes" },
-        { id: "humanPlayerNotes", label: "Human Player Notes" }
     ]);
     for (var i = 0; i < asciiErrors.length; i++) {
         required.push(asciiErrors[i]);
@@ -4465,10 +4462,6 @@ function validateMatch(onValid) {
 
     const allianceTotalPoints = parseInt(document.getElementById('allianceTotalPoints').value) || 0;
     const teleopContribution = parseInt(document.getElementById('teleopContribution').value);
-    
-    if (teleopScored > 0 && allianceTotalPoints === 0) {
-        required.push("Teleop: Alliance Total Points is 0 but robot scored fuel (Teleop tab).");
-    }
     
     if (allianceTotalPoints > 0 && teleopScored > allianceTotalPoints) {
         required.push("Teleop: Robot's Fuel Scored (" + teleopScored + ") cannot exceed Alliance Total Points (" + allianceTotalPoints + ") (Post Match tab).");
@@ -4730,11 +4723,6 @@ function generateMatchCSV(){
     }
 
     let totalMatch = matchType + data.matchNumber;
-    
-    const humanPlayerRoles = [
-        data.humanPlayer.fedRobot ? "Fed balls to Robot" : null,
-        data.humanPlayer.fedHumanPlayers ? "Fed balls to Human Players" : null
-    ].filter(Boolean).join('; ');
 
     let autoClimbLevel = "";
 
@@ -4776,8 +4764,8 @@ function generateMatchCSV(){
         data.teleop.fuelScored,
         data.teleop.fuelMissed,
         
-        data.humanPlayer.fuelScored,
-        data.humanPlayer.fuelMissed,
+        "",
+        "",
         teleopActiveRole,
         teleopInactiveRole,
         teleopTransitionRole,
@@ -4791,8 +4779,8 @@ function generateMatchCSV(){
         data.endgame.notes,
         data.auto.ballsCollectedToOurSide,
         traversalType,
-        humanPlayerRoles,
-        data.humanPlayer.HPnotes,
+        "",
+        "",
         data.defence.rating,
         data.defence.notes,
         data.defence.rewatchWorthy
@@ -4961,16 +4949,6 @@ function collectMatchData(){
             
             disconnect: document.querySelector('input[name="disconnect"]:checked')?.value || "",           
             notes: document.getElementById('endgameNotes').value,
-        },
-
-        humanPlayer: {
-            fuelMissed: parseInt(document.getElementById('humanPlayerFuelMissed').textContent),
-            fuelScored: parseInt(document.getElementById('humanPlayerFuelScored').textContent),
-        
-            fedRobot: document.getElementById('fedRobot').checked,
-            fedHumanPlayers: document.getElementById('fedHumanPlayers').checked,
-        
-           HPnotes: (document.getElementById('humanPlayerNotes') || document.getElementById('endgameNotes') || {value:''}).value
         },
 
         defence: {
@@ -5158,9 +5136,7 @@ function fillTestData() {
     // Teleop
     document.getElementById('teleopFuelScored').textContent = Math.floor(Math.random() * 20);
     document.getElementById('teleopFuelMissed').textContent = Math.floor(Math.random() * 10);
-    document.getElementById('humanPlayerFuelMissed').textContent = Math.floor(Math.random() * 15);
-    document.getElementById('humanPlayerFuelScored').textContent = Math.floor(Math.random() * parseInt(document.getElementById('humanPlayerFuelMissed').textContent));
-    
+
     // Roles
     document.getElementById('activeRoleFunnel').checked = Math.random() > 0.5;
     document.getElementById('activeRoleScoring').checked = Math.random() > 0.5;
