@@ -362,12 +362,13 @@ textarea {
 }
 
 .counter-label {
-  flex: 1;
-  padding: 10px 14px;
+  display: block;
   font-family: 'Inter', sans-serif;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--text);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
 }
 
 .counter-value {
@@ -410,7 +411,6 @@ textarea {
   background: var(--green-bright);
 }
 
-/* 5 buttons: [-5][-][val][+][+5] */
 .counter-btn.big-step {
   font-size: 11px;
   font-weight: 700;
@@ -423,29 +423,34 @@ textarea {
 }
 
 .shot-counter {
-  flex-wrap: nowrap;
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
+  justify-content: center; 
   gap: 6px;
   padding: 8px;
-  overflow-x: auto;
 }
 
 .shot-counter .counter-label {
-  flex: 0 0 auto;
-  min-width: 110px;
-  padding: 0 8px 0 4px;
+  flex: 0 0 100%;
+  text-align: center;
+  padding: 4px 8px;
   font-size: 14px;
   font-weight: 600;
 }
 
 .shot-counter .counter-value {
-  min-width: 56px;
+  flex: 0 0 100%;
+  text-align: center;
   font-size: 18px;
-  padding: 0 2px;
+  padding: 4px 0;
+  margin: 0;
 }
 
 .shot-counter .shot-step-btn {
-  width: 46px;
+  flex: 1 1 auto; 
+  min-width: 50px;
+  max-width: 70px;
   height: 38px;
   border: 1px solid var(--gold);
   border-radius: 8px;
@@ -453,6 +458,53 @@ textarea {
   color: var(--gold-bright);
   font-size: 12px;
   font-weight: 700;
+}
+
+@media (min-width: 700px) {
+  .shot-counter {
+    flex-wrap: nowrap;
+    justify-content: space-between;
+  }
+  
+  .shot-counter .counter-label {
+    flex: 0 0 auto;
+    text-align: left;
+    min-width: 110px;
+    padding: 0 8px 0 4px;
+    order: 1;
+  }
+  
+  .shot-counter .counter-label::after {
+    content: '';
+    flex: 1 1 auto; 
+  }
+  
+  .shot-counter .counter-value {
+    flex: 0 0 auto;
+    min-width: 56px;
+    text-align: center;
+    order: 10; 
+  }
+  
+  .shot-counter .shot-step-btn {
+    flex: 0 0 auto;
+    width: 46px;
+    min-width: unset;
+    max-width: unset;
+    order: 2; 
+  }
+  
+  .shot-counter .shot-step-btn:nth-of-type(-n+4) {
+    order: 2;
+  }
+  
+  .shot-counter .counter-value {
+    order: 5;
+  }
+  
+  .shot-counter .shot-step-btn:nth-of-type(n+5) {
+    order: 6;
+  }
 }
 
 .shot-counter .shot-step-btn:hover {

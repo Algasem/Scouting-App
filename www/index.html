@@ -7,7 +7,6 @@
   <link rel="stylesheet" href="style.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <link rel="manifest" href="manifest.json">
-  <!--<meta name="theme-color" content="#da4416">-->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <link rel="apple-touch-icon" href="icon-192.png">
 </head>
@@ -165,7 +164,6 @@
         <button class="sub-tab active" onclick="switchTab('auto', this)">Auto</button>
         <button class="sub-tab" onclick="switchTab('teleop', this)">Teleop</button>
         <button class="sub-tab" onclick="switchTab('endgame', this)">Endgame</button>
-        <!--<button class="sub-tab" onclick="switchTab('humanPlayer', this)">Human Player</button> -->
         <button class="sub-tab" onclick="switchTab('postMatch', this)">Post Match</button>
       </div>
 
@@ -379,55 +377,6 @@
           <div class="form-group">
             <label>Notes</label>
             <textarea id="endgameNotes" placeholder="Any observations… Please include information useful to our strategy team (Ex: always misses from one position) NOT 'Drivers did a cool dance before the match'"></textarea>
-          </div>
-
-        </div>
-      </div>
-
-      <!-- ── HUMAN PLAYER ── -->
-      <div id="humanPlayer" class="tab-content">
-        <div class="card">
-          <div class="card-title">Human Player</div>
-
-          <div class="form-group">
-            <div class="counter">
-              <span class="counter-label">Fuel Scored</span>
-              <button class="counter-btn big-step" onclick="decrement5('humanPlayerFuelScored')">-5</button>
-              <button class="counter-btn" onclick="decrement('humanPlayerFuelScored')">−</button>
-              <span class="counter-value" id="humanPlayerFuelScored">0</span>
-              <button class="counter-btn" onclick="increment('humanPlayerFuelScored')">+</button>
-              <button class="counter-btn big-step" onclick="increment5('humanPlayerFuelScored')">+5</button>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <div class="counter">
-              <span class="counter-label">Fuel Missed</span>
-              <button class="counter-btn big-step" onclick="decrement5('humanPlayerFuelMissed')">-5</button>
-              <button class="counter-btn" onclick="decrement('humanPlayerFuelMissed')">−</button>
-              <span class="counter-value" id="humanPlayerFuelMissed">0</span>
-              <button class="counter-btn" onclick="increment('humanPlayerFuelMissed')">+</button>
-              <button class="counter-btn big-step" onclick="increment5('humanPlayerFuelMissed')">+5</button>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label>Actions</label>
-            <div class="toggle-group">
-              <label class="toggle-label">
-                <input type="checkbox" id="fedRobot">
-                <span class="toggle-pill">Fed balls to Robot</span>
-              </label>
-              <label class="toggle-label">
-                <input type="checkbox" id="fedHumanPlayers">
-                <span class="toggle-pill">Fed balls to Human Players</span>
-              </label>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label>Notes</label>
-            <textarea id="humanPlayerNotes" placeholder="Any observations…"></textarea>
           </div>
 
         </div>
