@@ -3800,55 +3800,70 @@ const teamData = {
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyXn4Mg7BqH8f-KfDuZe77Wrf-JLUUrLtArWPhYjtdO-Q-wvtcJi3qP7_rW88yoJQCu7A/exec"; // Your URL
 
 async function syncToSheets() {
-  try {
-    if (!navigator.onLine) {
-      alert('❌ No internet connection');
-      return
-    }
+    const syncButton = event.target;
     
-    const matchCount = Number(localStorage.getItem("MatchCount")) || 0;
-    const pitCount = Number(localStorage.getItem("PitCount")) || 0;
-    
-    if (matchCount === 0 && pitCount === 0) {
-      alert('No data to sync');
+    if (syncButton.classList.contains('btn-loading')) {
       return;
     }
-    
-    // Collect matches - PROPER CSV PARSING
-    const matches = [];
-    for (let i = 0; i < matchCount; i++) {
-      const csv = localStorage.getItem("Match" + i);
-      if (csv) {
-        matches.push(parseCSVRow(csv));
+  
+    try {
+      if (!navigator.onLine) {
+        alert('❌ No internet connection');
+        return
       }
-    }
-    
-    // Collect pits - PROPER CSV PARSING
-    const pits = [];
-    for (let i = 0; i < pitCount; i++) {
-      const csv = localStorage.getItem("Pit" + i);
-      if (csv) {
-        pits.push(parseCSVRow(csv));
+      
+      const matchCount = Number(localStorage.getItem("MatchCount")) || 0;
+      const pitCount = Number(localStorage.getItem("PitCount")) || 0;
+      
+      if (matchCount === 0 && pitCount === 0) {
+        alert('No data to sync');
+        return;
       }
+  
+      syncButton.classList.add('btn-loading');
+      syncButton.disabled = true;
+      const originalText = syncButton.textContent;
+      syncButton.setAttribute('data-original-text', originalText);
+  
+      // Collect matches - PROPER CSV PARSING
+      const matches = [];
+      for (let i = 0; i < matchCount; i++) {
+        const csv = localStorage.getItem("Match" + i);
+        if (csv) {
+          matches.push(parseCSVRow(csv));
+        }
+      }
+      
+      // Collect pits - PROPER CSV PARSING
+      const pits = [];
+      for (let i = 0; i < pitCount; i++) {
+        const csv = localStorage.getItem("Pit" + i);
+        if (csv) {
+          pits.push(parseCSVRow(csv));
+        }
+      }
+      
+      // Send to Google Sheets
+      const response = await fetch(SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify({ matches, pits })
+      });
+      
+      const result = await response.json();
+      
+      if (result.success) {
+        alert(`✓ Synced ${result.matches} matches, ${result.pits} pits`);
+      } else {
+        alert('❌ Sync failed: ' + result.error);
+      }
+      
+    } catch (error) {
+      alert('❌ Sync failed: ' + error.message);
     }
-    
-    // Send to Google Sheets
-    const response = await fetch(SCRIPT_URL, {
-      method: 'POST',
-      body: JSON.stringify({ matches, pits })
-    });
-    
-    const result = await response.json();
-    
-    if (result.success) {
-      alert(`✓ Synced ${result.matches} matches, ${result.pits} pits`);
-    } else {
-      alert('❌ Sync failed: ' + result.error);
+    finally {
+      syncButton.classList.remove('btn-loading');
+      syncButton.disabled = false;
     }
-    
-  } catch (error) {
-    alert('❌ Sync failed: ' + error.message);
-  }
 }
 
 // Proper CSV parser that handles quoted fields with commas
@@ -4104,42 +4119,6 @@ function syncTeleopShotsToPostMatch() {
     }
 }
 
-
-// Switch between Scouting, Pit and History tabs
-function switchMainTab(tabName) {
-    // Only select the main tabs (first .tabs container that's a direct child of body)
-    const mainTabsContainer = document.querySelector('body > .tabs');
-    const mainTabs = mainTabsContainer.querySelectorAll('.tab');
-    
-    // Select only main content sections (scouting, pit, history)
-    const mainContents = document.querySelectorAll('body > .tab-content');
-    
-    mainTabs.forEach(tab => tab.classList.remove('active'));
-    mainContents.forEach(content => content.classList.remove('active'));
-    
-    event.target.classList.add('active');
-    document.getElementById(tabName).classList.add('active');
-}
-
-// Switch between Pit, Auto, Teleop, and Engame tabs
-function switchTab(tabName) {
-    const tabs = document.querySelectorAll('#scouting .tabs .tab');
-    const contents = document.querySelectorAll('#scouting .tab-content');
-    
-    tabs.forEach(tab => tab.classList.remove('active'));
-    contents.forEach(content => content.classList.remove('active'));
-    
-    event.target.classList.add('active');
-    document.getElementById(tabName).classList.add('active');
-}
-
-// Increment fuel buttons 
-function increment(buttonID){ 
-    const value = document.getElementById(buttonID);
-
-    value.textContent = parseInt(value.textContent) + 1;        
-}
-
 function incrementBy(buttonID, amount) {
     const value = document.getElementById(buttonID);
     let nextValue = (parseInt(value.textContent) || 0) + amount;
@@ -4158,15 +4137,6 @@ function incrementBy(buttonID, amount) {
     }
 }
 
-// Decrement fuel buttons 
-function decrement(buttonID){ 
-    const value = document.getElementById(buttonID);
-
-    if(value.textContent > 0){
-        value.textContent = parseInt(value.textContent) -1;
-    }
-}
-
 function decrementBy(buttonID, amount) {
     const value = document.getElementById(buttonID);
     const nextValue = Math.max(0, (parseInt(value.textContent) || 0) - amount);
@@ -4174,25 +4144,6 @@ function decrementBy(buttonID, amount) {
 
     if (buttonID === 'teleopShotsScored' || buttonID === 'teleopShotsMissed') {
         syncTeleopShotsToPostMatch();
-    }
-}
-
-// Increment fuel buttons by 5 at once
-function increment5(buttonID) {
-    const value = document.getElementById(buttonID);
-
-    value.textContent = parseInt(value.textContent) + 5;
-}
-
-// Decrement fuel buttons by 5 at once
-function decrement5(buttonID) {
-    const value = document.getElementById(buttonID);
-
-    if(value.textContent - 5 >= 0) {
-        value.textContent = parseInt(value.textContent) -5;
-    }
-    else{
-        value.textContent = parseInt('0');
     }
 }
 
@@ -4221,6 +4172,7 @@ function resetForm(){
     document.getElementById('teleop-accuracy-val').textContent = '0';
     
     document.getElementById('teleopCollaboration').value = 1;
+    document.getElementById('teleopFouls').value = 1;
     document.getElementById('collab-val').textContent = '1';
     document.getElementById('drivingScore').value = 1;
     document.getElementById('drive-val').textContent = '1';
@@ -4395,8 +4347,10 @@ function validateMatch(onValid) {
     const matchNumVal = document.getElementById('matchNumber').value.trim();
     if (!matchNumVal) {
         required.push("Match number is required.");
-    } else if (parseInt(matchNumVal) > 100) {
-        required.push("Match number cannot exceed 100.");
+    } else if (parseInt(matchNumVal) > 100 && document.getElementById('qualification').checked) {
+        required.push("Qualification match number cannot exceed 100.");
+    } else if (parseInt(matchNumVal) > 30 && document.getElementById('playoff').checked) {
+        required.push("Playoff match number cannot exceed 30.");
     }
 
     const teamNumVal = document.getElementById('teamNumber').value.trim();
@@ -4616,14 +4570,6 @@ function validatePit(onValid) {
     }
 
     onValid();
-}
-
-function confirmReset(onValid) {
-    if (resetForm() == true) {
-        warnings.push("Confirm you want to clear your information.");
-        showValidationModal(warnings, onValid);
-        return;
-    }
 }
 
 // Generate the CSV array for a match
@@ -5016,7 +4962,7 @@ let count = Number(localStorage.getItem("MatchCount")) || 0;
 function saveMatch() {
     validateMatch(function() {
         const csv = generateMatchCSV();
-        downloadCSV(csv, new Date().toISOString() + ".csv");
+        //downloadCSV(csv, new Date().toISOString() + ".csv");
 
         localStorage.setItem("Match" + count, csv);
         count++;
@@ -5034,7 +4980,7 @@ let pitCount = Number(localStorage.getItem("PitCount")) || 0;
 function savePit(){
     validatePit(function() {
         const csv = generatePitCSV();
-        downloadCSV(csv, new Date().toISOString() + ".csv");
+        //downloadCSV(csv, new Date().toISOString() + ".csv");
 
         localStorage.setItem("Pit" + pitCount, csv);
         pitCount++;
@@ -5116,52 +5062,6 @@ function saveEdit() {
     }
     
     alert('Saved!');
-}
-
-function fillTestData() {
-    // Match info
-    document.getElementById('event').value = 'North Bay';
-    document.getElementById('qualification').checked = true;
-    document.getElementById('matchNumber').value = Math.floor(Math.random() * 50) + 1;
-    document.getElementById('teamNumber').value = Math.floor(Math.random() * 10000) + 1000;
-    document.getElementById('driverStation').value = ['R1', 'R2', 'R3', 'B1', 'B2', 'B3'][Math.floor(Math.random() * 6)];
-    document.getElementById('userName').value = 'Test Scout';
-    
-    // Auto
-    document.getElementById('autoFuelScored').textContent = Math.floor(Math.random() * 10);
-    document.getElementById('autoFuelMissed').textContent = Math.floor(Math.random() * 5);
-    document.getElementById('autoClimbLevel').value = ['None', 'Level 1'][Math.floor(Math.random() * 2)];
-    document.getElementById('autoBallsCollected').checked = Math.random() > 0.5;
-    
-    // Teleop
-    document.getElementById('teleopFuelScored').textContent = Math.floor(Math.random() * 20);
-    document.getElementById('teleopFuelMissed').textContent = Math.floor(Math.random() * 10);
-
-    // Roles
-    document.getElementById('activeRoleFunnel').checked = Math.random() > 0.5;
-    document.getElementById('activeRoleScoring').checked = Math.random() > 0.5;
-    document.getElementById('inactiveRoleLimit').checked = Math.random() > 0.5;
-    document.getElementById('transitionRoleScoring').checked = Math.random() > 0.5;
-    
-    // Traversal
-    const traversals = ['Bump', 'Trench', 'Both'];
-    document.getElementById(traversals[Math.floor(Math.random() * 3)]).checked = true;
-    
-    document.getElementById('teleopFouls').textContent = Math.floor(Math.random() * 3);
-    document.getElementById('teleopCollaboration').value = Math.floor(Math.random() * 4) + 1;
-    document.getElementById('drivingScore').value = Math.floor(Math.random() * 4) + 1;
-    
-    // Update slider displays
-    document.getElementById('collab-val').textContent = document.getElementById('teleopCollaboration').value;
-    document.getElementById('drive-val').textContent = document.getElementById('drivingScore').value;
-    
-    // Endgame
-    document.getElementById('endgameClimbLevel').value = ['None', 'Level 1', 'Level 2', 'Level 3'][Math.floor(Math.random() * 4)];
-    document.getElementById('endgameClimbSpeed').value = ['N/A', 'Slow', 'Medium', 'Fast'][Math.floor(Math.random() * 4)];
-    document.getElementById('disconnectNo').checked = true;
-    document.getElementById('endgameNotes').value = 'Auto-generated test data';
-    
-    alert('✓ Form filled with test data!');
 }
 
 function deleteFromEdit() {
