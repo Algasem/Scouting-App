@@ -5255,3 +5255,23 @@ function clearHistory(){
     localStorage.clear();
     window.location.reload();
 }
+
+function displayHelp() {
+    const modal = document.getElementById("helpModal");
+    if (!modal) return;
+    modal.classList.add("active");
+    modal.setAttribute("aria-hidden", "false");
+  }
+  
+  function closeHelp() {
+    const modal = document.getElementById("helpModal");
+    if (!modal) return;
+    modal.classList.remove("active");
+    modal.setAttribute("aria-hidden", "true");
+  }
+  
+  document.addEventListener("click", (e) => {
+    const modal = document.getElementById("helpModal");
+    if (!modal || !modal.classList.contains("active")) return;
+    if (e.target === modal) closeHelp();
+  });  

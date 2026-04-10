@@ -1246,3 +1246,84 @@ details {
 @keyframes spinner {
   to { transform: rotate(360deg); }
 }
+/* ...existing code... */
+
+.help-modal-content,
+.help-body {
+  text-align: left; /* override any centered card/modal styles */
+}
+
+.help-body {
+  line-height: 1.55;
+}
+
+.help-body h2,
+.help-body h3,
+.help-body p,
+.help-body ul,
+.help-body ol,
+.help-body li {
+  text-align: left;
+}
+
+/* Headings spacing */
+.help-body h2 {
+  margin: 18px 0 10px;
+  font-size: 16px;
+}
+
+.help-body h3 {
+  margin: 14px 0 8px;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+}
+
+/* Paragraph spacing */
+.help-body p {
+  margin: 8px 0;
+}
+
+/* Lists: consistent indentation + spacing (prevents weird centered bullets) */
+.help-body ul,
+.help-body ol {
+  margin: 8px 0 12px;
+  padding-left: 18px;          /* consistent indent */
+  list-style-position: outside; /* keep markers in margin */
+}
+
+.help-body li {
+  margin: 6px 0;
+}
+
+/* If your global CSS adds custom bullets, this normalizes markers in the guide */
+.help-body ul { list-style-type: disc; }
+.help-body ol { list-style-type: decimal; }
+.help-body li::marker { color: var(--text-dim); }
+
+/* Optional: “plain list” helper if you want NO bullets for some <ul> sections.
+   Add class="list-plain" to that <ul> in HTML where bullets shouldn't appear. */
+.help-body .list-plain {
+  list-style: none;
+  padding-left: 0;
+}
+.help-body .list-plain > li {
+  margin: 6px 0;
+  padding-left: 0;
+}
+
+#helpModal .help-modal-content {
+  display: flex;
+  flex-direction: column;
+  max-height: 85vh;  /* ensures there's room to scroll on smaller screens */
+  overflow: hidden;  /* prevents the whole modal from scrolling behind the body */
+}
+
+/* Scroll the guide text area */
+#helpModal .help-body {
+  flex: 1 1 auto;
+  min-height: 0;        /* critical: allows flex child to shrink and scroll */
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-right: 6px;   /* space for scrollbar */
+  -webkit-overflow-scrolling: touch; /* smoother iOS */
+}
