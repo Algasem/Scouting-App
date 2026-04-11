@@ -210,7 +210,8 @@ body {
 /* ─── MATCH INFO GRID ─── */
 .match-info-grid {
   display: grid;
-  grid-template-columns: 1.3fr 1fr; /* Event slightly wider but not huge */
+  min-width: 0;
+  grid-template-columns: 1fr 1fr; 
   grid-template-areas:
     "event team"
     "stage stage"
@@ -219,7 +220,7 @@ body {
 }
 
 /* Assign areas */
-.match-info-grid .event { grid-area: event; }
+.match-info-grid .event { grid-area: event; max-width: 100%;}
 .match-info-grid .team { grid-area: team; }
 .match-info-grid .stage { grid-area: stage; }
 .match-info-grid .driver { grid-area: driver; }
