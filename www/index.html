@@ -15,9 +15,7 @@
   <!-- ─── HEADER ─── -->
   <header class="app-header">
     <h1>FRC <span class="header-accent">7476</span> SPONGEBOTICS</h1>
-    <div>
-      <button class="toggle-pill" onclick="displayHelp()">Help/Tutorial</button>
-    </div>
+    
     <div class="username-wrapper">
       <label>SCOUT</label>
       <select id="userName">
@@ -107,7 +105,7 @@
         <div class="card-title">Match Info</div>
         <div class="match-info-grid">
 
-          <div class="form-group span-2">
+          <div class="form-group event">
             <label>Event</label>
             <select id="event">
               <option value="North Bay">North Bay</option>
@@ -122,30 +120,13 @@
               <option value="Other Event">Other Event</option>
             </select>
           </div>
-
-          <div class="form-group">
-            <label>Match #</label>
-            <input type="number" id="matchNumber" min="1" max="100" oninput="if(this.value > 100) this.value = 100; if(this.value < 1 && this.value !== '') this.value = 1;">
-          </div>
-          <div class="form-group">
-              <label>Team #</label>
+          
+          <div class="form-group team">
+            <label>Team #</label>
               <input type="number" id="teamNumber" min="1" max="12000" oninput="if(this.value > 12000) this.value = 12000; if(this.value < 1 && this.value !== '') this.value = 1;">
           </div>
 
-          <div class="form-group">
-            <label>Driver Station</label>
-            <select id="driverStation">
-              <option value="" disabled selected>Select…</option>
-              <option value="R1">R1</option>
-              <option value="R2">R2</option>
-              <option value="R3">R3</option>
-              <option value="B1">B1</option>
-              <option value="B2">B2</option>
-              <option value="B3">B3</option>
-            </select>
-          </div>
-
-          <div class="form-group">
+          <div class="form-group stage">
             <label>Match Stage</label>
             <div class="stage-group">
               <label class="toggle-label">
@@ -162,6 +143,26 @@
               </label>
             </div>
           </div>
+
+          <div class="form-group driver">
+            <label>Driver Station</label>
+            <select id="driverStation">
+              <option value="" disabled selected>Select…</option>
+              <option value="R1">R1</option>
+              <option value="R2">R2</option>
+              <option value="R3">R3</option>
+              <option value="B1">B1</option>
+              <option value="B2">B2</option>
+              <option value="B3">B3</option>
+            </select>
+          </div>
+
+          <div class="form-group match">
+            <label>Match #</label>
+            <input type="number" id="matchNumber" min="1" max="100" oninput="if(this.value > 100) this.value = 100; if(this.value < 1 && this.value !== '') this.value = 1;">
+          </div>
+
+          
 
         </div>
       </div>
@@ -826,7 +827,9 @@
     </div>
   </div>
 </div>
-
+<div align="center">
+  <button class="toggle-pill" onclick="displayHelp()">Help/Tutorial</button>
+</div>
 <div id="helpModal" class="modal" aria-hidden="true">
   <div class="modal-content help-modal-content" role="dialog" aria-modal="true" aria-label="Scouting App Guide">
     <button type="button" class="modal-close" aria-label="Close" onclick="closeHelp()">✕</button>

@@ -210,11 +210,20 @@ body {
 /* ─── MATCH INFO GRID ─── */
 .match-info-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1.3fr 1fr; /* Event slightly wider but not huge */
+  grid-template-areas:
+    "event team"
+    "stage stage"
+    "driver match";
   gap: 10px;
-  margin-bottom: 12px;
 }
 
+/* Assign areas */
+.match-info-grid .event { grid-area: event; }
+.match-info-grid .team { grid-area: team; }
+.match-info-grid .stage { grid-area: stage; }
+.match-info-grid .driver { grid-area: driver; }
+.match-info-grid .match { grid-area: match; }
 .match-info-grid .span-2 {
   grid-column: span 2;
 }
@@ -881,13 +890,13 @@ details {
 }
 
 .export-buttons .btn {
-  min-width: 160px; /* ← Add this line */
+  min-width: 160px;
 }
 
 @media (min-width: 400px) {
   .export-buttons {
     flex-direction: row;
-    flex-wrap: wrap; /* ← Add this so buttons wrap */
+    flex-wrap: wrap;
   }
 }
 
@@ -895,7 +904,13 @@ details {
 .stage-group {
   display: flex;
   gap: 8px;
+  flex-wrap: wrap;
 }
+
+.stage-group .toggle-label {
+  flex: 0 0 auto; 
+}
+
 
 /* ─── RESPONSIVE ─── */
 @media (max-width: 400px) {
