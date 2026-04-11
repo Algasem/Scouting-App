@@ -4667,8 +4667,19 @@ function generateMatchCSV(){
     else if(data.playoffMatch){
         matchType = "P";
     }
+    else if(data.practiceMatch){
+        matchType = "Practice";
+    }
 
-    let totalMatch = matchType + data.matchNumber;
+    let totalMatch = "";
+
+    if(matchType == "Practice"){
+        totalMatch = "Practice";    
+        data.event = "Other Event";
+    }
+    else{
+        totalMatch = matchType + data.matchNumber;
+    }
 
     let autoClimbLevel = "";
 
@@ -4832,6 +4843,7 @@ function collectMatchData(){
         event: document.getElementById('event').value,
         qualMatch: document.getElementById('qualification').checked,
         playoffMatch: document.getElementById('playoff').checked,
+        practiceMatch: document.getElementById('practice').checked,
         matchNumber: document.getElementById('matchNumber').value,
         teamNumber: document.getElementById('teamNumber').value,
         scoutName: document.getElementById('userName').value,

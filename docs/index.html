@@ -156,6 +156,10 @@
                 <input type="radio" name="matchStage" id="playoff" value="no">
                 <span class="toggle-pill">Playoffs</span>
               </label>
+              <label class="toggle-label">
+                <input type="radio" name="matchStage" id="practice" value="no">
+                <span class="toggle-pill">Practice</span>
+              </label>
             </div>
           </div>
 
@@ -823,9 +827,6 @@
   </div>
 </div>
 
-
-<button type="button" class="btn btn-secondary" onclick="displayHelp()">Help</button>
-
 <div id="helpModal" class="modal" aria-hidden="true">
   <div class="modal-content help-modal-content" role="dialog" aria-modal="true" aria-label="Scouting App Guide">
     <button type="button" class="modal-close" aria-label="Close" onclick="closeHelp()">✕</button>
@@ -837,7 +838,7 @@
       <p><strong>Before the Match (Fill this BEFORE scouting)</strong></p>
       <ul>
         <li><strong>Event:</strong> Select the competition</li>
-        <li><strong>Match Stage:</strong> Playoffs or Qualification</li>
+        <li><strong>Match Stage:</strong> Playoffs, Practice or Qualification</li>
         <li><strong>Driver Station:</strong> Check where the drivers are standing or check Blue Alliance</li>
         <li><strong>Match #:</strong> Current match number</li>
         <li><strong>Team #:</strong> Team you're scouting</li>
