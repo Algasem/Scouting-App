@@ -1,3 +1,78 @@
+/* ─── LANDING PAGE ─── */
+
+// Match start sound — tries to play a custom audio file, falls back to synthesized buzzer
+function playMatchStartSound() {
+  var audio = document.getElementById('matchStartAudio');
+  if (audio && audio.canPlayType && audio.src) {
+    audio.currentTime = 0;
+    audio.play().catch(function() { playFallbackBuzzer(); });
+    return;
+  }
+  playFallbackBuzzer();
+}
+
+// Fallback: synthesize FRC-style buzzer with Web Audio API
+function playFallbackBuzzer() {
+  try {
+    var ctx = new AudioContext();
+    var now = ctx.currentTime;
+
+    function makeBuzz(startTime, duration) {
+      [300, 305].forEach(function(freq) {
+        var osc = ctx.createOscillator();
+        var gain = ctx.createGain();
+        osc.type = 'square';
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0, now + startTime);
+        gain.gain.linearRampToValueAtTime(0.12, now + startTime + 0.04);
+        gain.gain.setValueAtTime(0.12, now + startTime + duration - 0.06);
+        gain.gain.linearRampToValueAtTime(0, now + startTime + duration);
+        osc.connect(gain).connect(ctx.destination);
+        osc.start(now + startTime);
+        osc.stop(now + startTime + duration);
+      });
+    }
+
+    makeBuzz(0, 0.22);
+    makeBuzz(0.35, 0.22);
+    makeBuzz(0.7, 0.22);
+    makeBuzz(1.1, 0.6);
+
+    setTimeout(function() { ctx.close(); }, 2200);
+  } catch (e) {}
+}
+
+function dismissLanding() {
+  playMatchStartSound();
+  const landing = document.getElementById('landingPage');
+  landing.classList.add('landing--exit');
+  setTimeout(() => landing.remove(), 700);
+}
+
+function toggleHowTo() {
+  const section = document.getElementById('howToSection');
+  section.classList.toggle('landing-how--open');
+}
+
+// Spawn floating particles on the landing page
+(function initLandingParticles() {
+  document.addEventListener('DOMContentLoaded', function () {
+    const container = document.getElementById('landingParticles');
+    if (!container) return;
+    for (let i = 0; i < 18; i++) {
+      const p = document.createElement('div');
+      p.className = 'landing-particle';
+      p.style.left = Math.random() * 100 + '%';
+      p.style.bottom = '-4px';
+      p.style.animationDuration = (4 + Math.random() * 6) + 's';
+      p.style.animationDelay = (Math.random() * 6) + 's';
+      p.style.width = p.style.height = (2 + Math.random() * 3) + 'px';
+      if (Math.random() > 0.5) p.style.background = 'var(--green-bright)';
+      container.appendChild(p);
+    }
+  });
+})();
+
 const USERNAME_KEY = "ScoutUsername_v1";
 
 const teamData = {
@@ -5286,4 +5361,5 @@ function displayHelp() {
     const modal = document.getElementById("helpModal");
     if (!modal || !modal.classList.contains("active")) return;
     if (e.target === modal) closeHelp();
-  });  
+  });
+
