@@ -12,6 +12,94 @@
 </head>
 <body>
 
+  <!-- Drop your sound file as www/match-start.mp3 (or .wav/.m4a) and update src below -->
+  <audio id="matchStartAudio" preload="auto" src="FRC-sound.mp3"></audio>
+
+  <!-- ─── LANDING PAGE ─── -->
+  <div id="landingPage" class="landing">
+    <div class="landing-bg">
+      <div class="landing-grid"></div>
+      <div class="landing-glow landing-glow--gold"></div>
+      <div class="landing-glow landing-glow--green"></div>
+      <div class="landing-particles" id="landingParticles"></div>
+    </div>
+
+    <div class="landing-content">
+      <!-- Decorative top line -->
+      <div class="landing-topline"></div>
+
+      <div class="landing-badge">FRC TEAM 7476</div>
+
+      <h1 class="landing-title">
+        <span class="landing-title-main">SPONGE<span class="landing-accent">BOTICS</span></span>
+        <span class="landing-title-sub">SCOUTING SYSTEM</span>
+      </h1>
+
+      <p class="landing-desc">Track robot performance. Record scoring data. Analyze movements. Win matches.</p>
+
+      <!-- Two buttons side by side -->
+      <div class="landing-buttons">
+        <button id="enterAppBtn" class="landing-enter-btn" onclick="dismissLanding()">
+          <span>ENTER APP</span>
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 10h12m0 0l-4-4m4 4l-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button class="landing-howto-btn" onclick="toggleHowTo()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="17" r="1" fill="currentColor"/></svg>
+          <span>HOW TO USE</span>
+        </button>
+      </div>
+
+      <!-- Collapsible how-to section -->
+      <div id="howToSection" class="landing-how">
+        <div class="landing-how-header">
+          <div class="landing-how-line"></div>
+          <h2 class="landing-how-title">SCOUTING GUIDE</h2>
+          <div class="landing-how-line"></div>
+        </div>
+        <div class="landing-steps">
+          <div class="landing-step" style="animation-delay: 0s">
+            <div class="landing-step-num">1</div>
+            <div>
+              <strong>Select your name</strong>
+              <p>Pick your name from the scout dropdown in the header so your submissions are tracked.</p>
+            </div>
+          </div>
+          <div class="landing-step" style="animation-delay: 0.08s">
+            <div class="landing-step-num">2</div>
+            <div>
+              <strong>Set match info</strong>
+              <p>Choose the event, enter the team number, match type, and match number before recording.</p>
+            </div>
+          </div>
+          <div class="landing-step" style="animation-delay: 0.16s">
+            <div class="landing-step-num">3</div>
+            <div>
+              <strong>Record the match</strong>
+              <p>Use the Auto, Teleop, and Endgame tabs to log scoring, movement, and defense data in real time.</p>
+            </div>
+          </div>
+          <div class="landing-step" style="animation-delay: 0.24s">
+            <div class="landing-step-num">4</div>
+            <div>
+              <strong>Submit &amp; share</strong>
+              <p>Hit Submit to save locally. Use the QR code or export to share data with the drive team.</p>
+            </div>
+          </div>
+        </div>
+        <button class="landing-howto-close" onclick="toggleHowTo()">GOT IT</button>
+      </div>
+    </div>
+
+    <div class="landing-footer">
+      <div class="landing-footer-line"></div>
+      <div class="landing-footer-inner">
+        <span>REBUILT 2026</span>
+        <span class="landing-dot"></span>
+        <span>Earl of March SS</span>
+      </div>
+    </div>
+  </div>
+
   <!-- ─── HEADER ─── -->
   <header class="app-header">
     <h1>FRC <span class="header-accent">7476</span> SPONGEBOTICS</h1>
@@ -108,7 +196,6 @@
           <div class="form-group event">
             <label>Event</label>
             <select id="event">
-              <option value="Niagara College">Niagara College</option>
               <option value="North Bay">North Bay</option>
               <option value="Humber Polytechnic">Humber Polytechnic</option>
               <option value="Durham College">Durham College</option>
@@ -116,6 +203,7 @@
               <option value="University of Waterloo">University of Waterloo</option>
               <option value="Georgian College">Georgian College</option>
               <option value="Windsor Essex">Windsor Essex</option>
+              <option value="Niagara College">Niagara College</option>
               <option value="Ontario Provincial Championship">Ontario Provincial Championship</option>
               <option value="Other Event">Other Event</option>
             </select>
@@ -827,9 +915,10 @@
     </div>
   </div>
 </div>
-<div align="center">
-  <button class="toggle-pill" onclick="displayHelp()">Help/Tutorial</button>
-</div>
+<button class="help-floating-btn" onclick="displayHelp()" aria-label="Help and Tutorial">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="17" r="1" fill="currentColor"/></svg>
+  <span>Help</span>
+</button>
 <div id="helpModal" class="modal" aria-hidden="true">
   <div class="modal-content help-modal-content" role="dialog" aria-modal="true" aria-label="Scouting App Guide">
     <button type="button" class="modal-close" aria-label="Close" onclick="closeHelp()">✕</button>
